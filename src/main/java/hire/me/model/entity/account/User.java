@@ -1,19 +1,28 @@
-package hire.me.model.entity;
+package hire.me.model.entity.account;
 
-public abstract class Account {
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class User {
+    private static final Logger logger = LogManager.getLogger(User.class);
+
     String login;
     String password;
-    AccountStatus status;
+    UserStatus status;
     Person person;
+    UserRole userRole;
 
-    public Account(String login, String password, AccountStatus status, Person person) {
+    public User(String login, String password, UserStatus status, Person person, UserRole userRole) {
+        logger.trace("constructor({},{},{},{}",login, password, status, person, userRole);
         this.login = login;
         this.password = password;
         this.status = status;
         this.person = person;
+        this.userRole = userRole;
     }
 
-    public Account() {
+    public User() {
+        logger.trace("constructor(empty)");
     }
 
     public String getLogin() {
@@ -32,11 +41,11 @@ public abstract class Account {
         this.password = password;
     }
 
-    public AccountStatus getAccountStatus() {
+    public UserStatus getUserStatus() {
         return status;
     }
 
-    public void setAccountStatus(AccountStatus status) {
+    public void setUserStatus(UserStatus status) {
         this.status = status;
     }
 
@@ -48,6 +57,14 @@ public abstract class Account {
         this.person = person;
     }
 
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -55,6 +72,7 @@ public abstract class Account {
                 ", password='" + password + '\'' +
                 ", status=" + status +
                 ", person=" + person +
+                ", user role=" + userRole +
                 '}';
     }
 }

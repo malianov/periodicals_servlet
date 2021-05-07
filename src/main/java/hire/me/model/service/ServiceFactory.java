@@ -1,6 +1,10 @@
 package hire.me.model.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class ServiceFactory {
+    private static final Logger logger = LogManager.getLogger(ServiceFactory.class);
 
     private static ServiceFactory serviceFactory;
 
@@ -19,7 +23,7 @@ public class ServiceFactory {
         return serviceFactory;
     }
 
-    public SubscriberService getSubscriberService() {
-        return SubscriberService.getInstance();
+    public UserService getUserService() {
+        return UserService.getInstance();
     }
 }

@@ -2,12 +2,15 @@ package hire.me.connection;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class ConnectionPool {
+    private static final Logger logger = LogManager.getLogger(ConnectionPool.class);
     private static volatile HikariDataSource dataSource;
 
     private static DataSource getDataSource() {

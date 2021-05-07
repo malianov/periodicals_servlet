@@ -1,5 +1,8 @@
 package hire.me.utility;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
@@ -8,6 +11,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 public interface Password {
+    static final Logger logger = LogManager.getLogger(Password.class);
 
     static String generateStrongPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int iterations = 1000;

@@ -1,7 +1,10 @@
 package hire.me.controller.command;
 
-import hire.me.model.entity.Subscriber;
-import hire.me.model.service.SubscriberService;
+import hire.me.model.entity.account.User;
+import hire.me.model.entity.account.UserRole;
+import hire.me.model.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,15 +14,16 @@ import java.io.IOException;
 import java.util.HashSet;
 
 public class CommandUtility {
+    private static final Logger logger = LogManager.getLogger(CommandUtility.class);
 
-    private static SubscriberService subscriberService;
+    private static UserService userService;
 
     static {
-        subscriberService = SubscriberService.getInstance();
+        userService = UserService.getInstance();
     }
 
     public static boolean checkUserIsLogged(HttpServletRequest request, String email) {
-
+        logger.trace("Check is user with email = {email} is logged");
         HashSet<String> loggedUsers = (HashSet<String>) request.getSession()
                 .getServletContext()
                 .getAttribute("loggedUsers");
@@ -29,6 +33,7 @@ public class CommandUtility {
         }
 
         loggedUsers.add(email);
+
         request.getSession()
                 .getServletContext()
                 .setAttribute("loggedUsers", loggedUsers);
@@ -36,12 +41,15 @@ public class CommandUtility {
     }
 
 
-    public static void logUser(HttpServletRequest request, String login, String password){
+    public static void loginUser(HttpServletRequest request, String login, String password, UserRole userRole){
+        logger.trace("Set attributes with login = {}, password = {} and userRole = {}", login, password, userRole);
         request.getSession().setAttribute("password", password);
         request.getSession().setAttribute("login", login);
+        request.getSession().setAttribute("role", userRole);
     }
 
     public static void logoutUser(HttpServletRequest request, String login) {
+        logger.trace("Inside logoutUser for login = {}", login);
 
         HashSet<String> loggedUsers = (HashSet<String>)
                 request.getSession().getServletContext().getAttribute("loggedUsers");
@@ -54,13 +62,14 @@ public class CommandUtility {
         session.removeAttribute("password");
     }
 
-    public static Subscriber getCurrentSessionUser(HttpServletRequest request){
+    public static User getCurrentSessionUser(HttpServletRequest request){
+        logger.trace("Inside getCurrentSessionUser");
 
         final HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
 
-        SubscriberService subscriberService = SubscriberService.getInstance();
-        return subscriberService.getSubscriberByEmail(email);
+        UserService userService = UserService.getInstance();
+        return userService.getUserByEmail(email);
     }
 
     public static void disallowBackToCached(HttpServletRequest request, HttpServletResponse response)

@@ -1,8 +1,12 @@
 package hire.me.model.validator;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.regex.Pattern;
 
 public class DataValidator {
+    private static final Logger logger = LogManager.getLogger(DataValidator.class);
 
     public static boolean validateEmail(String email) {
         return email != null && Pattern.matches("(^[\\w\\.-_]+)@([\\w\\.-]+)\\.([\\w\\.-]+)$", email);
@@ -13,5 +17,5 @@ public class DataValidator {
     }
 
     //TODO
-    // Add user name, surname and login validation
+    // Add account name, surname and login validation
 }
