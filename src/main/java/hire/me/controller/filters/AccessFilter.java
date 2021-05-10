@@ -26,27 +26,28 @@ public class AccessFilter implements Filter {
 		logger.info("Initialization for Access filter");
 
 		allowedPages.put(UserRole.GUEST,
-				Stream.of("/app/registration",
-						"/app/login",
-						"/app/home")
+				Stream.of("registration",
+						"login",
+						"home")
 				.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
 		allowedPages.put(UserRole.SUBSCRIBER,
-				Stream.of("/app/createSubscription",
-						"/app/subscriptions",
-						"/app/home",
-						"/app/logout",
-						"/app/subscriberAccount",
+				Stream.of("createSubscription",
+						"subscriptions",
+						"home",
+						"to_home_page",
+						"logout",
+						"subscriberAccount",
 						"")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
 		allowedPages.put(UserRole.ADMIN,
-				Stream.of("/app/registration",
-						"/app/home",
-						"/app/logout",
-						"/app/administratorAccount",
+				Stream.of("registration",
+						"home",
+						"logout",
+						"administratorAccount",
 						"",
-						"/app/subscribers")
+						"subscribers")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
 	}

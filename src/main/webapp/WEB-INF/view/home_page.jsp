@@ -7,17 +7,8 @@
 </head>
 <body>
 <div>
-    <p>User Login</p>
-</div>
-<div>
-
+    <p>THIS IS A MAIN PAGE</p>
 </div>
 
-<div>
-    <p>Account Registration</p>
-</div>
-<div>
-
-</div>
 </body>
 </html>

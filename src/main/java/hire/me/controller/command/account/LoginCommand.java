@@ -49,6 +49,6 @@ public class LoginCommand implements Command {
 
         String path = req.getServletContext().getContextPath();
         logger.trace("Path is {}", path);
-        return "redirect@" + path + "/app/subscriberAccount";
+        return "redirect@" + path + "/app/to_home_page";
     }
 }
