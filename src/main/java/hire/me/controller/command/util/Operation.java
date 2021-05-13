@@ -8,7 +8,9 @@ public enum Operation {
     REGISTRATION("registration"),
     TO_LOGIN_PAGE("to_login_page"),
     TO_REGISTRATION_PAGE("to_registration_page"),
-    TO_HOME_PAGE("to_home_page");
+    TO_HOME_PAGE("to_home_page"),
+    TO_SUPPORT_PAGE("to_support_page"),
+    TO_CATALOG("to_catalog_page");
 
     private static final Logger logger = LogManager.getLogger(Operation.class);
 

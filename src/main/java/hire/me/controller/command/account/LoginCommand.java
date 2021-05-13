@@ -32,7 +32,7 @@ public class LoginCommand implements Command {
 
         if(!userService.isLoginExist(login)) {
             logger.trace("Login {} doesn't exist", login);
-            return "/WEB-INF/common/login.jsp?loginExist=false";
+            return "/WEB-INF/view/common/login.jsp?loginExist=false";
         }
 
         final UserRole role = userService.getRoleByLogin(login);
@@ -44,7 +44,7 @@ public class LoginCommand implements Command {
             CommandUtility.loginUser(req, login, password, role);
         } else {
             logger.trace("Password is incorrect");
-            return "/WEB-INF/common/login.jsp?passwordCorrect=false";
+            return "/WEB-INF/view/common/login.jsp?passwordCorrect=false";
         }
 
         String path = req.getServletContext().getContextPath();

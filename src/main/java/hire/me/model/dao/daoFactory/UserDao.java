@@ -11,7 +11,7 @@ public interface UserDao extends AbstractDao<User> {
 
     boolean isUserExist(final String email, final String password);
     boolean emailIsAlreadyUsed(final String email);
-
+    boolean loginIsAlreadyUsed(final String login);
     boolean isLoginExist(String login);
     boolean isPasswordCorrectForLogin(String login, String password);
 

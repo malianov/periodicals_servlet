@@ -119,6 +119,23 @@ public class JdbcUserDAOImpl implements UserDao {
     }
 
     @Override
+    public boolean loginIsAlreadyUsed(String login) {
+        logger.trace("login => {}", login);
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users where login=(?);")) {
+            ps.setString(1, login);
+            final ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println("Caught SQLException exception" + e);
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
     public boolean isLoginExist(String login) {
         logger.trace("login => {}", login);
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users where login=(?);")) {

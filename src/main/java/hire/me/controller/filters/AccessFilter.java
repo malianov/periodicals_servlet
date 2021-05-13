@@ -27,8 +27,12 @@ public class AccessFilter implements Filter {
 
 		allowedPages.put(UserRole.GUEST,
 				Stream.of("registration",
+						"app",
 						"login",
-						"home")
+						"home",
+						"to_home_page",
+						"to_catalog_page",
+						"to_support_page")
 				.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
 		allowedPages.put(UserRole.SUBSCRIBER,
@@ -38,7 +42,8 @@ public class AccessFilter implements Filter {
 						"to_home_page",
 						"logout",
 						"subscriberAccount",
-						"")
+						"",
+						"to_support_page")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
 		allowedPages.put(UserRole.ADMIN,
@@ -47,7 +52,8 @@ public class AccessFilter implements Filter {
 						"logout",
 						"administratorAccount",
 						"",
-						"subscribers")
+						"subscribers",
+						"to_support_page")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
 	}
@@ -66,19 +72,23 @@ public class AccessFilter implements Filter {
 
 		logger.info("URL is " + path);
 
+		logger.info("current role before -> " + (UserRole) req.getSession().getAttribute("role"));
+
 		if (req.getSession().getAttribute("role") == null) {
 			req.getSession().setAttribute("role", UserRole.GUEST);
 		}
 		UserRole currentRole = ((UserRole) req.getSession().getAttribute("role"));
-		logger.info("current role " + currentRole);
+		logger.info("current role " + currentRole + ", path = " + path);
+		logger.info("allowedPages.get(currentRole).contains(path) => " + allowedPages.get(currentRole).contains(path));
 
 		if(allowedPages.get(currentRole).contains(path)) {
 			logger.info("send info to next element");
+			logger.info("allowedPages.get(currentRole).contains(path) = " + allowedPages.get(currentRole).contains(path));
 			chain.doFilter(req, resp);
 		} else {
 			if(currentRole.equals(UserRole.GUEST)) {
-				logger.info("forward quest to login");
-				req.getRequestDispatcher("/WEB-INF/common/login.jsp").forward(req, resp);
+				logger.info("forward quest to home page");
+				req.getRequestDispatcher("/WEB-INF/view/home_page.jsp").forward(req, resp);
 			} else {
 				logger.info("forward quest to error 403");
 				req.getRequestDispatcher("/WEB-INF/common/error/403.jsp").forward(req, resp);

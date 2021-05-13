@@ -38,15 +38,28 @@ public class UserService {
                     user.getPerson().getEmail());
         }
 
+        if (userDao.loginIsAlreadyUsed(user.getLogin())) {
+            throw new Exception("Failed registering already existing user login " +
+                    user.getLogin());
+        }
+
         userDao.create(user);
     }
 
     public User getUserByEmail(String email) {
-
         List<User> users = getAllUsers();
 
         return users.stream()
                 .filter(user -> email.equals(user.getPerson().getEmail()))
+                .findAny()
+                .orElse(null);
+    }
+
+    public User getUserByLogin(String login) {
+        List<User> users = getAllUsers();
+
+        return users.stream()
+                .filter(user -> login.equals(user.getLogin()))
                 .findAny()
                 .orElse(null);
     }

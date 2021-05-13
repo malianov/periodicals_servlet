@@ -22,17 +22,17 @@ public class CommandUtility {
         userService = UserService.getInstance();
     }
 
-    public static boolean checkUserIsLogged(HttpServletRequest request, String email) {
-        logger.trace("Check is user with email = {email} is logged");
+    public static boolean checkUserIsLogged(HttpServletRequest request, String login) {
+        logger.trace("Check is user with login = {login} is logged");
         HashSet<String> loggedUsers = (HashSet<String>) request.getSession()
                 .getServletContext()
                 .getAttribute("loggedUsers");
 
-        if(loggedUsers.stream().anyMatch(email::equals)) {
+        if(loggedUsers.stream().anyMatch(login::equals)) {
             return true;
         }
 
-        loggedUsers.add(email);
+        loggedUsers.add(login);
 
         request.getSession()
                 .getServletContext()
@@ -66,10 +66,10 @@ public class CommandUtility {
         logger.trace("Inside getCurrentSessionUser");
 
         final HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
+        String login = session.getAttribute("login").toString();
 
         UserService userService = UserService.getInstance();
-        return userService.getUserByEmail(email);
+        return userService.getUserByLogin(login);
     }
 
     public static void disallowBackToCached(HttpServletRequest request, HttpServletResponse response)
@@ -83,7 +83,7 @@ public class CommandUtility {
         response.addHeader("Cache-Control", "post-check=0, pre-check=0");
         response.setHeader("Pragma","no-cache");
         response.setDateHeader ("Expires", 0);
-        if (session.getAttribute("email") == null || session.getAttribute("password") == null) {
+        if (session.getAttribute("login") == null || session.getAttribute("password") == null) {
             response.sendRedirect(path + "/WEB-INF/common/error/invalidSession.jsp");
         }
     }

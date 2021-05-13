@@ -1,0 +1,33 @@
+/* table th:hover {
+    background-color:blue;
+    color: white;    
+} */
+
+/* table th a:hover {
+     background-color:blue;
+    color: white;    
+} */
+ 
+a{
+    color:#000;
+}
+/* .bg-able:hover {
+     background-color:blue;
+ } */
+.btn-menu{
+    margin-left: 10px;
+    margin-top: 10px;
+}
+.form-check{
+    margin-left: 10px;
+}
+.form-check-label{
+    font-weight: normal;
+}
+.all-items{
+    margin-left: 20px;
+}
+
+.size-as-row{
+    padding: 0rem;
+}

@@ -2,9 +2,7 @@ package hire.me.controller.command;
 
 import hire.me.controller.command.account.LoginCommand;
 import hire.me.controller.command.account.RegistrationCommand;
-import hire.me.controller.command.directions_to.HomePage;
-import hire.me.controller.command.directions_to.LoginPage;
-import hire.me.controller.command.directions_to.RegistrationPage;
+import hire.me.controller.command.directions_to.*;
 import hire.me.model.exception.NotFoundCommandException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,6 +22,8 @@ public class CommandFactory {
         commands.put(TO_LOGIN_PAGE.getPath(), new LoginPage());
         commands.put(TO_REGISTRATION_PAGE.getPath(), new RegistrationPage());
         commands.put(TO_HOME_PAGE.getPath(), new HomePage());
+        commands.put(TO_CATALOG.getPath(), new CatalogPage());
+        commands.put(TO_SUPPORT_PAGE.getPath(), new SupportPage());
     }
 
     public static Command getCommand(String url) throws NotFoundCommandException {
