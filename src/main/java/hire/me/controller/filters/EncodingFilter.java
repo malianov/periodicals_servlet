@@ -10,16 +10,16 @@ public class EncodingFilter implements Filter {
 
 	private static final Logger logger = LogManager.getLogger(EncodingFilter.class);
 
-	public void init(FilterConfig fConfig) throws ServletException {
+	public void init(FilterConfig config) throws ServletException {
 		logger.info("Initialization for Encoding filter");
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
 
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;charset=UTF-8");
-		logger.info("Encoding - charset set to " + request.getCharacterEncoding());
-		chain.doFilter(request, response);
+		req.setCharacterEncoding("UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
+		logger.info("Encoding - charset set to " + req.getCharacterEncoding());
+		chain.doFilter(req, resp);
 	}
 
 	public void destroy() {

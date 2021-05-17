@@ -22,7 +22,7 @@ public class AccessFilter implements Filter {
 
 	private Map<UserRole, Set<String>> allowedPages = new HashMap<>();
 
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(FilterConfig config) throws ServletException {
 		logger.info("Initialization for Access filter");
 
 		allowedPages.put(UserRole.GUEST,
