@@ -41,11 +41,20 @@ public class LoginCommand implements Command {
 
         if(userService.isPasswordCorrectForLogin(login, password, role)) {
             logger.trace("The password {} for login {} and role {} is correct", password, login, role);
+
+            if (CommandUtility.checkUserIsLogged(req, login)) {
+                logger.trace("The user {} is being logged", login);
+                return "/WEB-INF/view/common/error/multilogin.jsp";
+            }
+
             CommandUtility.loginUser(req, login, password, role);
         } else {
             logger.trace("Password is incorrect");
             return "/WEB-INF/view/common/login.jsp?passwordCorrect=false";
         }
+
+
+
 
         String path = req.getServletContext().getContextPath();
         logger.trace("Path is {}", path);

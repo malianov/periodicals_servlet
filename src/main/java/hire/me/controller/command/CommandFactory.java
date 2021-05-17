@@ -1,5 +1,6 @@
 package hire.me.controller.command;
 
+import hire.me.controller.command.account.LogOutCommand;
 import hire.me.controller.command.account.LoginCommand;
 import hire.me.controller.command.account.RegistrationCommand;
 import hire.me.controller.command.directions_to.*;
@@ -24,6 +25,7 @@ public class CommandFactory {
         commands.put(TO_HOME_PAGE.getPath(), new HomePage());
         commands.put(TO_CATALOG.getPath(), new CatalogPage());
         commands.put(TO_SUPPORT_PAGE.getPath(), new SupportPage());
+        commands.put(LOGOUT.getPath(),new LogOutCommand());
     }
 
     public static Command getCommand(String url) throws NotFoundCommandException {

@@ -14,92 +14,74 @@
     <jsp:include page="navbar.jsp"/>
 
     <div class="nav justify-content-between fs-5 text-muted">
-        <h4 class="h5 text-muted mt-1 mb-2">Our periodics catalog</h4>
+        <h4 class="h5 text-muted mt-1 mb-2"><fmt:message key="catalog.our-periodic-catalog"/></h4>
         <form class="col-12 col-lg-4 mb-3 mt-mb-lg-0">
-            <input type="search" class="form-control" placeholder="Search by periodics name..." aria-label="Search">
+            <input type="search" class="form-control" placeholder="<fmt:message key="catalog.search-by-periodic-name"/>"
+                   aria-label="Search">
         </form>
     </div>
     <table class="table table-hover table-bordered border-primary border border-2 text-muted">
         <thead class="border-primary border border-2 table-primary">
         <tr>
-            <th class="scope=" scope="col">id</th>
-            <th scope="col"><a href=# class="text-decoration-none">Periodics ▴▾</a></th>
-            <%--                    <i class="fas fa-sort"></i></a></th>--%>
-            <th class="bg-able" scope="col">
-                <div class="drop-items">
-                    <a class="text-decoration-none dropdown-toggle" id="dropdownMenuBtn10"
-                       data-bs-toggle="dropdown">theme</a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuBtn10">
-                        <div class="total">
-                            <div class="form-check form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                                <label class="form-check-label" for="inlineCheckbox1">all items</label>
-                            </div>
-                        </div>
-                        <div class="all-items">
-                            <div class="form-check form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                       value="option1">
-                                <label class="form-check-label" for="inlineCheckbox1">healthy</label>
-                            </div>
-                            <div class="form-check form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                       value="option1">
-                                <label class="form-check-label" for="inlineCheckbox1">healthy1</label>
-                            </div>
-                            <div class="form-check form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                       value="option1">
-                                <label class="form-check-label" for="inlineCheckbox1">healthy2</label>
-                            </div>
-                            <div class="form-check form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                       value="option1">
-                                <label class="form-check-label" for="inlineCheckbox1">healthy3</label>
-                            </div>
-                        </div>
-                        <div class="btn-menu d-grid gap-2 pe-2">
-                            <button type="button" class="btn btn-primary">применить</button>
-                        </div>
-                    </div>
-                </div>
-                </ul>
+            <th class="scope=" scope="col"><fmt:message key="catalog.id"/></th>
+            <th scope="col"><a href=# class="text-decoration-none"><fmt:message key="catalog.periodic-name"/></a>
             </th>
             <th class="bg-able" scope="col">
                 <div class="drop-items">
-                    <a class="text-decoration-none dropdown-toggle" id="dropdownMenuBtn10"
-                       data-bs-toggle="dropdown">type
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuBtn10">
-                        <div class="total">
-                            <div class="form-check form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                       value="option1">
-                                <label class="form-check-label" for="inlineCheckbox1">all items</label>
-                            </div>
+                    <a class="text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"><fmt:message
+                            key="catalog.theme"/></a>
+                    <div class="dropdown-menu">
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label">healthy</label>
                         </div>
-                        <div class="all-items">
-                            <div class="form-check form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                       value="option1">
-                                <label class="form-check-label" for="inlineCheckbox1">magazines</label>
-                            </div>
-                            <div class="form-check form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                       value="option1">
-                                <label class="form-check-label" for="inlineCheckbox1">newspapers</label>
-                            </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label">healthy1</label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label">healthy2</label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label">healthy3</label>
                         </div>
                         <div class="btn-menu d-grid gap-2 pe-2">
-                            <button type="button" class="btn btn-primary">применить</button>
+                            <button type="button" class="btn btn-primary"><fmt:message key="catalog.apply"/></button>
                         </div>
                     </div>
                 </div>
-                </ul>
             </th>
-            <th scope="col">date added</th>
-            <th scope="col"><a href=# class="text-decoration-none">price, ₴ ▴▾</a></th>
-            <%--                    <i class="fas fa-hryvnia"></i> <i class="fas fa-sort"></i></a></th>--%>
+            <th class="bg-able" scope="col">
+                <div class="drop-items">
+                    <a class="text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"><fmt:message
+                            key="catalog.type"/></a>
+                    <div class="dropdown-menu">
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label">magazines</label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label">newspapers</label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label">healthy2</label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label">healthy3</label>
+                        </div>
+                        <div class="btn-menu d-grid gap-2 pe-2">
+                            <button type="button" class="btn btn-primary"><fmt:message key="catalog.apply"/></button>
+                        </div>
+                    </div>
+                </div>
+            </th>
+            <th scope="col"><fmt:message key="catalog.date-added"/></th>
+            <th scope="col"><a href=# class="text-decoration-none"><fmt:message key="catalog.price"/></a></th>
         </tr>
         </thead>
         <tbody>
@@ -213,17 +195,19 @@
 <div class="container my-0 fixed-bottom">
     <nav>
         <ul class="pagination justify-content-center ">
-            <li class="page-item"><a href="#" class="page-link border-primary">Previous</a></li>
+            <li class="page-item"><a href="#" class="page-link border-primary"><fmt:message
+                    key="pagination.previous"/></a></li>
             <li class="page-item"><a href="#" class="page-link border-primary">1</a></li>
             <li class="page-item"><a href="#" class="page-link border-primary">2</a></li>
             <li class="page-item"><a href="#" class="page-link border-primary">3</a></li>
-            <li class="page-item"><a href="#" class="page-link border-primary">Next</a></li>
+            <li class="page-item"><a href="#" class="page-link border-primary"><fmt:message key="pagination.next"/></a>
+            </li>
         </ul>
     </nav>
     <footer>
         <div class="text-center text-white p-3 bg-primary">
-            © 2021 Copyright:
-            <a class="text-white" href="ma_igor@ukr.net">Malianov Igor</a>
+            <fmt:message key="footer.copyright"/>
+            <a class="text-white" href="ma_igor@ukr.net"><fmt:message key="footer.malianov-igor"/></a>
         </div>
     </footer>
 </div>

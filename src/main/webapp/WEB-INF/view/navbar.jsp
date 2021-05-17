@@ -54,39 +54,28 @@
             <li><a class="dropdown-item" href="?language=ru"><fmt:message key="language.russian"/></a></li>
         </ul>
 
-
-        <%--        <button type="button" class="btn btn-outline-primary me-3" data-bs-toggle="modal"
-                        data-bs-target="#modalLogin">
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.login}">
-                            <fmt:message key="logout"/>
-                        </c:when>
-                        <c:otherwise>
-                            <fmt:message key="login"/>
-                        </c:otherwise>
-                    </c:choose>
-                </button>--%>
-
-
         <c:choose>
             <c:when test="${not empty sessionScope.login}">
-                <button type="button" class="btn btn-outline-primary me-3" data-bs-toggle="modal"
-                        data-bs-target="#modalLogin"><fmt:message key="logout"/>
-                </button>
+                <a href="${pageContext.request.contextPath}/app/logout" class="btn btn-outline-primary me-3"><fmt:message key="logout"/></a>
+
+
+
 
 
             </c:when>
             <c:otherwise>
                 <button type="button" class="btn btn-outline-primary me-3" data-bs-toggle="modal"
-                        data-bs-target="#modalLogin"><fmt:message key="login"/>
+                        data-bs-target="#modalLogin">
+                    <fmt:message key="login"/>
                 </button>
             </c:otherwise>
         </c:choose>
 
-
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#modalSignUp"><fmt:message key="sign-up"/>
-        </button>
+        <c:if test="${empty sessionScope.login}">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modalSignUp"><fmt:message key="sign-up"/>
+            </button>
+        </c:if>
     </div>
 </header>
 

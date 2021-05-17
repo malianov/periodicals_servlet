@@ -23,23 +23,26 @@ public class CommandUtility {
     }
 
     public static boolean checkUserIsLogged(HttpServletRequest request, String login) {
-        logger.trace("Check is user with login = {login} is logged");
+        logger.trace("Check is user with login = {} is logged", login);
         HashSet<String> loggedUsers = (HashSet<String>) request.getSession()
                 .getServletContext()
                 .getAttribute("loggedUsers");
 
         if(loggedUsers.stream().anyMatch(login::equals)) {
+            logger.trace("User with login = {} is logged", login);
             return true;
         }
 
         loggedUsers.add(login);
+        logger.trace("User with login = {} is added to the logged users list", login);
 
         request.getSession()
                 .getServletContext()
                 .setAttribute("loggedUsers", loggedUsers);
+
+        System.out.println("The quantity of loggedUsers are = " + loggedUsers);
         return false;
     }
-
 
     public static void loginUser(HttpServletRequest request, String login, String password, UserRole userRole){
         logger.trace("Set attributes with login = {}, password = {} and userRole = {}", login, password, userRole);
@@ -55,11 +58,13 @@ public class CommandUtility {
                 request.getSession().getServletContext().getAttribute("loggedUsers");
 
         loggedUsers.remove(login);
+        logger.trace("User with login = {} is being removed from list of logged users", login);
         request.getSession().getServletContext().setAttribute("loggedUsers", loggedUsers);
 
         final HttpSession session = request.getSession();
         session.removeAttribute("login");
         session.removeAttribute("password");
+        session.removeAttribute("role");
     }
 
     public static User getCurrentSessionUser(HttpServletRequest request){

@@ -18,6 +18,18 @@
     <url-pattern>/app/*</url-pattern>
   </servlet-mapping>
 
+  <listener>
+    <listener-class>
+      hire.me.controller.listener.SessionListener
+    </listener-class>
+  </listener>
+
+  <listener>
+    <listener-class>
+      hire.me.controller.listener.ContextListener
+    </listener-class>
+  </listener>
+
   <filter>
     <filter-name>LocaleFilter</filter-name>
     <filter-class>hire.me.controller.filters.LocaleFilter</filter-class>
