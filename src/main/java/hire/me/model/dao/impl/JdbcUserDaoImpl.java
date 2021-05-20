@@ -17,20 +17,20 @@ import java.util.List;
 
 import static hire.me.connection.ConnectionPool.getConnection;
 
-public class JdbcUserDAOImpl implements UserDao {
-    private static final Logger logger = LogManager.getLogger(JdbcUserDAOImpl.class);
+public class JdbcUserDaoImpl implements UserDao {
+    private static final Logger logger = LogManager.getLogger(JdbcUserDaoImpl.class);
 
     final private Connection connection = getConnection();
-    private static JdbcUserDAOImpl instance;
+    private static JdbcUserDaoImpl instance;
 
-    private JdbcUserDAOImpl() {}
+    private JdbcUserDaoImpl() {}
 
-    public static JdbcUserDAOImpl getInstance() {
+    public static JdbcUserDaoImpl getInstance() {
         logger.trace("");
         if (instance == null) {
-            synchronized (JdbcUserDAOImpl.class) {
+            synchronized (JdbcUserDaoImpl.class) {
                 if (instance == null) {
-                    instance = new JdbcUserDAOImpl();
+                    instance = new JdbcUserDaoImpl();
                 }
             }
         }

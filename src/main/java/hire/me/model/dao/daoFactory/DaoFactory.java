@@ -10,6 +10,7 @@ public abstract class DaoFactory {
     private static DaoFactory daoFactory;
 
     public abstract UserDao createUserDao();
+    public abstract PeriodicalDao createPeriodicalDao();
 
     public static DaoFactory getInstance() {
         logger.trace("isDatafactoryExist = {}", daoFactory);

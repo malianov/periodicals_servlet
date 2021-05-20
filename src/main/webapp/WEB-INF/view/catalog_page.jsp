@@ -15,16 +15,22 @@
 
     <div class="nav justify-content-between fs-5 text-muted">
         <h4 class="h5 text-muted mt-1 mb-2"><fmt:message key="catalog.our-periodic-catalog"/></h4>
+
+
+
         <form class="col-12 col-lg-4 mb-3 mt-mb-lg-0">
             <input type="search" class="form-control" placeholder="<fmt:message key="catalog.search-by-periodic-name"/>"
-                   aria-label="Search">
+                   aria-label="Search" name="search_input">
         </form>
+
+
+
     </div>
     <table class="table table-hover table-bordered border-primary border border-2 text-muted">
         <thead class="border-primary border border-2 table-primary">
         <tr>
             <th class="scope=" scope="col"><fmt:message key="catalog.id"/></th>
-            <th scope="col"><a href=# class="text-decoration-none"><fmt:message key="catalog.periodic-name"/></a>
+            <th scope="col"><a href="#" class="text-decoration-none"><fmt:message key="catalog.periodic-name"/></a>
             </th>
             <th class="bg-able" scope="col">
                 <div class="drop-items">
@@ -85,110 +91,20 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>England</td>
-            <td>English</td>
-            <td>London</td>
-            <td>England</td>
-            <td>123.23</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>France</td>
-            <td>French</td>
-            <td>Paris</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Germany</td>
-            <td>German</td>
-            <td>Berlin</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>France</td>
-            <td>French</td>
-            <td>Paris</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Germany</td>
-            <td>German</td>
-            <td>Berlin</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>France</td>
-            <td>French</td>
-            <td>Paris</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Germany</td>
-            <td>German</td>
-            <td>Berlin</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>France</td>
-            <td>French</td>
-            <td>Paris</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Germany</td>
-            <td>German</td>
-            <td>Berlin</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>France</td>
-            <td>French</td>
-            <td>Paris</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Germany</td>
-            <td>German</td>
-            <td>Berlin</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Germany</td>
-            <td>German</td>
-            <td>Berlin</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Germany</td>
-            <td>German</td>
-            <td>Berlin</td>
-            <td>England</td>
-            <td>English</td>
-        </tr>
+
+
+        <c:forEach items="${periodicals}" var="all_periodics_list">
+            <tr>
+                <td><c:out value="${all_periodics_list.getTitle()}"/></td>
+                <td><c:out value="${all_periodics_list.getTheme()}"/></td>
+                <td><c:out value="${all_periodics_list.getPeriodicalType()}"/></td>
+                <td><c:out value="${all_periodics_list.getPricePerItem()}"/></td>
+                <td><c:out value="${all_periodics_list.getTitle()}"/></td>
+                <td><c:out value="${all_periodics_list.getTitle()}"/></td>
+            </tr>
+        </c:forEach>
+
+
         </tbody>
     </table>
 </div>

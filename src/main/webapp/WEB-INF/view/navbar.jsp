@@ -26,7 +26,7 @@
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 fs-5 text-muted">
         <li><a href="${pageContext.request.contextPath}/app/to_home_page"
                class="nav-link px-2 link-primary"><fmt:message key="home"/></a></li>
-        <li><a href="${pageContext.request.contextPath}/app/to_catalog_page"
+        <li><a href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=all"
                class="nav-link px-2 link-dark"><fmt:message key="catalog"/></a></li>
         <li><a href="${pageContext.request.contextPath}/app/to_support_page"
                class="nav-link px-2 link-dark"><fmt:message key="support"/></a></li>

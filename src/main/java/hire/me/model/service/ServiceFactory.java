@@ -26,4 +26,8 @@ public class ServiceFactory {
     public UserService getUserService() {
         return UserService.getInstance();
     }
+
+    public PeriodicalService getPeriodicalService() {
+        return PeriodicalService.getInstance();
+    }
 }
