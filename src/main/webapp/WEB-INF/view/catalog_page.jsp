@@ -17,12 +17,10 @@
         <h4 class="h5 text-muted mt-1 mb-2"><fmt:message key="catalog.our-periodic-catalog"/></h4>
 
 
-
         <form class="col-12 col-lg-4 mb-3 mt-mb-lg-0">
             <input type="search" class="form-control" placeholder="<fmt:message key="catalog.search-by-periodic-name"/>"
                    aria-label="Search" name="search_input">
         </form>
-
 
 
     </div>
@@ -109,17 +107,52 @@
     </table>
 </div>
 <div class="container my-0 fixed-bottom">
+
+
     <nav>
         <ul class="pagination justify-content-center ">
-            <li class="page-item"><a href="#" class="page-link border-primary"><fmt:message
-                    key="pagination.previous"/></a></li>
-            <li class="page-item"><a href="#" class="page-link border-primary">1</a></li>
-            <li class="page-item"><a href="#" class="page-link border-primary">2</a></li>
-            <li class="page-item"><a href="#" class="page-link border-primary">3</a></li>
-            <li class="page-item"><a href="#" class="page-link border-primary"><fmt:message key="pagination.next"/></a>
-            </li>
+
+            <c:if test="${currentPage != 1}">
+                <li class="page-item"><a
+                        href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=${searchInput}&current_page=${currentPage - 1}"
+                        class="page-link border-primary"><fmt:message key="pagination.previous"/></a></li>
+            </c:if>
+            <c:if test="${currentPage == 1}">
+                <li class="page-item"><a
+                        href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=${searchInput}&current_page=${currentPage}"
+                        class="page-link border-secondary text-secondary"><fmt:message key="pagination.previous"/></a></li>
+            </c:if>
+
+            <c:forEach begin="1" end="${nuOfPages}" var="i">
+                <c:choose>
+                    <c:when test="${currentPage eq i}">
+                        <li class="page-item"><a
+                                href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=${searchInput}&current_page=${i}"
+                                class="page-link border-primary bg-primary text-white">${i}</a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item"><a
+                                href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=${searchInput}&current_page=${i}"
+                                class="page-link border-primary">${i}</a></li>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+
+            <c:if test="${currentPage lt nuOfPages}">
+            <li class="page-item"><a
+                    href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=${searchInput}&current_page=${currentPage + 1}"
+                    class="page-link border-primary"><fmt:message key="pagination.next"/></a></li>
+                </c:if>
+            <c:if test="${currentPage == nuOfPages}">
+                <li class="page-item"><a
+                        href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=${searchInput}&current_page=${currentPage}"
+                        class="page-link border-secondary text-secondary"><fmt:message key="pagination.next"/></a></li>
+            </c:if>
+
+
         </ul>
     </nav>
+
     <footer>
         <div class="text-center text-white p-3 bg-primary">
             <fmt:message key="footer.copyright"/>

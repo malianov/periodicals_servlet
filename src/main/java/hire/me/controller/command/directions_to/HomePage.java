@@ -15,6 +15,7 @@ public class HomePage implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("to home page");
+        request.getSession().setAttribute("page", "home");
         return "/WEB-INF/view/home_page.jsp";
     }
 }

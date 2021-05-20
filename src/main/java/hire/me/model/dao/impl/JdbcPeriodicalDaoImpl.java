@@ -82,7 +82,7 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
 //        }
 //    }
 
-    public PeriodicalService.PaginationResult searchPeriodicalsByPagination(int lowerBound, int upperBound, String searchKey) {
+    public PeriodicalService.PaginationResult searchPeriodicalsWithPagination(int lowerBound, int upperBound, String searchKey) {
         logger.info("Search periodical by pagination with lowerBound = {}, upperBound = {} and searchKey = {}", lowerBound, upperBound, searchKey);
 
         PeriodicalService.PaginationResult paginationResult = new PeriodicalService.PaginationResult();
@@ -112,7 +112,7 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
 
             if (rs.next()) {
                 logger.info("We have smth inside rs_2");
-                paginationResult.setNoOfRows(rs.getInt(1));
+                paginationResult.setNuOfRows(rs.getInt(1));
             }
             rs.close();
 

@@ -24,55 +24,40 @@ public class CatalogPage implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("to catalog page");
 
-        final int ROWS_PER_PAGE = 19;
+        final int ROWS_PER_PAGE = 5;
         int currentPage = 1;
 
         if(request.getParameter("current_page") != null) {
             currentPage = Integer.parseInt(request.getParameter("current_page"));
         }
 
-        performPagination(request, currentPage, ROWS_PER_PAGE);
+        String searchInput = "%";
 
-        return "/WEB-INF/view/catalog_page.jsp";
+        if(request.getParameter("search_input") != null) {
+            searchInput = String.valueOf(request.getParameter("search_input"));
 
-//        String path = request.getServletContext().getContextPath();
-//        logger.trace("Path is {}", path);
-//        return "redirect@" + path + "/app/to_catalog_page";
-    }
+        }
 
-    private void performPagination(HttpServletRequest request, int currentPage, int rowsPerPage) {
-
-//        String searchInput = String.valueOf(request.getSession().getAttribute("search_input"));
-        String searchInput = String.valueOf(request.getParameter("search_input"));
-        logger.info("==================================Search input - {}", searchInput);
-
-        int lowerBound = calcLowerBound(currentPage, rowsPerPage);
-        logger.info("lowerBound = {}", lowerBound);
-
-
+        int lowerBound = (currentPage - 1) * ROWS_PER_PAGE;
 
         PeriodicalService.PaginationResult paginationResult =
-                periodicalService.getSearchPeriodicalByPagination(lowerBound, rowsPerPage, searchInput);
+                periodicalService.getSearchPeriodicalWithPagination(lowerBound, ROWS_PER_PAGE, searchInput);
 
         List<Periodical> periodicals = paginationResult.getPeriodicalList();
-        logger.trace("periodicals = {}", periodicals);
 
-        int nuOfRows = paginationResult.getNoOfRows();
-        logger.trace("nuOfRows = {}", nuOfRows);
+        int nuOfRows = paginationResult.getNuOfRows();
+        logger.trace("======================= nuOfRows - {}", nuOfRows);
 
-        int noOfPages = calcNoOfPages(nuOfRows, rowsPerPage);
-        logger.trace("noOfPages = {}", noOfPages);
+        int nuOfPages = (int) Math.ceil(nuOfRows * 1.0 / ROWS_PER_PAGE);
+
+        logger.trace("======================= nuOfPages - {}", nuOfPages);
 
         request.getSession().setAttribute("periodicals", periodicals);
-        request.getSession().setAttribute("noOfPages", noOfPages);
+        request.getSession().setAttribute("nuOfPages", nuOfPages);
         request.getSession().setAttribute("currentPage", currentPage);
-    }
+        request.getSession().setAttribute("searchInput", searchInput);
+        request.getSession().setAttribute("page", "catalog");
 
-    private int calcLowerBound(int currentPage, int rowsPerPage) {
-        return (currentPage - 1) * rowsPerPage;
-    }
-
-    private int calcNoOfPages(int noOfRows, int rowsPerPage) {
-        return (int) Math.ceil(noOfRows * 1.0 / rowsPerPage);
+        return "/WEB-INF/view/catalog_page.jsp";
     }
 }

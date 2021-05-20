@@ -24,12 +24,32 @@
         </div>
     </nav>
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 fs-5 text-muted">
-        <li><a href="${pageContext.request.contextPath}/app/to_home_page"
-               class="nav-link px-2 link-primary"><fmt:message key="home"/></a></li>
-        <li><a href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=all"
-               class="nav-link px-2 link-dark"><fmt:message key="catalog"/></a></li>
-        <li><a href="${pageContext.request.contextPath}/app/to_support_page"
-               class="nav-link px-2 link-dark"><fmt:message key="support"/></a></li>
+
+        <c:choose>
+            <c:when test="${page eq 'home'}">
+                <li><a href="${pageContext.request.contextPath}/app/to_home_page" class="nav-link px-2 link-primary"><fmt:message key="home"/></a></li>
+            </c:when>
+            <c:otherwise>
+                <li><a href="${pageContext.request.contextPath}/app/to_home_page" class="nav-link px-2 link-dark"><fmt:message key="home"/></a></li>
+            </c:otherwise>
+        </c:choose>
+        <c:choose>
+            <c:when test="${page eq 'catalog'}">
+                <li><a href="${pageContext.request.contextPath}/app/to_catalog_page?current_page=1" class="nav-link px-2 link-primary"><fmt:message key="catalog"/></a></li>
+            </c:when>
+            <c:otherwise>
+                <li><a href="${pageContext.request.contextPath}/app/to_catalog_page?current_page=1" class="nav-link px-2 link-dark"><fmt:message key="catalog"/></a></li>
+            </c:otherwise>
+        </c:choose>
+        <c:choose>
+            <c:when test="${page eq 'support'}">
+                <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-primary"><fmt:message key="support"/></a></li>
+            </c:when>
+            <c:otherwise>
+                <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-dark"><fmt:message key="support"/></a></li>
+            </c:otherwise>
+        </c:choose>
+
     </ul>
     <div class="col-md-3 text-end">
         <button class="btn btn-primary me-3" type="button" id="dropdownMenuBtn1" data-bs-toggle="dropdown">
@@ -49,9 +69,9 @@
             </c:choose>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuBtn1">
-            <li><a class="dropdown-item" href="?language=en"><fmt:message key="language.english"/></a></li>
-            <li><a class="dropdown-item" href="?language=ua"><fmt:message key="language.ukrainian"/></a></li>
-            <li><a class="dropdown-item" href="?language=ru"><fmt:message key="language.russian"/></a></li>
+            <li><a class="dropdown-item" href="?language=en&search_input=${searchInput}&current_page=${currentPage}"><fmt:message key="language.english"/></a></li>
+            <li><a class="dropdown-item" href="?language=ua&search_input=${searchInput}&current_page=${currentPage}"><fmt:message key="language.ukrainian"/></a></li>
+            <li><a class="dropdown-item" href="?language=ru&search_input=${searchInput}&current_page=${currentPage}"><fmt:message key="language.russian"/></a></li>
         </ul>
 
         <c:choose>
