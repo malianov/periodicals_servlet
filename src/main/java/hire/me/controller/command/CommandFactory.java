@@ -1,5 +1,6 @@
 package hire.me.controller.command;
 
+import hire.me.controller.command.account.BlockUnblockCommand;
 import hire.me.controller.command.account.LogOutCommand;
 import hire.me.controller.command.account.LoginCommand;
 import hire.me.controller.command.account.RegistrationCommand;
@@ -25,7 +26,9 @@ public class CommandFactory {
         commands.put(TO_HOME_PAGE.getPath(), new HomePage());
         commands.put(TO_CATALOG.getPath(), new CatalogPage());
         commands.put(TO_SUPPORT_PAGE.getPath(), new SupportPage());
+        commands.put(TO_SUBSCRIBERS_PAGE.getPath(), new SubscribersPage());
         commands.put(LOGOUT.getPath(),new LogOutCommand());
+        commands.put(BLOCK_UNBLOCK.getPath(), new BlockUnblockCommand());
     }
 
     public static Command getCommand(String url) throws NotFoundCommandException {

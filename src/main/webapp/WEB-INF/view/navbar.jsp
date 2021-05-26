@@ -41,14 +41,46 @@
                 <li><a href="${pageContext.request.contextPath}/app/to_catalog_page?current_page=1" class="nav-link px-2 link-dark"><fmt:message key="catalog"/></a></li>
             </c:otherwise>
         </c:choose>
+
+
+
         <c:choose>
+            <c:when test="${sessionScope.role eq 'ADMIN'}">
+                <c:choose>
+                    <c:when test="${page eq 'subscribers'}">
+                        <li><a href="${pageContext.request.contextPath}/app/to_subscribers_page?current_page=1" class="nav-link px-2 link-primary"><fmt:message key="subscribers"/></a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li><a href="${pageContext.request.contextPath}/app/to_subscribers_page?current_page=1" class="nav-link px-2 link-dark"><fmt:message key="subscribers"/></a></li>
+                    </c:otherwise>
+                </c:choose>
+            </c:when>
+            <c:otherwise>
+                <c:choose>
+                    <c:when test="${page eq 'support'}">
+                        <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-primary"><fmt:message key="support"/></a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-dark"><fmt:message key="support"/></a></li>
+                    </c:otherwise>
+                </c:choose>
+            </c:otherwise>
+        </c:choose>
+
+
+
+<%--        <c:choose>
             <c:when test="${page eq 'support'}">
                 <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-primary"><fmt:message key="support"/></a></li>
             </c:when>
             <c:otherwise>
                 <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-dark"><fmt:message key="support"/></a></li>
             </c:otherwise>
-        </c:choose>
+        </c:choose>--%>
+
+
+
+
 
     </ul>
     <div class="col-md-3 text-end">

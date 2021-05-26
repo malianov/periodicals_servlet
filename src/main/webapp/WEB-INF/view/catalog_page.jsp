@@ -21,9 +21,8 @@
             <input type="search" class="form-control" placeholder="<fmt:message key="catalog.search-by-periodic-name"/>"
                    aria-label="Search" name="search_input">
         </form>
-
-
     </div>
+
     <table class="table table-hover table-bordered border-primary border border-2 text-muted">
         <thead class="border-primary border border-2 table-primary">
         <tr>
@@ -37,19 +36,44 @@
                     <div class="dropdown-menu">
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" value="option1">
-                            <label class="form-check-label">healthy</label>
+                            <label class="form-check-label"><fmt:message key="catalog.auto-moto-yachts"/></label>
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" value="option1">
-                            <label class="form-check-label">healthy1</label>
+                            <label class="form-check-label"><fmt:message
+                                    key="catalog.for-children-and-parents"/></label>
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" value="option1">
-                            <label class="form-check-label">healthy2</label>
+                            <label class="form-check-label"><fmt:message key="catalog.leisure-relaxation"/></label>
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" value="option1">
-                            <label class="form-check-label">healthy3</label>
+                            <label class="form-check-label"><fmt:message key="catalog.women"/></label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label"><fmt:message key="catalog.film-and-television"/></label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label"><fmt:message key="catalog.economy-business-money"/></label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label"><fmt:message key="catalog.cooking"/></label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label"><fmt:message key="catalog.medicine-health"/></label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label"><fmt:message key="catalog.society-politics"/></label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="checkbox" value="option1">
+                            <label class="form-check-label"><fmt:message key="catalog.sport"/></label>
                         </div>
                         <div class="btn-menu d-grid gap-2 pe-2">
                             <button type="button" class="btn btn-primary"><fmt:message key="catalog.apply"/></button>
@@ -64,19 +88,15 @@
                     <div class="dropdown-menu">
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" value="option1">
-                            <label class="form-check-label">magazines</label>
+                            <label class="form-check-label"><fmt:message key="catalog.magazine"/></label>
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" value="option1">
-                            <label class="form-check-label">newspapers</label>
+                            <label class="form-check-label"><fmt:message key="catalog.newspaper"/></label>
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" value="option1">
-                            <label class="form-check-label">healthy2</label>
-                        </div>
-                        <div class="form-check form-check">
-                            <input class="form-check-input" type="checkbox" value="option1">
-                            <label class="form-check-label">healthy3</label>
+                            <label class="form-check-label"><fmt:message key="catalog.electronic"/></label>
                         </div>
                         <div class="btn-menu d-grid gap-2 pe-2">
                             <button type="button" class="btn btn-primary"><fmt:message key="catalog.apply"/></button>
@@ -84,7 +104,7 @@
                     </div>
                 </div>
             </th>
-            <th scope="col"><fmt:message key="catalog.date-added"/></th>
+
             <th scope="col"><a href=# class="text-decoration-none"><fmt:message key="catalog.price"/></a></th>
         </tr>
         </thead>
@@ -92,13 +112,22 @@
 
 
         <c:forEach items="${periodicals}" var="all_periodics_list">
-            <tr>
-                <td><c:out value="${all_periodics_list.getTitle()}"/></td>
-                <td><c:out value="${all_periodics_list.getTheme()}"/></td>
-                <td><c:out value="${all_periodics_list.getPeriodicalType()}"/></td>
-                <td><c:out value="${all_periodics_list.getPricePerItem()}"/></td>
-                <td><c:out value="${all_periodics_list.getTitle()}"/></td>
-                <td><c:out value="${all_periodics_list.getTitle()}"/></td>
+
+            <c:choose>
+                <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
+                    <tr class="table-active">
+                </c:when>
+                <c:otherwise>
+                    <tr onclick="input" data-toggle="modal" href="#the name for my modal windows" >
+                </c:otherwise>
+            </c:choose>
+
+            <td><c:out value="${all_periodics_list.getId()}"/></td>
+            <td><c:out value="${all_periodics_list.getTitle()}"/></td>
+            <td><c:out value="${all_periodics_list.getTheme()}"/></td>
+            <td><c:out value="${all_periodics_list.getPeriodicalType()}"/></td>
+            <td><c:out value="${all_periodics_list.getPricePerItem()}"/></td>
+
             </tr>
         </c:forEach>
 
@@ -120,7 +149,8 @@
             <c:if test="${currentPage == 1}">
                 <li class="page-item"><a
                         href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=${searchInput}&current_page=${currentPage}"
-                        class="page-link border-secondary text-secondary"><fmt:message key="pagination.previous"/></a></li>
+                        class="page-link border-secondary text-secondary"><fmt:message key="pagination.previous"/></a>
+                </li>
             </c:if>
 
             <c:forEach begin="1" end="${nuOfPages}" var="i">
@@ -139,10 +169,10 @@
             </c:forEach>
 
             <c:if test="${currentPage lt nuOfPages}">
-            <li class="page-item"><a
-                    href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=${searchInput}&current_page=${currentPage + 1}"
-                    class="page-link border-primary"><fmt:message key="pagination.next"/></a></li>
-                </c:if>
+                <li class="page-item"><a
+                        href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=${searchInput}&current_page=${currentPage + 1}"
+                        class="page-link border-primary"><fmt:message key="pagination.next"/></a></li>
+            </c:if>
             <c:if test="${currentPage == nuOfPages}">
                 <li class="page-item"><a
                         href="${pageContext.request.contextPath}/app/to_catalog_page?search_input=${searchInput}&current_page=${currentPage}"

@@ -1,7 +1,5 @@
 package hire.me.controller.filters;
 
-import hire.me.model.entity.account.Account;
-import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,11 +48,13 @@ public class AccessFilter implements Filter {
 		allowedPages.put(UserRole.ADMIN,
 				Stream.of("registration",
 						"home",
+						"to_home_page",
 						"logout",
 						"administratorAccount",
 						"",
-						"subscribers",
+						"to_subscribers_page",
 						"to_catalog_page",
+						"to_block_unblock_user",
 						"to_support_page")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 

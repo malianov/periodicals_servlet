@@ -11,13 +11,13 @@ public class JdbcDaoFactory extends DaoFactory {
 
     @Override
     public UserDao createUserDao() {
-        logger.trace("");
+        logger.trace("User DAO created");
         return JdbcUserDaoImpl.getInstance();
     }
 
     @Override
     public PeriodicalDao createPeriodicalDao() {
-        logger.trace("");
+        logger.trace("Periodical DAO created");
         return JdbcPeriodicalDaoImpl.getInstance();
     }
 }

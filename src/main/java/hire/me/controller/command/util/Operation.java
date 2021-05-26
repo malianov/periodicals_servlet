@@ -11,7 +11,9 @@ public enum Operation {
     TO_HOME_PAGE("to_home_page"),
     TO_SUPPORT_PAGE("to_support_page"),
     TO_CATALOG("to_catalog_page"),
-    LOGOUT("logout");
+    LOGOUT("logout"),
+    TO_SUBSCRIBERS_PAGE("to_subscribers_page"),
+    BLOCK_UNBLOCK("to_block_unblock_user");
 
     private static final Logger logger = LogManager.getLogger(Operation.class);
 

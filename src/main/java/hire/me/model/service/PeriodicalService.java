@@ -2,13 +2,10 @@ package hire.me.model.service;
 
 import hire.me.model.dao.daoFactory.DaoFactory;
 import hire.me.model.dao.daoFactory.PeriodicalDao;
-import hire.me.model.dao.daoFactory.UserDao;
-import hire.me.model.entity.account.User;
 import hire.me.model.entity.periodical.Periodical;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
 import java.util.List;
 
 public class PeriodicalService {

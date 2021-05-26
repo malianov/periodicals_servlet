@@ -31,3 +31,13 @@ a{
 .size-as-row{
     padding: 0rem;
 }
+
+.internal-table-rows {
+    border-color: #4285f4;
+}
+
+.zero-five-padding {
+    padding: 0 0.5rem;
+}
+
+

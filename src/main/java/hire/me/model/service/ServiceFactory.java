@@ -30,4 +30,8 @@ public class ServiceFactory {
     public PeriodicalService getPeriodicalService() {
         return PeriodicalService.getInstance();
     }
+
+    public UserService getUsersService() {
+        return UserService.getInstance();
+    }
 }

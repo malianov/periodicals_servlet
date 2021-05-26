@@ -4,6 +4,8 @@ import hire.me.model.dao.daoFactory.DaoFactory;
 import hire.me.model.dao.daoFactory.UserDao;
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
+import hire.me.model.entity.account.UserStatus;
+import hire.me.model.entity.periodical.Periodical;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,6 +57,8 @@ public class UserService {
                 .orElse(null);
     }
 
+
+
     public User getUserByLogin(String login) {
         List<User> users = getAllUsers();
 
@@ -93,5 +97,36 @@ public class UserService {
         logger.info("Check the role by login");
         UserDao dao = daoFactory.createUserDao();
         return dao.getRoleByLogin(login);
+    }
+
+    public void changeUserStatus(String login, String status) {
+        UserDao dao = daoFactory.createUserDao();
+        dao.changeUserStatus(login, status);
+    }
+
+    public UserService.PaginationResult getSearchSubscribersWithPagination(int lowerBound, int upperBound, String searchKey) {
+        return daoFactory.createUserDao().searchSubscribersWithPagination(lowerBound, upperBound, searchKey);
+    }
+
+    public static class PaginationResult {
+        private int nuOfRows;
+        private List<User> subscriberList;
+
+        public int getNuOfRows() {
+            return nuOfRows;
+        }
+
+        public void setNuOfRows(int nuOfRows) {
+            logger.trace("setNuOfRows request, nuOfRows = {}", nuOfRows);
+            this.nuOfRows = nuOfRows;
+        }
+
+        public List<User> getSubscribersList() {
+            return subscriberList;
+        }
+
+        public void setSubscribersList(List<User> resultList) {
+            this.subscriberList = resultList;
+        }
     }
 }

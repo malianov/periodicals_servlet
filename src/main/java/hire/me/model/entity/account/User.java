@@ -6,11 +6,22 @@ import org.apache.logging.log4j.Logger;
 public class User {
     private static final Logger logger = LogManager.getLogger(User.class);
 
+    Integer id;
     String login;
     String password;
     UserStatus status;
     Person person;
     UserRole userRole;
+
+    public User(Integer id, String login, String password, UserStatus status, Person person, UserRole userRole) {
+        logger.trace("constructor({}, {},{},{},{}",id, login, password, status, person, userRole);
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.status = status;
+        this.person = person;
+        this.userRole = userRole;
+    }
 
     public User(String login, String password, UserStatus status, Person person, UserRole userRole) {
         logger.trace("constructor({},{},{},{}",login, password, status, person, userRole);
@@ -23,6 +34,14 @@ public class User {
 
     public User() {
         logger.trace("constructor(empty)");
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getLogin() {

@@ -6,4 +6,6 @@
 <fmt:setLocale value="${language}"/>
 <fmt:setBundle basename="messages"/>
 
+<c:set var="page" value="home" scope="session"/>
+
 <jsp:forward page="WEB-INF/view/home_page.jsp"/>

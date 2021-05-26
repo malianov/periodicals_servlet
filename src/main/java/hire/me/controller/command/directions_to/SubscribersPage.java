@@ -1,28 +1,29 @@
 package hire.me.controller.command.directions_to;
 
 import hire.me.controller.command.Command;
+import hire.me.model.entity.account.User;
 import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.service.PeriodicalService;
 import hire.me.model.service.ServiceFactory;
+import hire.me.model.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-public class CatalogPage implements Command {
-    private static final Logger logger = LogManager.getLogger(CatalogPage.class);
+public class SubscribersPage implements Command {
+    private static final Logger logger = LogManager.getLogger(SubscribersPage.class);
 
     ServiceFactory serviceFactory = ServiceFactory.getInstance();
-    PeriodicalService periodicalService = serviceFactory.getPeriodicalService();
+    UserService userService = serviceFactory.getUserService();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.trace("to catalog page");
+        logger.trace("to subscribers page");
 
         final int ROWS_PER_PAGE = 14;
         int currentPage = 1;
@@ -40,10 +41,10 @@ public class CatalogPage implements Command {
 
         int lowerBound = (currentPage - 1) * ROWS_PER_PAGE;
 
-        PeriodicalService.PaginationResult paginationResult =
-                periodicalService.getSearchPeriodicalWithPagination(lowerBound, ROWS_PER_PAGE, searchInput);
+        UserService.PaginationResult paginationResult =
+                userService.getSearchSubscribersWithPagination(lowerBound, ROWS_PER_PAGE, searchInput);
 
-        List<Periodical> periodicals = paginationResult.getPeriodicalList();
+        List<User> subscribers = paginationResult.getSubscribersList();
 
         int nuOfRows = paginationResult.getNuOfRows();
         logger.trace("======================= nuOfRows - {}", nuOfRows);
@@ -52,12 +53,12 @@ public class CatalogPage implements Command {
 
         logger.trace("======================= nuOfPages - {}", nuOfPages);
 
-        request.getSession().setAttribute("periodicals", periodicals);
+        request.getSession().setAttribute("subscribers", subscribers);
         request.getSession().setAttribute("nuOfPages", nuOfPages);
         request.getSession().setAttribute("currentPage", currentPage);
         request.getSession().setAttribute("searchInput", searchInput);
-        request.getSession().setAttribute("page", "catalog");
+        request.getSession().setAttribute("page", "subscribers");
 
-        return "/WEB-INF/view/catalog_page.jsp";
+        return "/WEB-INF/view/subscribers_page.jsp";
     }
 }

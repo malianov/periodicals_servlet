@@ -6,7 +6,15 @@ import org.apache.logging.log4j.Logger;
 public class Periodical {
     private static final Logger logger = LogManager.getLogger(Periodical.class);
 
-    private int number;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
     private String title;
     private String description;
     private long pricePerItem;
@@ -15,6 +23,16 @@ public class Periodical {
     private PeriodicalType periodicalType;
 
     public Periodical(String title, String description, long pricePerItem, String theme, PeriodicalStatus periodicalStatus, PeriodicalType periodicalType) {
+        this.title = title;
+        this.description = description;
+        this.pricePerItem = pricePerItem;
+        this.theme = theme;
+        this.periodicalStatus = periodicalStatus;
+        this.periodicalType = periodicalType;
+    }
+
+    public Periodical(Integer id, String title, String description, long pricePerItem, String theme, PeriodicalStatus periodicalStatus, PeriodicalType periodicalType) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.pricePerItem = pricePerItem;

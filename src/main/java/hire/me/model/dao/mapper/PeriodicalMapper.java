@@ -13,6 +13,7 @@ import java.util.Map;
 public class PeriodicalMapper implements ObjectMapper<Periodical> {
     private static final Logger logger = LogManager.getLogger(PeriodicalMapper.class);
 
+    private static final String ID = "id";
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
     private static final String PRICE_PER_ITEM = "price_per_item";
@@ -25,6 +26,7 @@ public class PeriodicalMapper implements ObjectMapper<Periodical> {
 
         Periodical periodical = new Periodical();
         logger.trace("Create new periodical");
+        periodical.setId(rs.getInt(ID));
         periodical.setTitle(rs.getString(TITLE));
         periodical.setDescription(rs.getString(DESCRIPTION));
         periodical.setPricePerItem(rs.getLong(PRICE_PER_ITEM));

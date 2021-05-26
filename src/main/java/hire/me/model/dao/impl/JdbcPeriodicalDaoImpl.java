@@ -59,29 +59,6 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
         }
     }
 
-//    public List<Periodical> findPeriodicalByPartOfName(String partOfName) {
-//        logger.info("Lets find periodical by name - {}", partOfName);
-//        Map<Integer, Periodical> periodicalItems = new HashMap<>();
-//
-//        String query = "SELECT * FROM periodical WHERE title LIKE ? ESCAPE '!';";
-//
-//        try (Statement st = connection.createStatement()) {
-//            ResultSet rs = st.executeQuery(query);
-//            PeriodicalMapper periodicalMapper = new PeriodicalMapper();
-//
-//            while (rs.next()) {
-//                logger.info("Trying to get smth from rs");
-//                Periodical periodical = periodicalMapper.extractFromResultSet(rs);
-//            }
-//
-//            return new ArrayList<>(periodicalItems.values());
-//        } catch (SQLException e) {
-//            logger.trace("Catched SQLException {}", e);
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
     public PeriodicalService.PaginationResult searchPeriodicalsWithPagination(int lowerBound, int upperBound, String searchKey) {
         logger.info("Search periodical by pagination with lowerBound = {}, upperBound = {} and searchKey = {}", lowerBound, upperBound, searchKey);
 
@@ -90,7 +67,7 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
         List<Periodical> periodicals = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement periodicalsPS = connection.prepareStatement("SELECT periodical.title, periodical.description, periodical.price_per_item, types.type, periodical.id_theme, periodic_status.status FROM periodical INNER JOIN periodic_status ON periodical.id_status = periodic_status.id INNER JOIN types ON periodical.id_type = types.id WHERE periodical.title LIKE ? LIMIT ?, ?;");
+             PreparedStatement periodicalsPS = connection.prepareStatement("SELECT periodical.id, periodical.title, periodical.description, periodical.price_per_item, types.type, periodical.id_theme, periodic_status.status FROM periodical INNER JOIN periodic_status ON periodical.id_status = periodic_status.id INNER JOIN types ON periodical.id_type = types.id WHERE periodical.title LIKE ? ORDER BY periodical.id LIMIT ?, ?;");
              PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) FROM periodical WHERE title LIKE ?;")) {
 
             logger.trace("try to get queryList");

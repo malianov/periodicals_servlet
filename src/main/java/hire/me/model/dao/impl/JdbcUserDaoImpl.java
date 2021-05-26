@@ -1,8 +1,15 @@
 package hire.me.model.dao.impl;
 
+import hire.me.connection.ConnectionPool;
 import hire.me.model.dao.daoFactory.UserDao;
+import hire.me.model.dao.mapper.PeriodicalMapper;
+import hire.me.model.dao.mapper.UserMapper;
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
+import hire.me.model.entity.account.UserStatus;
+import hire.me.model.entity.periodical.Periodical;
+import hire.me.model.service.PeriodicalService;
+import hire.me.model.service.UserService;
 import hire.me.utility.Password;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static hire.me.connection.ConnectionPool.getConnection;
@@ -192,4 +200,93 @@ public class JdbcUserDaoImpl implements UserDao {
         }
         return role;
     }
+
+    public UserService.PaginationResult searchSubscribersWithPagination(int lowerBound, int upperBound, String searchKey) {
+        logger.info("Search users by pagination with lowerBound = {}, upperBound = {} and searchKey = {}", lowerBound, upperBound, searchKey);
+
+        UserService.PaginationResult paginationResult = new UserService.PaginationResult();
+        UserMapper userMapper = new UserMapper();
+        List<User> subscribers = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement subscribersPS = connection.prepareStatement("SELECT users.id, users.login, users.first_name, users.surname, users.email," +
+                     "users.account_status FROM users WHERE users.user_role='SUBSCRIBER' AND (users.login LIKE ? OR users.first_name LIKE ? OR users.surname LIKE ? OR users.email LIKE ?) LIMIT ?, ?;");
+             PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) " +
+                     "FROM users WHERE users.user_role='SUBSCRIBER' AND (users.login LIKE ? OR users.first_name LIKE ? OR users.surname LIKE ? OR users.email LIKE ?);");) {
+
+            logger.trace("try to get queryList");
+
+            subscribersPS.setString(1, "%" + searchKey + "%");
+            subscribersPS.setString(2, "%" + searchKey + "%");
+            subscribersPS.setString(3, "%" + searchKey + "%");
+            subscribersPS.setString(4, "%" + searchKey + "%");
+            subscribersPS.setInt(5, lowerBound);
+            subscribersPS.setInt(6, upperBound);
+
+            ResultSet rs = subscribersPS.executeQuery();
+            while (rs.next()) {
+                logger.info("We have smth inside rs_1");
+                User subscriber = userMapper.extractFromResultSet(rs);
+                subscribers.add(subscriber);
+            }
+            rs.close();
+
+            countRowsPS.setString(1, "%" + searchKey + "%");
+            countRowsPS.setString(2, "%" + searchKey + "%");
+            countRowsPS.setString(3, "%" + searchKey + "%");
+            countRowsPS.setString(4, "%" + searchKey + "%");
+            rs = countRowsPS.executeQuery();
+
+            if (rs.next()) {
+                logger.info("We have smth inside rs_2");
+                paginationResult.setNuOfRows(rs.getInt(1));
+            }
+            rs.close();
+
+        } catch (SQLException e) {
+            logger.trace("Catched SQLException {}", e);
+            e.printStackTrace();
+        }
+
+        paginationResult.setSubscribersList(new ArrayList<>(subscribers));
+        return paginationResult;
+    }
+
+    @Override
+    public void changeUserStatus(String login, String status) {
+        try (PreparedStatement ps = connection.prepareStatement("UPDATE users SET account_status = (?) WHERE `login` = (?);")) {
+            ps.setString(2, login);
+            ps.setString(1, status.equals("ACTIVE") ? "ACTIVE" : "BLOCKED");
+
+            ps.execute();
+
+        } catch (SQLException e) {
+            logger.trace("Caught SQLException exception", e);
+            e.printStackTrace();
+        }
+    }
+
+
 }
+
+    /*Override
+    public void create(User user) {
+        logger.trace("user => {}", user);
+        try (PreparedStatement ps = connection.prepareStatement("INSERT INTO users " +
+                "(login, first_name, surname, email, password, account_status, user_role) " +
+                "VALUES ((?),(?),(?),(?),(?),(?),(?))")) {
+
+            ps.setString(1, user.getLogin());
+            ps.setString(2, user.getPerson().getName());
+            ps.setString(3, user.getPerson().getSurname());
+            ps.setString(4, user.getPerson().getEmail());
+            ps.setString(5, user.getPassword());
+            ps.setString(6, user.getUserStatus().name());
+            ps.setString(7, UserRole.SUBSCRIBER.name());
+
+            ps.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }*/
