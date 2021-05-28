@@ -41,11 +41,9 @@ private static final Logger logger = LogManager.getLogger(BlockUnblockCommand.cl
         if(newStatus.equals("unblock")) {
             newStatus = UserStatus.ACTIVE.name();
             logger.trace("New status for {} is equal to {}. ",userLogin, newStatus);
-            userService.changeUserStatus(userLogin, newStatus);
         } else if(newStatus.equals("block")) {
             newStatus = UserStatus.BLOCKED.name();
             logger.trace("New status for {} is equal to {}. ",userLogin, newStatus);
-            userService.changeUserStatus(userLogin, newStatus);
         } else {
             // Exception - no suitable value
         }
@@ -59,7 +57,7 @@ private static final Logger logger = LogManager.getLogger(BlockUnblockCommand.cl
             e.printStackTrace();
             return "/WEB-INF/view/subscribers.jsp";
         }
-//        return "/WEB-INF/view/subscribers.jsp";
+
         String path = request.getServletContext().getContextPath();
         return "redirect@" + path + "/app/to_subscribers_page";
     }

@@ -8,4 +8,6 @@ public interface PeriodicalDao extends AbstractDao<Periodical> {
     boolean nameIsAlreadyUsed(final String name);
     PeriodicalService.PaginationResult searchPeriodicalsWithPagination(int lowerBound, int upperBound, String
             searchKey);
+
+    void changePeriodicalStatus(String periodical_id, String newPeriodicStatus);
 }

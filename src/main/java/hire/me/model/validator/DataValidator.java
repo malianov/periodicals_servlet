@@ -16,6 +16,10 @@ public class DataValidator {
         return password != null && Pattern.matches("^([a-zA-Z0-9_.]{1,30})$", password);
     }
 
+    public static boolean validateLogin(String login) {
+        return login != null && Pattern.matches("(^[\\w\\.-_]+)$", login);
+    }
+
     //TODO
     // Add account name, surname and login validation
 }

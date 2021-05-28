@@ -104,21 +104,25 @@
                     </div>
                 </div>
             </th>
-
             <th scope="col"><a href=# class="text-decoration-none"><fmt:message key="catalog.price"/></a></th>
+            <c:choose>
+                <c:when test="${sessionScope.role ne 'GUEST'}">
+                    <th scope="col">Action</th>
+                </c:when>
+            </c:choose>
+
         </tr>
         </thead>
         <tbody>
 
 
         <c:forEach items="${periodicals}" var="all_periodics_list">
-
             <c:choose>
                 <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
                     <tr class="table-active">
                 </c:when>
                 <c:otherwise>
-                    <tr onclick="input" data-toggle="modal" href="#the name for my modal windows" >
+                    <tr>
                 </c:otherwise>
             </c:choose>
 
@@ -128,6 +132,299 @@
             <td><c:out value="${all_periodics_list.getPeriodicalType()}"/></td>
             <td><c:out value="${all_periodics_list.getPricePerItem()}"/></td>
 
+            <c:choose>
+                <c:when test="${sessionScope.role ne 'GUEST'}">
+                    <td>
+                        <c:choose>
+                            <c:when test="${sessionScope.role eq 'ADMIN'}">
+                                <div class="d-flex">
+                                    <button type="button" class="btn btn-outline-primary me-3 btn-sm flex-fill"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalInformation_${all_periodics_list.getId()}">Edit
+                                    </button>
+                                    <c:choose>
+                                        <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
+                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic">
+                                                <input name="periodic_id" type="hidden"
+                                                       value="${all_periodics_list.getId()}">
+                                                <input name="periodic_status" type="hidden" value="make_orderable">
+                                                <button class="btn btn-sm btn-outline-success me-3 btn-sm flex-fill"
+                                                        type="submit">Make orderable
+                                                </button>
+                                            </form>
+                                        </c:when>
+                                        <%--                                        <c:otherwise>--%>
+                                        <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'ORDERABLE'}">
+                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic">
+                                                <input name="periodic_id" type="hidden"
+                                                       value="${all_periodics_list.getId()}">
+                                                <input name="periodic_status" type="hidden" value="make_nonorderable">
+                                                <button class="btn btn-sm btn-outline-danger me-3" type="submit">Make
+                                                    nonorderable
+                                                </button>
+                                            </form>
+                                        </c:when>
+                                        <%--                                        </c:otherwise>--%>
+                                    </c:choose>
+                                </div>
+                                <div class="modal fade" id="modalInformation_${all_periodics_list.getId()}"
+                                     tabindex="-1" role="dialog"
+                                     aria-hidden="true" data-bs-backdrop="static">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content border border-primary border-3">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title fs-5 fw-bold text-center">
+                                                    Periodic information</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="GET"
+                                                      action="${pageContext.request.contextPath}/app/to_edit_periodic">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Title</label>
+                                                        <input type="text" class="form-control btn-outline-primary"
+                                                               name="new_title">
+                                                        <div class="form-text"><c:out
+                                                                value="${all_periodics_list.getTitle()}"/></div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="message-text"
+                                                               class="col-form-label">Descriprion</label>
+                                                        <textarea class="form-control btn-outline-primary"
+                                                                  id="message-text" name="new_description"></textarea>
+                                                        <div class="form-text">"<c:out
+                                                                value="${all_periodics_list.getDescription()}"></c:out></div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Theme</label>
+                                                        <select class="form-select btn-outline-primary"
+                                                                name="new_theme">
+                                                            <option selected></option>
+                                                            <option value="theme_1">One</option>
+                                                            <option value="theme_2">Two</option>
+                                                            <option value="theme_3">Three</option>
+                                                        </select>
+                                                        <div class="form-text"><c:out
+                                                                value="${all_periodics_list.getTheme()}"></c:out></div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Type</label>
+                                                        <select class="form-select btn-outline-primary" name="new_type">
+                                                            <option selected></option>
+                                                            <option value="type_1">Magazine</option>
+                                                            <option value="type_2">Newspaper</option>
+                                                            <option value="type_3">Electronic</option>
+                                                        </select>
+                                                        <div class="form-text">
+                                                            <c:out value="${all_periodics_list.getPeriodicalType()}"></c:out>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Price per item</label>
+                                                        <input type="text" class="form-control btn-outline-primary"
+                                                               name="new_price">
+                                                        <div class="form-text">
+                                                            <c:out value="${all_periodics_list.getPricePerItem()}"></c:out>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-grid gap-2">
+                                                        <button class="btn btn-primary" type="submit">Confirm</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:when>
+                            <c:when test="${sessionScope.role eq 'SUBSCRIBER'}">
+                                <form method="get" action="/app/app/to_order_periodic">
+                                    <input name="periodic_id" type="hidden" value="${all_periodics_list.getId()}">
+                                    <input name="status" type="hidden" value="unblock">
+                                        <%--                                    <button class="btn btn-sm btn-primary" type="submit">Order</button>--%>
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-3"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalOrder">Order
+                                    </button>
+                                </form>
+
+
+                            <div class="container">
+                                <div class="modal fade" id="modalOrder" tabindex="-1" role="dialog" aria-hidden="true"
+                                     data-bs-backdrop="static">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content border border-primary border-3">
+                                            <div class="modal-header">
+                                                <p class="modal-title fs-5 fw-bold text-center">
+                                                    "Кто много читает, тот много знает!"</p>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="mb-3">
+
+                                                        <article class="blog-post">
+                                                            <h2 class="blog-post-title">Purchase Order</h2>
+                                                            <p class="blog-post-meta">May 28, 2021 by <a href="#">Igor</a></p>
+                                                            <hr>
+                                                            <h3 class="fst-italic"><strong>Title</strong></h3>
+                                                            <p>"${all_periodics_list.getTitle()}"</p>
+                                                            <h5 class="fst-italic"><strong>Description</strong></h5>
+                                                            <p>"${all_periodics_list.getDescription()}"</p>
+                                                            <h5 class="fst-italic"><strong>Price per item</strong></h5>
+                                                            <p>Krosswords are very popular for everyone.</p>
+
+                                                            <h5 class="fst-italic"><strong>Months of subscription</strong></h5>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                                       value="option1" disabled>
+                                                                <label class="form-check-label" for="inlineCheckbox1">Jan</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                                                                       value="option2" disabled>
+                                                                <label class="form-check-label" for="inlineCheckbox2">Feb</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                                                                       value="option3" disabled>
+                                                                <label class="form-check-label" for="inlineCheckbox3">Mar</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                                       value="option1" disabled>
+                                                                <label class="form-check-label" for="inlineCheckbox1">Apr</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                                                                       value="option2" disabled>
+                                                                <label class="form-check-label" for="inlineCheckbox2">May</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                                                                       value="option3" disabled>
+                                                                <label class="form-check-label" for="inlineCheckbox3">Jun</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                                       value="option1">
+                                                                <label class="form-check-label" for="inlineCheckbox1">Jul</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                                                                       value="option2">
+                                                                <label class="form-check-label" for="inlineCheckbox2">Aug</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                                                                       value="option3">
+                                                                <label class="form-check-label" for="inlineCheckbox3">Sep</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                                       value="option1">
+                                                                <label class="form-check-label" for="inlineCheckbox1">Oct</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                                                                       value="option2">
+                                                                <label class="form-check-label" for="inlineCheckbox2">Nov</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                                                                       value="option3">
+                                                                <label class="form-check-label" for="inlineCheckbox3">Dec</label>
+                                                            </div>
+                                                        </article>
+                                                        <hr>
+                                                        <div class="d-grid gap-2">
+                                                            <button class="btn btn-primary" type="button">Confirm order</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+
+
+
+                                                <!-- <p>Name: Igor</p>
+                                                <p>Surname: Malianov</p>
+                                                <p>Email: ma_igor@ukr.net</p>
+                                                <p>Registered: 22.05.2021</p>
+                                                <p>Status: Active</p>
+                                                <p>Personal account: 256 UAH</p> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="modalSignUp" tabindex="-1" role="dialog" aria-labelledby="modalHeaderFooterTitle"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalHeaderFooterTitle">Edit subscriber information</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>You are going to change the information for the following subscriber:_______</p>
+                                                <form class="form-floating" method="GET" action="/app/to_registration_page">
+                                                    < <!-- <div class="form-floating row mb-3">
+                                <label class="col-md-2 col-form-label">login</label>
+                                <div class="col-md-10">
+                                    <input name="login" type="text" autofocus type="text" class="form-control"
+                                        id="login-input">
+                                    <label for="login-input">His login information</label>
+                                </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-md-2 col-form-label">name</label>
+                        <div class="col-md-10">
+                            <input name="name" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-md-2 col-form-label">surname</label>
+                        <div class="col-md-10">
+                            <input name="surname" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-md-2 col-form-label">email</label>
+                        <div class="col-md-10">
+                            <input name="email" type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">register</button>
+                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">cancel</button>
+                    </div> -->
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+                            </c:when>
+
+
+
+                            <%--                            <c:otherwise>--%>
+                            <%--                                <form method="get" action="/app/app/to_order_periodic">--%>
+                            <%--                                    <input name="user_login" type="hidden" value="${all_periodics_list.getId()}">--%>
+                            <%--                                    <input name="status" type="hidden" value="unblock">--%>
+                            <%--                                    <button class="btn btn-sm btn-primary" type="submit">Order</button>--%>
+                            <%--                                </form>--%>
+                            <%--                            </c:otherwise>--%>
+                        </c:choose>
+                    </td>
+                </c:when>
+            </c:choose>
             </tr>
         </c:forEach>
 

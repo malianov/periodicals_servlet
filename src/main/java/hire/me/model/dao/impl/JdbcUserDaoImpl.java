@@ -14,6 +14,7 @@ import hire.me.utility.Password;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
@@ -49,8 +50,8 @@ public class JdbcUserDaoImpl implements UserDao {
     public void create(User user) {
         logger.trace("user => {}", user);
         try (PreparedStatement ps = connection.prepareStatement("INSERT INTO users " +
-                "(login, first_name, surname, email, password, account_status, user_role) " +
-                "VALUES ((?),(?),(?),(?),(?),(?),(?))")) {
+                "(login, first_name, surname, email, password, account_status, user_role, personal_account) " +
+                "VALUES ((?),(?),(?),(?),(?),(?),(?),(?))")) {
 
             ps.setString(1, user.getLogin());
             ps.setString(2, user.getPerson().getName());
@@ -59,6 +60,7 @@ public class JdbcUserDaoImpl implements UserDao {
             ps.setString(5, user.getPassword());
             ps.setString(6, user.getUserStatus().name());
             ps.setString(7, UserRole.SUBSCRIBER.name());
+            ps.setString(8, String.valueOf(user.getPersonalAccount()));
 
             ps.execute();
 

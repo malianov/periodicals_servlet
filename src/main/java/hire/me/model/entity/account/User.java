@@ -3,6 +3,8 @@ package hire.me.model.entity.account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
+
 public class User {
     private static final Logger logger = LogManager.getLogger(User.class);
 
@@ -12,24 +14,27 @@ public class User {
     UserStatus status;
     Person person;
     UserRole userRole;
+    Integer personalAccount;
 
-    public User(Integer id, String login, String password, UserStatus status, Person person, UserRole userRole) {
-        logger.trace("constructor({}, {},{},{},{}",id, login, password, status, person, userRole);
+    public User(Integer id, String login, String password, UserStatus status, Person person, UserRole userRole, Integer personalAccount) {
+        logger.trace("constructor({}, {},{},{},{}",id, login, password, status, person, userRole, personalAccount);
         this.id = id;
         this.login = login;
         this.password = password;
         this.status = status;
         this.person = person;
         this.userRole = userRole;
+        this.personalAccount = personalAccount;
     }
 
-    public User(String login, String password, UserStatus status, Person person, UserRole userRole) {
-        logger.trace("constructor({},{},{},{}",login, password, status, person, userRole);
+    public User(String login, String password, UserStatus status, Person person, UserRole userRole, Integer personalAccount) {
+        logger.trace("constructor({},{},{},{}",login, password, status, person, userRole, personalAccount);
         this.login = login;
         this.password = password;
         this.status = status;
         this.person = person;
         this.userRole = userRole;
+        this.personalAccount = personalAccount;
     }
 
     public User() {
@@ -82,6 +87,15 @@ public class User {
 
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
+    }
+
+
+    public Integer getPersonalAccount() {
+        return personalAccount;
+    }
+
+    public void setPersonalAccount(Integer personalAccount) {
+        this.personalAccount = personalAccount;
     }
 
     @Override

@@ -15,9 +15,9 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Locale;
 import java.util.Map;
 
 public class RegistrationCommand implements Command, Password {
@@ -32,13 +32,14 @@ public class RegistrationCommand implements Command, Password {
     }
 
     public RegistrationCommand() {
+        logger.trace("Registration command");
         this.serviceFactory = ServiceFactory.getInstance();
         this.userService = serviceFactory.getUserService();
     }
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
+        logger.trace("execute");
         final String password = req.getParameter("password");
         final String confirmedPassword = req.getParameter("confirmedPassword");
 
@@ -58,17 +59,27 @@ public class RegistrationCommand implements Command, Password {
                 "name", req.getParameter("name"),
                 "surname", req.getParameter("surname"),
                 "email", req.getParameter("email"),
-                "password",  hashedPassword,
-                "role", req.getParameter("role"));
+                "password", hashedPassword,
+                "role", req.getParameter("role"),
+                "personal_account", "0");
+
+
+        if (!DataValidator.validateLogin(registrationData.get("login"))) {
+            logger.trace("validate login");
+            return "/WEB-INF/common/registration.jsp?invalidLogin=true";
+        }
 
         if (!DataValidator.validateEmail(registrationData.get("email"))) {
+            logger.trace("validate email");
             return "/WEB-INF/common/registration.jsp?invalidEmail=true";
         }
 
         if (!DataValidator.validatePassword(password)) {
+            logger.trace("validate password");
             return "/WEB-INF/common/registration.jsp?invalidPassword=true";
         }
 
+        logger.trace("before new User registration");
         User user = newUserRegistration(registrationData);
 
         try {
@@ -77,11 +88,14 @@ public class RegistrationCommand implements Command, Password {
             e.printStackTrace();
             return "/WEB-INF/common/registration.jsp?alreadyExist=true";
         }
-        return "/WEB-INF/common/registration.jsp?success=true";
+//        return "/WEB-INF/common/registration.jsp?success=true";
+        String path = req.getServletContext().getContextPath();
+        logger.trace("Path is {}", path);
+        return "redirect@" + path + "/app/to_home_page";
     }
 
     private User newUserRegistration(Map<String, String> registrationData) {
-
+logger.trace("new user registration");
         final Person person = new Person();
         person.setName(registrationData.get("name"));
         person.setSurname(registrationData.get("surname"));
@@ -95,6 +109,7 @@ public class RegistrationCommand implements Command, Password {
         user.setUserStatus(UserStatus.ACTIVE);
         user.setPerson(person);
         user.setUserRole(role);
+        user.setPersonalAccount(0);
         return user;
     }
 }

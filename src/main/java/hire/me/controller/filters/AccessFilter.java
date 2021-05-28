@@ -27,9 +27,11 @@ public class AccessFilter implements Filter {
 				Stream.of("registration",
 						"app",
 						"login",
+
 						"home",
 						"to_home_page",
 						"to_catalog_page",
+						"to_registration_page",
 						"to_support_page")
 				.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
@@ -55,6 +57,8 @@ public class AccessFilter implements Filter {
 						"to_subscribers_page",
 						"to_catalog_page",
 						"to_block_unblock_user",
+						"to_edit_periodic",
+						"to_make_order_nonorder_periodic",
 						"to_support_page")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 

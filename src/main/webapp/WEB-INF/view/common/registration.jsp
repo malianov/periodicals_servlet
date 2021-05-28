@@ -11,7 +11,7 @@
     <p>Account Registration</p>
 </div>
 <div>
-    <form method="get" action="/app/registration">
+    <form method="get" action="/app/app/registration">
 
         <input name="login" type="text" placeholder="Login" autofocus>
         <input name="name" type="text" placeholder="Name">

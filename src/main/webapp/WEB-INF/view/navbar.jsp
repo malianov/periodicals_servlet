@@ -83,7 +83,9 @@
 
 
     </ul>
-    <div class="col-md-3 text-end">
+    <div class="col-md-4 text-end">
+
+
         <button class="btn btn-primary me-3" type="button" id="dropdownMenuBtn1" data-bs-toggle="dropdown">
             <c:choose>
                 <c:when test="${language eq 'ua'}">
@@ -109,25 +111,36 @@
         <c:choose>
             <c:when test="${not empty sessionScope.login}">
                 <a href="${pageContext.request.contextPath}/app/logout" class="btn btn-outline-primary me-3"><fmt:message key="logout"/></a>
-
-
-
-
-
             </c:when>
             <c:otherwise>
-                <button type="button" class="btn btn-outline-primary me-3" data-bs-toggle="modal"
-                        data-bs-target="#modalLogin">
+                <button type="button" class="btn btn-outline-primary me-3" data-bs-toggle="modal" data-bs-target="#modalLogin">
                     <fmt:message key="login"/>
                 </button>
             </c:otherwise>
         </c:choose>
 
-        <c:if test="${empty sessionScope.login}">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#modalSignUp"><fmt:message key="sign-up"/>
-            </button>
-        </c:if>
+<%--        <c:if test="${empty sessionScope.login}">--%>
+<%--            <button type="button" class="btn btn-primary" data-bs-toggle="modal"--%>
+<%--                    data-bs-target="#modalSignUp"><fmt:message key="sign-up"/>--%>
+<%--            </button>--%>
+<%--        </c:if>--%>
+
+
+        <c:choose>
+            <c:when test="${empty sessionScope.login}">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#modalSignUp"><fmt:message key="sign-up"/>
+                </button>
+            </c:when>
+            <c:when test="${!empty sessionScope.login && sessionScope.role eq 'SUBSCRIBER'}">
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                        data-bs-target="#modalPersonalAccount">2456.435 ₴
+                </button>
+            </c:when>
+
+
+
+        </c:choose>
     </div>
 </header>
 
@@ -176,7 +189,7 @@
             </div>
             <div class="modal-body">
                 <p><fmt:message key="please-enter-your-registration-information"/></p>
-                <form method="GET" action="${pageContext.request.contextPath}/to_registration_page">
+                <form method="GET" action="${pageContext.request.contextPath}/app/app/registration">
                     <div class="row mb-3">
                         <label for="horizontalLogin" class="col-md-2 col-form-label"><fmt:message key="login"/></label>
                         <div class="col-md-10">

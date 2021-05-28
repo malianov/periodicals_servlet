@@ -102,6 +102,20 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
         return paginationResult;
     }
 
+    @Override
+    public void changePeriodicalStatus(String periodical_id, String newPeriodicStatus) {
+        try (PreparedStatement ps = connection.prepareStatement("UPDATE periodical SET id_status = (?) WHERE `id` = (?);")) {
+            // UPDATE `myPeriodics`.`periodical` SET `id_status` = '2' WHERE (`id` = '3');
+            ps.setString(2, periodical_id);
+            ps.setInt(1, newPeriodicStatus.equals("ORDERABLE") ? 1 : 2);
+
+            ps.execute();
+
+        } catch (SQLException e) {
+            logger.trace("Caught SQLException exception", e);
+            e.printStackTrace();
+        }
+    }
 
 
     @Override

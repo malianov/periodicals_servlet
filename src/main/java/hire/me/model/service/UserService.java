@@ -33,6 +33,7 @@ public class UserService {
     }
 
     public void registerUser(User user) throws Exception {
+        logger.trace("register user");
         UserDao userDao = daoFactory.createUserDao();
 
         if (userDao.emailIsAlreadyUsed(user.getPerson().getEmail())) {

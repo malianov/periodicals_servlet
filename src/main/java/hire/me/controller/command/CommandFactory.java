@@ -1,9 +1,6 @@
 package hire.me.controller.command;
 
-import hire.me.controller.command.account.BlockUnblockCommand;
-import hire.me.controller.command.account.LogOutCommand;
-import hire.me.controller.command.account.LoginCommand;
-import hire.me.controller.command.account.RegistrationCommand;
+import hire.me.controller.command.account.*;
 import hire.me.controller.command.directions_to.*;
 import hire.me.model.exception.NotFoundCommandException;
 import org.apache.logging.log4j.LogManager;
@@ -19,16 +16,18 @@ public class CommandFactory {
     private static final Map<String, Command> commands = new HashMap<>();
 
     static {
+        commands.put(TO_REGISTRATION_PAGE.getPath(), new RegistrationPage());
         commands.put(LOGIN.getPath(),new LoginCommand());
         commands.put(REGISTRATION.getPath(),new RegistrationCommand());
         commands.put(TO_LOGIN_PAGE.getPath(), new LoginPage());
-        commands.put(TO_REGISTRATION_PAGE.getPath(), new RegistrationPage());
         commands.put(TO_HOME_PAGE.getPath(), new HomePage());
         commands.put(TO_CATALOG.getPath(), new CatalogPage());
         commands.put(TO_SUPPORT_PAGE.getPath(), new SupportPage());
         commands.put(TO_SUBSCRIBERS_PAGE.getPath(), new SubscribersPage());
         commands.put(LOGOUT.getPath(),new LogOutCommand());
         commands.put(BLOCK_UNBLOCK.getPath(), new BlockUnblockCommand());
+        commands.put(EDIT_PERIODIC.getPath(), new EditPeriodicCommand());
+        commands.put(MAKE_ORDER_NONORDER_PERIODIC.getPath(), new OrderableNonorderableCommand());
     }
 
     public static Command getCommand(String url) throws NotFoundCommandException {

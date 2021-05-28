@@ -39,10 +39,25 @@
         </thead>
         <tbody>
 
+
+
+
+        <c:choose>
+        <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
+        <tr class="table-active">
+            </c:when>
+            <c:otherwise>
+        <tr>
+            </c:otherwise>
+            </c:choose>
+
+
+
+
         <c:forEach items="${subscribers}" var="all_subscribers_list">
             <c:choose>
                 <c:when test="${all_subscribers_list.getUserStatus() eq 'BLOCKED'}">
-                    <tr class="<%--text-decoration-line-through--%> text-danger zero-five-padding">
+                    <tr class="<%--text-decoration-line-through--%>table-active text-danger">
                 </c:when>
                 <c:otherwise>
                     <tr>
@@ -61,18 +76,17 @@
                         <form method="get" action="/app/app/to_block_unblock_user">
                             <input name="user_login" type="hidden" value="${all_subscribers_list.getLogin()}">
                             <input name="status" type="hidden" value="unblock">
-                            <button class="btn btn-sm btn-primary" type="submit">Unblock</button>
+                            <button class="btn btn-sm btn-outline-success" type="submit">Unblock</button>
                         </form>
                     </c:when>
                     <c:otherwise>
                         <form method="get" action="/app/app/to_block_unblock_user">
                             <input name="user_login" type="hidden" value="${all_subscribers_list.getLogin()}">
                             <input name="status" type="hidden" value="block">
-                            <button class="btn btn-sm btn-primary" type="submit">Block</button>
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Block</button>
                         </form>
                     </c:otherwise>
                 </c:choose>
-
             </td>
 
             </tr>

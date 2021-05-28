@@ -30,46 +30,6 @@ public class LocaleFilter implements Filter {
         chain.doFilter(req, resp);
     }
 
-
-/*    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        final HttpServletRequest req   = (HttpServletRequest) request;
-        final HttpServletResponse resp = (HttpServletResponse) response;
-        String language = (String) req.getSession().getAttribute("language");
-
-        logger.info("URL is " + req.getRequestURI());
-        logger.info("Session Language is " + req.getSession().getAttribute("language"));
-
-        String path = req.getRequestURI()
-                .replace(req.getContextPath(), "")
-                .replace(req.getServletPath(), "")
-                .replace("/", "");
-
-        logger.info("URL is " + path);
-
-        if(req.getParameter("language").isBlank()) {
-            resp.sendRedirect(path);
-        }
-
-        logger.info("Language is " + language);
-
-        boolean isEnglish   = language.equals("EN");
-        boolean isUkrainian = language.equals("UA");
-        boolean isRussian = language.equals("RU");
-
-        if (isEnglish) {
-            req.getSession().setAttribute("language", "en-EN");
-        } else if (isUkrainian) {
-            req.getSession().setAttribute("language", "uk-UA");
-        } else if (isRussian) {
-            req.getSession().setAttribute("language", "ru-RU");
-        }
-
-        logger.info("Language set to " + req.getSession().getAttribute("language"));
-        req.getSession().getAttribute("language");
-        resp.sendRedirect(path);
-    }*/
-
     @Override
     public void destroy() {
         logger.trace("Destroying");

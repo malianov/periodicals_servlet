@@ -2,6 +2,8 @@ package hire.me.model.service;
 
 import hire.me.model.dao.daoFactory.DaoFactory;
 import hire.me.model.dao.daoFactory.PeriodicalDao;
+import hire.me.model.dao.daoFactory.UserDao;
+import hire.me.model.entity.account.User;
 import hire.me.model.entity.periodical.Periodical;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,9 +31,19 @@ public class PeriodicalService {
         return instance;
     }
 
+    public void editPeriodic(int id) {
+        PeriodicalDao periodicalDao = daoFactory.createPeriodicalDao();
+//        periodicalDao.edit(id);
+    }
+
     public List<Periodical> getAllPeriodics() {
         PeriodicalDao dao = daoFactory.createPeriodicalDao();
         return dao.findAll();
+    }
+
+    public void changePeriodicalStatus(String periodical_id, String newPeriodicStatus) {
+        PeriodicalDao dao = daoFactory.createPeriodicalDao();
+        dao.changePeriodicalStatus(periodical_id, newPeriodicStatus);
     }
 
     public PaginationResult getSearchPeriodicalWithPagination(int lowerBound, int upperBound, String searchKey) {
