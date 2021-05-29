@@ -40,14 +40,18 @@
         <tbody>
 
 
+
+
         <c:choose>
-            <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
-                <tr class="table-active">
+        <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
+        <tr class="table-active">
             </c:when>
             <c:otherwise>
-                <tr>
+        <tr>
             </c:otherwise>
-        </c:choose>
+            </c:choose>
+
+
 
 
             <c:forEach items="${subscribers}" var="all_subscribers_list">
@@ -64,7 +68,7 @@
             <td class="align-middle"><c:out value="${all_subscribers_list.getPerson().getName()}"/></td>
             <td class="align-middle"><c:out value="${all_subscribers_list.getPerson().getSurname()}"/></td>
             <td class="align-middle"><c:out value="${all_subscribers_list.getPerson().getEmail()}"/></td>
-            <td class="align-middle text-center"><c:out value="${all_subscribers_list.getPersonalAccount()}"/></td>
+            <td class="align-middle text-center"><c:out value="${all_subscribers_list.getId()}"/></td>
             <td class="align-middle text-center">22.06.2019</td>
             <td class="text-center">
                 <c:choose>
