@@ -1,6 +1,7 @@
 package hire.me.controller.command.directions_to;
 
 import hire.me.controller.command.Command;
+import hire.me.controller.command.CommandUtility;
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.service.PeriodicalService;
@@ -24,6 +25,7 @@ public class SubscribersPage implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("to subscribers page");
+//        CommandUtility.disallowBackToCached(request, response);
 
         final int ROWS_PER_PAGE = 14;
         int currentPage = 1;

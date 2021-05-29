@@ -40,35 +40,31 @@
         <tbody>
 
 
-
-
         <c:choose>
-        <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
-        <tr class="table-active">
+            <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
+                <tr class="table-active">
+            </c:when>
+            <c:otherwise>
+                <tr>
+            </c:otherwise>
+        </c:choose>
+
+
+            <c:forEach items="${subscribers}" var="all_subscribers_list">
+            <c:choose>
+            <c:when test="${all_subscribers_list.getUserStatus() eq 'BLOCKED'}">
+        <tr class="<%--text-decoration-line-through--%>table-active text-danger">
             </c:when>
             <c:otherwise>
         <tr>
             </c:otherwise>
-            </c:choose>
-
-
-
-
-        <c:forEach items="${subscribers}" var="all_subscribers_list">
-            <c:choose>
-                <c:when test="${all_subscribers_list.getUserStatus() eq 'BLOCKED'}">
-                    <tr class="<%--text-decoration-line-through--%>table-active text-danger">
-                </c:when>
-                <c:otherwise>
-                    <tr>
-                </c:otherwise>
             </c:choose>
             <td class="align-middle text-center"><c:out value="${all_subscribers_list.getId()}"/></td>
             <td class="align-middle"><c:out value="${all_subscribers_list.getLogin()}"/></td>
             <td class="align-middle"><c:out value="${all_subscribers_list.getPerson().getName()}"/></td>
             <td class="align-middle"><c:out value="${all_subscribers_list.getPerson().getSurname()}"/></td>
             <td class="align-middle"><c:out value="${all_subscribers_list.getPerson().getEmail()}"/></td>
-            <td class="align-middle text-center"><c:out value="${all_subscribers_list.getId()}"/></td>
+            <td class="align-middle text-center"><c:out value="${all_subscribers_list.getPersonalAccount()}"/></td>
             <td class="align-middle text-center">22.06.2019</td>
             <td class="text-center">
                 <c:choose>
@@ -89,7 +85,7 @@
                 </c:choose>
             </td>
 
-            </tr>
+        </tr>
         </c:forEach>
 
         </tbody>

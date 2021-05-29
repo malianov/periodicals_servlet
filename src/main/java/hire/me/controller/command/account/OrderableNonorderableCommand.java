@@ -1,6 +1,7 @@
 package hire.me.controller.command.account;
 
 import hire.me.controller.command.Command;
+import hire.me.controller.command.CommandUtility;
 import hire.me.model.entity.account.UserStatus;
 import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.entity.periodical.PeriodicalStatus;
@@ -31,6 +32,8 @@ public class OrderableNonorderableCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("execute");
+        CommandUtility.disallowBackToCached(request, response);
+
         final String periodical_id = request.getParameter("periodic_id");
         String newPeriodicStatus = request.getParameter("periodic_status");
         logger.trace("We got 'status': {} - > {}", periodical_id, newPeriodicStatus);

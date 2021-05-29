@@ -32,7 +32,8 @@ public class JdbcUserDaoImpl implements UserDao {
     final private Connection connection = getConnection();
     private static JdbcUserDaoImpl instance;
 
-    private JdbcUserDaoImpl() {}
+    private JdbcUserDaoImpl() {
+    }
 
     public static JdbcUserDaoImpl getInstance() {
         logger.trace("");
@@ -50,7 +51,7 @@ public class JdbcUserDaoImpl implements UserDao {
     public void create(User user) {
         logger.trace("user => {}", user);
         try (PreparedStatement ps = connection.prepareStatement("INSERT INTO users " +
-                "(login, first_name, surname, email, password, account_status, user_role, personal_account) " +
+                "(login, first_name, surname, email, password, account_status, user_role, balance) " +
                 "VALUES ((?),(?),(?),(?),(?),(?),(?),(?))")) {
 
             ps.setString(1, user.getLogin());
@@ -60,7 +61,7 @@ public class JdbcUserDaoImpl implements UserDao {
             ps.setString(5, user.getPassword());
             ps.setString(6, user.getUserStatus().name());
             ps.setString(7, UserRole.SUBSCRIBER.name());
-            ps.setString(8, String.valueOf(user.getPersonalAccount()));
+            ps.setString(8, String.valueOf(user.getSubscriberBalance()));
 
             ps.execute();
 
@@ -212,7 +213,7 @@ public class JdbcUserDaoImpl implements UserDao {
 
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement subscribersPS = connection.prepareStatement("SELECT users.id, users.login, users.first_name, users.surname, users.email," +
-                     "users.account_status FROM users WHERE users.user_role='SUBSCRIBER' AND (users.login LIKE ? OR users.first_name LIKE ? OR users.surname LIKE ? OR users.email LIKE ?) LIMIT ?, ?;");
+                     "users.account_status, users.balance FROM users WHERE users.user_role='SUBSCRIBER' AND (users.login LIKE ? OR users.first_name LIKE ? OR users.surname LIKE ? OR users.email LIKE ?) LIMIT ?, ?;");
              PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) " +
                      "FROM users WHERE users.user_role='SUBSCRIBER' AND (users.login LIKE ? OR users.first_name LIKE ? OR users.surname LIKE ? OR users.email LIKE ?);");) {
 
@@ -268,7 +269,27 @@ public class JdbcUserDaoImpl implements UserDao {
         }
     }
 
+    @Override
+    public BigDecimal getSubscriberBalanceByLogin(String login) {
+        logger.trace("login => {}", login);
+        BigDecimal subscriberBalance = new BigDecimal(0.0);
 
+        try (PreparedStatement ps = connection.prepareStatement("SELECT users.balance FROM users where login=(?);")) {
+            ps.setString(1, login);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                subscriberBalance = new BigDecimal(rs.getString("balance"));
+                logger.trace("Inside getPrivateAccountByLogin, personalAccountis equal to {}", subscriberBalance);
+                return subscriberBalance;
+            }
+        } catch (SQLException e) {
+            logger.trace("Inside getSubscriberBalanceByLogin: Exception {}", e);
+            e.printStackTrace();
+        }
+        return subscriberBalance;
+    }
 }
 
     /*Override

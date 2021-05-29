@@ -8,9 +8,11 @@ import hire.me.model.service.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 public class LoginCommand implements Command {
     private static final Logger logger = LogManager.getLogger(LoginCommand.class);
@@ -24,11 +26,11 @@ public class LoginCommand implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("Entered to execute");
 
-        final String login = req.getParameter("login");
-        final String password = req.getParameter("password");
+        final String login = request.getParameter("login");
+        final String password = request.getParameter("password");
 
         if(!userService.isLoginExist(login)) {
             logger.trace("Login {} doesn't exist", login);
@@ -36,27 +38,25 @@ public class LoginCommand implements Command {
         }
 
         final UserRole role = userService.getRoleByLogin(login);
+        final BigDecimal privateAccount = userService.getPrivateAccountByLogin(login);
 
         logger.trace("Login {} has role as = {}", login, role);
 
         if(userService.isPasswordCorrectForLogin(login, password, role)) {
             logger.trace("The password {} for login {} and role {} is correct", password, login, role);
 
-            if (CommandUtility.checkUserIsLogged(req, login)) {
+            if (CommandUtility.checkUserIsLogged(request, login)) {
                 logger.trace("The user {} is being logged", login);
                 return "/WEB-INF/view/common/error/multilogin.jsp";
             }
 
-            CommandUtility.loginUser(req, login, password, role);
+            CommandUtility.loginUser(request, login, password, role, privateAccount);
         } else {
             logger.trace("Password is incorrect");
             return "/WEB-INF/view/common/login.jsp?passwordCorrect=false";
         }
 
-
-
-
-        String path = req.getServletContext().getContextPath();
+        String path = request.getServletContext().getContextPath();
         logger.trace("Path is {}", path);
         return "redirect@" + path + "/app/to_home_page";
     }

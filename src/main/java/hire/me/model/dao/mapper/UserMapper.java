@@ -22,6 +22,8 @@ private static final Logger logger = LogManager.getLogger(UserMapper.class);
     private static final String SURNAME = "surname";
     private static final String EMAIL = "email";
     private static final String STATUS = "account_status";
+    private static final String PERSONAL_BALANCE = "balance";
+
 
     @Override
     public User extractFromResultSet(ResultSet rs) throws SQLException {
@@ -31,6 +33,7 @@ private static final Logger logger = LogManager.getLogger(UserMapper.class);
         subscriber.setLogin(rs.getString(LOGIN));
         subscriber.setPerson(new Person(rs.getString(FIRST_NAME), rs.getString(SURNAME), rs.getString(EMAIL)));
         subscriber.setUserStatus(UserStatus.valueOf(rs.getString(STATUS).toUpperCase()));
+        subscriber.setSubscriberBalance(rs.getBigDecimal(PERSONAL_BALANCE));
 
         return subscriber;
     }

@@ -1,6 +1,7 @@
 package hire.me.controller.command.account;
 
 import hire.me.controller.command.Command;
+import hire.me.controller.command.CommandUtility;
 import hire.me.model.service.PeriodicalService;
 import hire.me.model.service.ServiceFactory;
 import hire.me.model.service.UserService;
@@ -19,10 +20,11 @@ public class EditPeriodicCommand implements Command {
     PeriodicalService periodicalService = serviceFactory.getPeriodicalService();
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("Entered to execute");
+        CommandUtility.disallowBackToCached(request, response);
 
-        final String periodicId = req.getParameter("periodic_id");
+        final String periodicId = request.getParameter("periodic_id");
         logger.trace("Periodic id = {}", periodicId);
 
 

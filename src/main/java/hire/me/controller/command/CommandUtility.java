@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashSet;
 
 public class CommandUtility {
@@ -44,11 +45,13 @@ public class CommandUtility {
         return false;
     }
 
-    public static void loginUser(HttpServletRequest request, String login, String password, UserRole userRole){
-        logger.trace("Set attributes with login = {}, password = {} and userRole = {}", login, password, userRole);
+    public static void loginUser(HttpServletRequest request, String login, String password, UserRole userRole, BigDecimal subscriberBalance){
+        logger.trace("Set attributes with login = {}, password = {}, userRole = {} and balance = {}", login, password, userRole, subscriberBalance);
         request.getSession().setAttribute("password", password);
         request.getSession().setAttribute("login", login);
         request.getSession().setAttribute("role", userRole);
+        request.getSession().setAttribute("subscriberBalance", subscriberBalance);
+        logger.trace("Subscriber balance = {}", subscriberBalance);
     }
 
     public static void logoutUser(HttpServletRequest request, String login) {
@@ -65,6 +68,8 @@ public class CommandUtility {
         session.removeAttribute("login");
         session.removeAttribute("password");
         session.removeAttribute("role");
+        session.removeAttribute("subscriberBalance");
+
     }
 
     public static User getCurrentSessionUser(HttpServletRequest request){

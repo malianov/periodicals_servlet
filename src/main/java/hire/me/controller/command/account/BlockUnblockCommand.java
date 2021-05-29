@@ -1,6 +1,7 @@
 package hire.me.controller.command.account;
 
 import hire.me.controller.command.Command;
+import hire.me.controller.command.CommandUtility;
 import hire.me.model.entity.account.UserStatus;
 import hire.me.model.service.ServiceFactory;
 import hire.me.model.service.UserService;
@@ -28,6 +29,7 @@ private static final Logger logger = LogManager.getLogger(BlockUnblockCommand.cl
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("execute");
+        CommandUtility.disallowBackToCached(request, response);
         final String userLogin = request.getParameter("user_login");
         String newStatus = request.getParameter("status");
         logger.trace("We got 'status': {} - > {}", userLogin, newStatus);

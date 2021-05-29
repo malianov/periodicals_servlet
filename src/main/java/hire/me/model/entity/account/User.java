@@ -14,27 +14,26 @@ public class User {
     UserStatus status;
     Person person;
     UserRole userRole;
-    Integer personalAccount;
+    BigDecimal subscriberBalance;
 
-    public User(Integer id, String login, String password, UserStatus status, Person person, UserRole userRole, Integer personalAccount) {
-        logger.trace("constructor({}, {},{},{},{}",id, login, password, status, person, userRole, personalAccount);
+    public User(Integer id, String login, String password, UserStatus status, Person person, UserRole userRole, BigDecimal subscriberBalance) {
+        logger.trace("constructor({}, {},{},{},{}",id, login, password, status, person, userRole, subscriberBalance);
         this.id = id;
         this.login = login;
         this.password = password;
         this.status = status;
         this.person = person;
         this.userRole = userRole;
-        this.personalAccount = personalAccount;
+        this.subscriberBalance = subscriberBalance;
     }
 
-    public User(String login, String password, UserStatus status, Person person, UserRole userRole, Integer personalAccount) {
-        logger.trace("constructor({},{},{},{}",login, password, status, person, userRole, personalAccount);
+    public User(String login, String password, UserStatus status, Person person, UserRole userRole) {
+        logger.trace("constructor({},{},{},{}",login, password, status, person, userRole);
         this.login = login;
         this.password = password;
         this.status = status;
         this.person = person;
         this.userRole = userRole;
-        this.personalAccount = personalAccount;
     }
 
     public User() {
@@ -90,12 +89,12 @@ public class User {
     }
 
 
-    public Integer getPersonalAccount() {
-        return personalAccount;
+    public BigDecimal getSubscriberBalance() {
+        return subscriberBalance;
     }
 
-    public void setPersonalAccount(Integer personalAccount) {
-        this.personalAccount = personalAccount;
+    public void setSubscriberBalance(BigDecimal balance) {
+        this.subscriberBalance = subscriberBalance;
     }
 
     @Override

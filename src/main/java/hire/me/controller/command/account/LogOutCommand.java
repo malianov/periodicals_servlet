@@ -14,13 +14,13 @@ public class LogOutCommand implements Command {
     private static final Logger logger = LogManager.getLogger(LogOutCommand.class);
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        String login = (String) req.getSession().getAttribute("login");
-        CommandUtility.logoutUser(req, login);
+        String login = (String) request.getSession().getAttribute("login");
+        CommandUtility.logoutUser(request, login);
         logger.trace("User {} logged out", login);
 
-        String path = req.getServletContext().getContextPath();
+        String path = request.getServletContext().getContextPath();
 
         return "redirect@" + path + "/app/to_home_page";
     }

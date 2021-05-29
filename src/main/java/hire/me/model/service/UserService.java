@@ -9,6 +9,7 @@ import hire.me.model.entity.periodical.Periodical;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class UserService {
@@ -107,6 +108,11 @@ public class UserService {
 
     public UserService.PaginationResult getSearchSubscribersWithPagination(int lowerBound, int upperBound, String searchKey) {
         return daoFactory.createUserDao().searchSubscribersWithPagination(lowerBound, upperBound, searchKey);
+    }
+
+    public BigDecimal getPrivateAccountByLogin(String login) {
+        UserDao dao = daoFactory.createUserDao();
+        return dao.getSubscriberBalanceByLogin(login);
     }
 
     public static class PaginationResult {

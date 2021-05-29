@@ -1,6 +1,7 @@
 package hire.me.controller.command.account;
 
 import hire.me.controller.command.Command;
+import hire.me.controller.command.CommandUtility;
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
 import hire.me.model.entity.account.UserStatus;
@@ -12,6 +13,7 @@ import hire.me.utility.Password;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -38,10 +40,11 @@ public class RegistrationCommand implements Command, Password {
     }
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("execute");
-        final String password = req.getParameter("password");
-        final String confirmedPassword = req.getParameter("confirmedPassword");
+
+        final String password = request.getParameter("password");
+        final String confirmedPassword = request.getParameter("confirmedPassword");
 
         if (!password.equals(confirmedPassword)) {
             return "/WEB-INF/common/registration.jsp?passwordsAreDifferent=true";
@@ -55,12 +58,12 @@ public class RegistrationCommand implements Command, Password {
         }
 
         Map<String, String> registrationData = Map.of(
-                "login", req.getParameter("login"),
-                "name", req.getParameter("name"),
-                "surname", req.getParameter("surname"),
-                "email", req.getParameter("email"),
+                "login", request.getParameter("login"),
+                "name", request.getParameter("name"),
+                "surname", request.getParameter("surname"),
+                "email", request.getParameter("email"),
                 "password", hashedPassword,
-                "role", req.getParameter("role"),
+                "role", request.getParameter("role"),
                 "personal_account", "0");
 
 
@@ -89,7 +92,7 @@ public class RegistrationCommand implements Command, Password {
             return "/WEB-INF/common/registration.jsp?alreadyExist=true";
         }
 //        return "/WEB-INF/common/registration.jsp?success=true";
-        String path = req.getServletContext().getContextPath();
+        String path = request.getServletContext().getContextPath();
         logger.trace("Path is {}", path);
         return "redirect@" + path + "/app/to_home_page";
     }
@@ -109,7 +112,7 @@ logger.trace("new user registration");
         user.setUserStatus(UserStatus.ACTIVE);
         user.setPerson(person);
         user.setUserRole(role);
-        user.setPersonalAccount(0);
+//        user.setPersonalAccount(0.0);
         return user;
     }
 }

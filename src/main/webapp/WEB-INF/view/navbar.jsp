@@ -134,7 +134,7 @@
             </c:when>
             <c:when test="${!empty sessionScope.login && sessionScope.role eq 'SUBSCRIBER'}">
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                        data-bs-target="#modalPersonalAccount">2456.435 ₴
+                        data-bs-target="#modalPersonalAccount">Ваш баланс: ${sessionScope.subscriberBalance} ₴
                 </button>
             </c:when>
 

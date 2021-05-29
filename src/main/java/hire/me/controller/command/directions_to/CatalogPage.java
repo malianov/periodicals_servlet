@@ -1,6 +1,7 @@
 package hire.me.controller.command.directions_to;
 
 import hire.me.controller.command.Command;
+import hire.me.controller.command.CommandUtility;
 import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.service.PeriodicalService;
 import hire.me.model.service.ServiceFactory;
@@ -23,6 +24,8 @@ public class CatalogPage implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("to catalog page");
+
+//        CommandUtility.disallowBackToCached(request, response);
 
         final int ROWS_PER_PAGE = 14;
         int currentPage = 1;
