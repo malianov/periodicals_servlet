@@ -240,7 +240,7 @@
                             <c:when test="${sessionScope.role eq 'SUBSCRIBER'}">
                                 <form method="get" action="/app/app/to_order_periodic">
                                     <input name="periodic_id" type="hidden" value="${all_periodics_list.getId()}">
-<%--                                    <input name="status" type="hidden" value="unblock">--%>
+                                        <%--                                    <input name="status" type="hidden" value="unblock">--%>
 
                                     <c:choose>
                                         <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
@@ -250,18 +250,21 @@
                                         </c:when>
                                         <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'ORDERABLE'}">
                                             <button type="button" class="btn btn-outline-primary btn-sm me-3"
-                                                    data-bs-toggle="modal" data-bs-target="#modalOrder_${all_periodics_list.getId()}">Order
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalOrder_${all_periodics_list.getId()}">Order
                                             </button>
                                             <div class="container">
-                                                <div class="modal fade" id="modalOrder_${all_periodics_list.getId()}" tabindex="-1" role="dialog"
+                                                <div class="modal fade" id="modalOrder_${all_periodics_list.getId()}"
+                                                     tabindex="-1" role="dialog"
                                                      aria-hidden="true"
                                                      data-bs-backdrop="static">
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content border border-primary border-3">
-                                                            <div class="modal-header">
-                                                                <p class="modal-title fs-5 fw-bold text-center">
-                                                                    "Кто много читает, тот много знает!"</p>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            <div class="modal-header text-center">
+                                                                <p class="modal-title fs-6 fw-bold fst-italic">
+                                                                    "Кто много читает, тот многава ни знаит !"</p>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
                                                                         aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
@@ -269,117 +272,143 @@
                                                                     <div class="mb-3">
 
                                                                         <article class="blog-post">
-                                                                            <h2 class="blog-post-title">Purchase Order</h2>
+                                                                            <h2 class="blog-post-title">Purchase
+                                                                                Order</h2>
                                                                             <p class="blog-post-meta">
                                                                                 Date: <span id="date"></span>
                                                                                 Time: <span id="time"></span> Created
                                                                                 by ${sessionScope.login}
                                                                             </p>
                                                                             <hr>
-                                                                            <h5 class="fst-italic"><strong>Title</strong></h5>
+                                                                            <h5 class="fst-italic">
+                                                                                <strong>Title</strong></h5>
                                                                             <p>${all_periodics_list.getTitle()}</p>
-                                                                            <h5 class="fst-italic"><strong>Description</strong></h5>
+                                                                            <hr>
+                                                                            <h5 class="fst-italic">
+                                                                                <strong>Description</strong></h5>
                                                                             <p>${all_periodics_list.getDescription()}</p>
-                                                                            <h5 class="fst-italic"><strong>Price per item</strong>
+                                                                            <hr>
+                                                                            <h5 class="fst-italic"><strong>Price per
+                                                                                item</strong>
                                                                             </h5>
                                                                             <p>${all_periodics_list.getPricePerItem()}</p>
-
+                                                                            <hr>
 
 
                                                                             <h5 class="fst-italic"><strong>Months of
                                                                                 subscription</strong>
                                                                             </h5>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox1"
-                                                                                       value="jan" disabled>
+                                                                                       value="item_1" disabled>
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox1">Jan</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox2"
-                                                                                       value="feb" disabled>
+                                                                                       value="item_2" disabled>
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox2">Feb</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox3"
-                                                                                       value="mar" disabled>
+                                                                                       value="item_3" disabled>
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox3">Mar</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox1"
-                                                                                       value="apr" disabled>
+                                                                                       value="item_4" disabled>
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox1">Apr</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox2"
-                                                                                       value="may" disabled>
+                                                                                       value="item_5" disabled>
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox2">May</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox3"
-                                                                                       value="jun" disabled>
+                                                                                       value="item_6" disabled>
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox3">Jun</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input btn-outline-primary"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox1"
-                                                                                       value="jul">
+                                                                                       value="item_7">
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox1">Jul</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input btn-outline-primary"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox2"
-                                                                                       value="aug">
+                                                                                       value="item_8">
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox2">Aug</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input btn-outline-primary"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox3"
-                                                                                       value="sep">
+                                                                                       value="item_9">
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox3">Sep</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input btn-outline-primary"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox1"
-                                                                                       value="oct1">
+                                                                                       value="item_10">
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox1">Oct</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input btn-outline-primary"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox2"
-                                                                                       value="nov">
+                                                                                       value="item_11">
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox2">Nov</label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="checkbox" name="selected"
+                                                                                <input class="form-check-input btn-outline-primary"
+                                                                                       type="checkbox" name="selected"
                                                                                        id="inlineCheckbox3"
-                                                                                       value="dec">
+                                                                                       value="item_12">
                                                                                 <label class="form-check-label"
                                                                                        for="inlineCheckbox3">Dec</label>
                                                                             </div>
+                                                                            <hr>
 
-
-
+                                                                            <h5 class="fst-italic">
+                                                                                <strong>Adress</strong></h5>
+                                                                            <p><textarea
+                                                                                    class="form-control btn-outline-primary"
+                                                                                    id="message-text"
+                                                                                    name="new_description"></textarea>
+                                                                            </p>
+                                                                            <input name="subscription_year" type="hidden" value="2021">
                                                                         </article>
                                                                         <hr>
                                                                         <div class="d-grid gap-2">
-                                                                            <button class="btn btn-primary" type="submit">Confirm
+                                                                            <button class="btn btn-primary"
+                                                                                    type="submit">Confirm
                                                                                 order
                                                                             </button>
                                                                         </div>
@@ -416,8 +445,6 @@
                                     </c:choose>
 
                                 </form>
-
-
 
 
                             </c:when>

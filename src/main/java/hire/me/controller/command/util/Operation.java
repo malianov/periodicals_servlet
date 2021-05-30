@@ -15,7 +15,8 @@ public enum Operation {
     TO_SUBSCRIBERS_PAGE("to_subscribers_page"),
     BLOCK_UNBLOCK("to_block_unblock_user"),
     EDIT_PERIODIC("to_edit_periodic"),
-    MAKE_ORDER_NONORDER_PERIODIC("to_make_order_nonorder_periodic");
+    MAKE_ORDER_NONORDER_PERIODIC("to_make_order_nonorder_periodic"),
+    MAKE_SUBSCRIPTION("to_order_periodic");
 
     private static final Logger logger = LogManager.getLogger(Operation.class);
 

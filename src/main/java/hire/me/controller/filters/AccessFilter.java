@@ -44,7 +44,8 @@ public class AccessFilter implements Filter {
 						"subscriberAccount",
 						"to_catalog_page",
 						"",
-						"to_support_page")
+						"to_support_page",
+						"to_order_periodic")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
 		allowedPages.put(UserRole.ADMIN,

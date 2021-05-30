@@ -34,4 +34,8 @@ public class ServiceFactory {
     public UserService getUsersService() {
         return UserService.getInstance();
     }
+
+    public SubscriptionService getSubscriptionService() {
+        return SubscriptionService.getInstance();
+    }
 }

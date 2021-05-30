@@ -2,6 +2,7 @@ package hire.me.controller.command;
 
 import hire.me.controller.command.account.*;
 import hire.me.controller.command.directions_to.*;
+import hire.me.controller.command.subscription.MakeSubscriptionCommand;
 import hire.me.model.exception.NotFoundCommandException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +29,7 @@ public class CommandFactory {
         commands.put(BLOCK_UNBLOCK.getPath(), new BlockUnblockCommand());
         commands.put(EDIT_PERIODIC.getPath(), new EditPeriodicCommand());
         commands.put(MAKE_ORDER_NONORDER_PERIODIC.getPath(), new OrderableNonorderableCommand());
+        commands.put(MAKE_SUBSCRIPTION.getPath(), new MakeSubscriptionCommand());
     }
 
     public static Command getCommand(String url) throws NotFoundCommandException {
