@@ -14,12 +14,10 @@ public class EncodingFilter implements Filter {
 		logger.trace("Initialization for Encoding filter");
 	}
 
-	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-
-		req.setCharacterEncoding("UTF-8");
-		resp.setContentType("text/html;charset=UTF-8");
-		logger.trace("Encoding - charset set to " + req.getCharacterEncoding());
-		chain.doFilter(req, resp);
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		chain.doFilter(request, response);
 	}
 
 	public void destroy() {

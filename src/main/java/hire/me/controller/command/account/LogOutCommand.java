@@ -17,6 +17,7 @@ public class LogOutCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         String login = (String) request.getSession().getAttribute("login");
+
         CommandUtility.logoutUser(request, login);
         logger.trace("User {} logged out", login);
 

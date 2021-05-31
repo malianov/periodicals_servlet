@@ -20,15 +20,12 @@ public class LoginCommand implements Command {
     private ServiceFactory serviceFactory;
 
     public LoginCommand() {
-        logger.trace("Entered to LoginCommand constructor");
         this.serviceFactory = ServiceFactory.getInstance();
         this.userService = serviceFactory.getUserService();
     }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.trace("Entered to execute");
-
         final String login = request.getParameter("login");
         final String password = request.getParameter("password");
 
@@ -41,16 +38,10 @@ public class LoginCommand implements Command {
         final BigDecimal privateAccount = userService.getPrivateAccountByLogin(login);
         final Long userId = userService.getIdByLogin(login);
 
-        logger.trace("Login {} has role as = {}", login, role);
-
         if(userService.isPasswordCorrectForLogin(login, password, role)) {
-            logger.trace("The password {} for login {} and role {} is correct", password, login, role);
-
             if (CommandUtility.checkUserIsLogged(request, login)) {
-                logger.trace("The user {} is being logged", login);
                 return "/WEB-INF/view/common/error/multilogin.jsp";
             }
-
             CommandUtility.loginUser(request, userId, login, password, role, privateAccount);
         } else {
             logger.trace("Password is incorrect");
@@ -58,7 +49,6 @@ public class LoginCommand implements Command {
         }
 
         String path = request.getServletContext().getContextPath();
-        logger.trace("Path is {}", path);
         return "redirect@" + path + "/app/to_home_page";
     }
 }

@@ -2,8 +2,6 @@ package hire.me.model.dao.daoFactory;
 
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
-import hire.me.model.entity.account.UserStatus;
-import hire.me.model.service.PeriodicalService;
 import hire.me.model.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,12 +20,8 @@ public interface UserDao extends AbstractDao<User> {
     Long getIdByLogin(String login);
     UserRole getRoleByLogin(String login);
     UserService.PaginationResult searchSubscribersWithPagination(int lowerBound, int upperBound, String searchKey);
-
     void changeUserStatus(String login, String status);
-
     BigDecimal getSubscriberBalanceByLogin(String login);
-
-//    void changeStatusToBlocked(String login);
 }
 
 

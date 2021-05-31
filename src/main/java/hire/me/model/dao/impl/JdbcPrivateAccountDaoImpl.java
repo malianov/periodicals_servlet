@@ -23,7 +23,6 @@ public class JdbcPrivateAccountDaoImpl implements PrivateAccountDao {
     }
 
     public static JdbcPrivateAccountDaoImpl getInstance() {
-
         if (instance == null) {
             synchronized (JdbcPrivateAccountDaoImpl.class) {
                 if (instance == null) {
@@ -36,12 +35,11 @@ public class JdbcPrivateAccountDaoImpl implements PrivateAccountDao {
 
     @Override
     public void increaseBalance(Connection serviceConnection, Long subscriberId, BigDecimal additionToBalance) {
-        // UPDATE users SET balance = (?) WHERE (id = (?));
         logger.info("increaseBalance for subscriberID = {}, additionToBalance = {}", subscriberId, additionToBalance);
+
         try (PreparedStatement ps = serviceConnection.prepareStatement("UPDATE users SET balance = (?) WHERE (id = (?))")) {
             ps.setBigDecimal(1, additionToBalance);
             ps.setLong(2, subscriberId);
-
             ps.execute();
 
         } catch (SQLException e) {
@@ -52,10 +50,9 @@ public class JdbcPrivateAccountDaoImpl implements PrivateAccountDao {
     @Override
     public BigDecimal getSubscriberBalance(Connection serviceConnection, Long subscriberId) {
         logger.info("getSubscriberBalance");
+
         try (PreparedStatement ps = serviceConnection.prepareStatement("SELECT balance FROM users where id=(?);")) {
-
             ps.setLong(1, subscriberId);
-
             final ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -70,9 +67,7 @@ public class JdbcPrivateAccountDaoImpl implements PrivateAccountDao {
     @Override
     public BigDecimal getSubscriberBalance(Long subscriberId) {
         try (PreparedStatement ps = connection.prepareStatement("SELECT balance FROM users where id=(?);")) {
-
             ps.setLong(1, subscriberId);
-
             final ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {

@@ -2,8 +2,6 @@ package hire.me.model.service;
 
 import hire.me.model.dao.daoFactory.DaoFactory;
 import hire.me.model.dao.daoFactory.SubscriptionDao;
-import hire.me.model.dao.daoFactory.UserDao;
-import hire.me.model.entity.account.UserRole;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,29 +46,17 @@ public class SubscriptionService {
             connection.setAutoCommit(false);
 
             BigDecimal actualPeriodicPricePerItem = getPeriodicPricePerItem(connection, subscribedPeriodicId, dao);
-            logger.trace("actualPeriodicPricePerItem - {}", actualPeriodicPricePerItem);
-
             BigDecimal actualSubscriberBalance = getSubscriberBalance(connection, subscriberId, dao);
-            logger.trace("actualSubscriberBalance - {}", actualSubscriberBalance);
 
             if (isSubscriberBalanceIsEnoughForSubscription(actualSubscriberBalance, actualPeriodicPricePerItem, quantityOfItems)) {
-                logger.trace("isSubscriptionSuccessful_inside try _ if");
-
                 BigDecimal newSubscriberBalance = newSubscriberBalance(actualSubscriberBalance, actualPeriodicPricePerItem, quantityOfItems);
-                logger.trace("newSubscriberBalance = {}", newSubscriberBalance);
                 setSubscriberBalanceToNew(connection, subscriberId, newSubscriberBalance, dao);
-
-                logger.trace("going to add record");
-
-
-
 
                 addSubscriptionRecord(connection, subscriberId, subscribedPeriodicId, selectedPeriodicItems, subscriptionYear, actualPeriodicPricePerItem, subscriberAddress, dao);
 
                 connection.commit();
                 connection.setAutoCommit(true);
             } else {
-                logger.trace("inside ELSE");
                 return false;
             }
 
@@ -84,12 +70,6 @@ public class SubscriptionService {
             }
             e.printStackTrace();
         }
-
-
-//        if(isSubscriberBalanceIsEnoughForSubscription(currentSubscriberBalance, periodicPricePerItem, quantityOfItems)))
-
-//        dao.isSubscriptionSuccessful(subscriberLogin, subscribedPeriodicId, subscriptionYear, selectedPeriodicItems);
-
         return true;
     }
 
@@ -98,10 +78,8 @@ public class SubscriptionService {
             dao.addSubscriptionRecord(connection, subscriberId, subscribedPeriodicId, item, subscriptionYear, actualPeriodicPricePerItem, subscriberAddress);
         }
     }
-
-
+    
     private BigDecimal getPeriodicPricePerItem(Connection connection, Integer subscribedPeriodicId, SubscriptionDao dao) {
-        logger.trace("getPeriodicPricePerItem INTERNAL INSODE SERVICE");
         return dao.getPeriodicPricePerItem(connection, subscribedPeriodicId);
     }
 

@@ -27,7 +27,6 @@ public class AccessFilter implements Filter {
 				Stream.of("registration",
 						"app",
 						"login",
-
 						"home",
 						"to_home_page",
 						"to_catalog_page",
@@ -63,7 +62,6 @@ public class AccessFilter implements Filter {
 						"to_make_order_nonorder_periodic",
 						"to_support_page")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
-
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -71,14 +69,10 @@ public class AccessFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
 
-		logger.trace("URL is " + req.getRequestURI());
-
 		String path = req.getRequestURI()
 				.replace(req.getContextPath(), "")
 				.replace(req.getServletPath(), "")
 				.replace("/", "");
-
-		logger.trace("URL is " + path);
 
 		logger.trace("current role before -> " + (UserRole) req.getSession().getAttribute("role"));
 
@@ -86,19 +80,13 @@ public class AccessFilter implements Filter {
 			req.getSession().setAttribute("role", UserRole.GUEST);
 		}
 		UserRole currentRole = ((UserRole) req.getSession().getAttribute("role"));
-		logger.trace("current role " + currentRole + ", path = " + path);
-		logger.trace("allowedPages.get(currentRole).contains(path) => " + allowedPages.get(currentRole).contains(path));
 
 		if(allowedPages.get(currentRole).contains(path)) {
-			logger.trace("send info to next element");
-			logger.trace("allowedPages.get(currentRole).contains(path) = " + allowedPages.get(currentRole).contains(path));
 			chain.doFilter(req, resp);
 		} else {
 			if(currentRole.equals(UserRole.GUEST)) {
-				logger.trace("forward quest to home page");
 				req.getRequestDispatcher("/WEB-INF/view/home_page.jsp").forward(req, resp);
 			} else {
-				logger.trace("forward quest to error 403");
 				req.getRequestDispatcher("/WEB-INF/common/error/403.jsp").forward(req, resp);
 			}
 		}

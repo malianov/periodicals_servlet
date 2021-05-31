@@ -1,7 +1,6 @@
 package hire.me.controller.command.directions_to;
 
 import hire.me.controller.command.Command;
-import hire.me.controller.command.CommandUtility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +15,6 @@ public class SupportPage implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("to support page");
-//        CommandUtility.disallowBackToCached(request, response);
 
         request.getSession().setAttribute("page", "support");
         return "/WEB-INF/view/support_page.jsp";

@@ -16,7 +16,7 @@
     <div class="container my-5">
         <div class="row p-8 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
             <div class="col-10 col-sm-8 col-lg-6">
-                <img src="${pageContext.request.contextPath}\resources\images\wow_4.jpg"
+                <img src="${pageContext.request.contextPath}\resources\images\support.jpg"
                      class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700"
                      height="500" loading="lazy">
             </div>

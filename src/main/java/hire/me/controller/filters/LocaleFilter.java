@@ -17,17 +17,14 @@ public class LocaleFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
-        logger.trace("do Locale Filter");
-        HttpServletRequest request = (HttpServletRequest) req;
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+        HttpServletRequest requestHttp = (HttpServletRequest) request;
 
-        logger.trace("language = {}", request.getParameter("language"));
         if(request.getParameter("language") != null) {
-            request.getSession().setAttribute("language", request.getParameter("language"));
-            logger.trace("Because language != null, lang = {}", request.getParameter("language"));
+            requestHttp.getSession().setAttribute("language", request.getParameter("language"));
         }
 
-        chain.doFilter(req, resp);
+        chain.doFilter(request, response);
     }
 
     @Override

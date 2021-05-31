@@ -5,14 +5,11 @@ import hire.me.model.dao.daoFactory.PeriodicalDao;
 import hire.me.model.dao.mapper.PeriodicalMapper;
 import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.service.PeriodicalService;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static hire.me.connection.ConnectionPool.getConnection;
 import static org.apache.logging.log4j.LogManager.getLogger;
@@ -47,7 +44,7 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
 
             ps.setString(1, periodical.getTitle());
             ps.setString(2, periodical.getDescription());
-            ps.setLong(3, periodical.getPricePerItem());
+            ps.setBigDecimal(3, periodical.getPricePerItem());
             ps.setString(4, periodical.getTheme());
             ps.setString(5, periodical.getPeriodicalStatus().name());
             ps.setString(6, periodical.getPeriodicalType().name());
@@ -77,6 +74,7 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
             periodicalsPS.setInt(3, upperBound);
 
             ResultSet rs = periodicalsPS.executeQuery();
+
             while (rs.next()) {
                 logger.info("We have smth inside rs_1");
                 Periodical periodical = periodicalMapper.extractFromResultSet(rs);
@@ -105,10 +103,8 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
     @Override
     public void changePeriodicalStatus(String periodical_id, String newPeriodicStatus) {
         try (PreparedStatement ps = connection.prepareStatement("UPDATE periodical SET id_status = (?) WHERE `id` = (?);")) {
-            // UPDATE `myPeriodics`.`periodical` SET `id_status` = '2' WHERE (`id` = '3');
             ps.setString(2, periodical_id);
             ps.setInt(1, newPeriodicStatus.equals("ORDERABLE") ? 1 : 2);
-
             ps.execute();
 
         } catch (SQLException e) {
@@ -116,7 +112,6 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public Periodical findById(long id) {
@@ -130,17 +125,14 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
 
     @Override
     public void update(Periodical periodical) {
-
     }
 
     @Override
     public void delete(long id) {
-
     }
 
     @Override
     public void close() {
-
     }
 
     @Override

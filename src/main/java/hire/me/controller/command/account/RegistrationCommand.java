@@ -1,7 +1,6 @@
 package hire.me.controller.command.account;
 
 import hire.me.controller.command.Command;
-import hire.me.controller.command.CommandUtility;
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
 import hire.me.model.entity.account.UserStatus;
@@ -24,9 +23,9 @@ import java.util.Map;
 
 public class RegistrationCommand implements Command, Password {
     private static final Logger logger = LogManager.getLogger(RegistrationCommand.class);
+
     private UserService userService;
     private ServiceFactory serviceFactory;
-
     private String hashedPassword;
 
     public void setHashedPassword(String hashedPassword) {
@@ -34,7 +33,6 @@ public class RegistrationCommand implements Command, Password {
     }
 
     public RegistrationCommand() {
-        logger.trace("Registration command");
         this.serviceFactory = ServiceFactory.getInstance();
         this.userService = serviceFactory.getUserService();
     }
@@ -64,7 +62,7 @@ public class RegistrationCommand implements Command, Password {
                 "email", request.getParameter("email"),
                 "password", hashedPassword,
                 "role", request.getParameter("role"),
-                "personal_account", "0");
+                "personal_account", "0.0");
 
 
         if (!DataValidator.validateLogin(registrationData.get("login"))) {
@@ -82,7 +80,6 @@ public class RegistrationCommand implements Command, Password {
             return "/WEB-INF/common/registration.jsp?invalidPassword=true";
         }
 
-        logger.trace("before new User registration");
         User user = newUserRegistration(registrationData);
 
         try {
@@ -91,14 +88,14 @@ public class RegistrationCommand implements Command, Password {
             e.printStackTrace();
             return "/WEB-INF/common/registration.jsp?alreadyExist=true";
         }
-//        return "/WEB-INF/common/registration.jsp?success=true";
+
         String path = request.getServletContext().getContextPath();
-        logger.trace("Path is {}", path);
         return "redirect@" + path + "/app/to_home_page";
     }
 
     private User newUserRegistration(Map<String, String> registrationData) {
-logger.trace("new user registration");
+        logger.trace("new user registration");
+
         final Person person = new Person();
         person.setName(registrationData.get("name"));
         person.setSurname(registrationData.get("surname"));
@@ -106,13 +103,16 @@ logger.trace("new user registration");
 
         UserRole role = UserRole.valueOf(registrationData.get("role").toUpperCase());
 
-        final User user = new User();
-        user.setLogin(registrationData.get("login"));
-        user.setPassword(registrationData.get("password"));
-        user.setUserStatus(UserStatus.ACTIVE);
-        user.setPerson(person);
-        user.setUserRole(role);
-//        user.setPersonalAccount(0.0);
+        final User user = new User.Builder()
+                .login(registrationData.get("login"))
+                .password(registrationData.get("password"))
+                .userStatus(UserStatus.ACTIVE)
+                .person(person)
+                .role(role)
+                .balance(new BigDecimal(registrationData.get("personal_account")))
+                .build();
+
         return user;
     }
 }
+

@@ -12,52 +12,24 @@ public class Subscription {
     private int quantity;
     private String address;
 
-    public Subscription(long id, User user, Periodical periodical, int quantity, String address) {
-        this.id = id;
-        this.user = user;
-        this.periodical = periodical;
-        this.quantity = quantity;
-        this.address = address;
-    }
-
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Periodical getPeriodical() {
         return periodical;
-    }
-
-    public void setPeriodical(Periodical periodical) {
-        this.periodical = periodical;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public String getAddress() {
         return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     @Override
@@ -73,14 +45,40 @@ public class Subscription {
         return Objects.hash(id, user, periodical, quantity, address);
     }
 
-    @Override
-    public String toString() {
-        return "Subscription{" +
-                "id=" + id +
-                ", user=" + user +
-                ", periodical=" + periodical +
-                ", quantity=" + quantity +
-                ", address='" + address + '\'' +
-                '}';
+    public static class Builder {
+        private Subscription newSubscription;
+
+        public Builder() {
+            newSubscription = new Subscription();
+        }
+
+        public Builder id(long id) {
+            newSubscription.id = id;
+            return this;
+        }
+
+        public Builder user(User user) {
+            newSubscription.user = user;
+            return this;
+        }
+
+        public Builder periodical(Periodical periodical) {
+            newSubscription.periodical = periodical;
+            return this;
+        }
+
+        public Builder quantity(int quantity) {
+            newSubscription.quantity = quantity;
+            return this;
+        }
+
+        public Builder address(String address) {
+            newSubscription.address = address;
+            return this;
+        }
+
+        public Subscription build() {
+            return newSubscription;
+        }
     }
 }

@@ -1,8 +1,5 @@
 package hire.me.controller.command.util;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public enum Operation {
     TO_REGISTRATION_PAGE("to_registration_page"),
     LOGIN("login"),
@@ -18,8 +15,6 @@ public enum Operation {
     MAKE_ORDER_NONORDER_PERIODIC("to_make_order_nonorder_periodic"),
     MAKE_SUBSCRIPTION("to_order_periodic"),
     ADDITION_TO_BALANCE("to_increase_balance");
-
-    private static final Logger logger = LogManager.getLogger(Operation.class);
 
     private String path;
 

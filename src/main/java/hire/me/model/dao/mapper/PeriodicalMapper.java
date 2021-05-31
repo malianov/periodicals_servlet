@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 
 public class PeriodicalMapper implements ObjectMapper<Periodical> {
     private static final Logger logger = LogManager.getLogger(PeriodicalMapper.class);
@@ -24,17 +23,15 @@ public class PeriodicalMapper implements ObjectMapper<Periodical> {
     @Override
     public Periodical extractFromResultSet(ResultSet rs) throws SQLException {
 
-        Periodical periodical = new Periodical();
-        logger.trace("Create new periodical");
-        periodical.setId(rs.getInt(ID));
-        periodical.setTitle(rs.getString(TITLE));
-        periodical.setDescription(rs.getString(DESCRIPTION));
-        periodical.setPricePerItem(rs.getLong(PRICE_PER_ITEM));
-        periodical.setTheme(rs.getString(THEME));
-        logger.trace("PeriodicalStatus.valueOf(rs.getString(STATUS)) - {}", PeriodicalStatus.valueOf(rs.getString(STATUS).toUpperCase()));
-        periodical.setPeriodicalStatus(PeriodicalStatus.valueOf(rs.getString(STATUS).toUpperCase()));
-        logger.trace("type = {}", rs.getString(TYPE).toUpperCase());
-        periodical.setPeriodicalType(PeriodicalType.valueOf(rs.getString(TYPE).toUpperCase()));
+        Periodical periodical = new Periodical.Builder()
+                .id(rs.getInt(ID))
+                .title(rs.getString(TITLE))
+                .description(rs.getString(DESCRIPTION))
+                .pricePerItem(rs.getBigDecimal(PRICE_PER_ITEM))
+                .theme(rs.getString(THEME))
+                .periodicalStatus(PeriodicalStatus.valueOf(rs.getString(STATUS).toUpperCase()))
+                .periodicalType(PeriodicalType.valueOf(rs.getString(TYPE).toUpperCase()))
+                .build();
 
         return periodical;
     }

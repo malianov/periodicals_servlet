@@ -16,43 +16,39 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class Servlet extends HttpServlet {
     private static final Logger logger = getLogger(Servlet.class);
 
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             logger.trace("Inside doGet");
-            processRequest(req, resp);
+            processRequest(request, response);
         } catch (NotFoundCommandException e) {
             logger.trace("Inside doGet: Exception {}", e);
             e.printStackTrace();
         }
     }
 
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             logger.trace("Inside doPost");
-            processRequest(req, resp);
+            processRequest(request, response);
         } catch (NotFoundCommandException e) {
             logger.trace("Inside doPost: Exception {}", e);
             e.printStackTrace();
         }
     }
 
-    private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException, NotFoundCommandException, ServletException {
-        logger.trace("Inside processRequest: path = {}", () -> req.getRequestURI());
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, NotFoundCommandException, ServletException {
+        logger.trace("Inside processRequest: path = {}", () -> request.getRequestURI());
 
-//        resp.setContentType("text/html; charset=UTF-8");
-//        req.setCharacterEncoding("UTF-8");
-        String path = req.getRequestURI();
+        String path = request.getRequestURI();
         path = path.replaceAll(".*/app/", "");
 
         Command command = CommandFactory.getCommand(path);
-        logger.trace("Inside processRequest: command = {}", () -> command);
-        String page = command.execute(req, resp);
-        logger.trace("Page is equal to {}", page);
+        String page = command.execute(request, response);
 
         if (page.contains("redirect@")) {
-            resp.sendRedirect(page.replace("redirect@", ""));
+            response.sendRedirect(page.replace("redirect@", ""));
         } else {
-            req.getRequestDispatcher(page).forward(req, resp);
+            request.getRequestDispatcher(page).forward(request, response);
         }
     }
 }

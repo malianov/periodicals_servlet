@@ -17,10 +17,10 @@ public class CommandFactory {
     private static final Map<String, Command> commands = new HashMap<>();
 
     static {
-        commands.put(TO_REGISTRATION_PAGE.getPath(), new RegistrationPage());
+//        commands.put(TO_REGISTRATION_PAGE.getPath(), new RegistrationPage());
         commands.put(LOGIN.getPath(),new LoginCommand());
         commands.put(REGISTRATION.getPath(),new RegistrationCommand());
-        commands.put(TO_LOGIN_PAGE.getPath(), new LoginPage());
+//        commands.put(TO_LOGIN_PAGE.getPath(), new LoginPage());
         commands.put(TO_HOME_PAGE.getPath(), new HomePage());
         commands.put(TO_CATALOG.getPath(), new CatalogPage());
         commands.put(TO_SUPPORT_PAGE.getPath(), new SupportPage());
@@ -35,10 +35,11 @@ public class CommandFactory {
 
     public static Command getCommand(String url) throws NotFoundCommandException {
         Command command = commands.get(url);
-        logger.trace("Inside getCommand: command {}", command);
+
         if (command == null) {
             throw new NotFoundCommandException();
         }
+
         return command;
     }
 }

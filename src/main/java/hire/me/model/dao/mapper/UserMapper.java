@@ -2,19 +2,15 @@ package hire.me.model.dao.mapper;
 
 import hire.me.model.entity.account.Person;
 import hire.me.model.entity.account.User;
-import hire.me.model.entity.account.UserRole;
 import hire.me.model.entity.account.UserStatus;
-import hire.me.model.entity.periodical.Periodical;
-import hire.me.model.entity.periodical.PeriodicalStatus;
-import hire.me.model.entity.periodical.PeriodicalType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserMapper implements ObjectMapper<User>{
-private static final Logger logger = LogManager.getLogger(UserMapper.class);
+public class UserMapper implements ObjectMapper<User> {
+    private static final Logger logger = LogManager.getLogger(UserMapper.class);
 
     private static final String ID = "id";
     private static final String LOGIN = "login";
@@ -27,13 +23,13 @@ private static final Logger logger = LogManager.getLogger(UserMapper.class);
 
     @Override
     public User extractFromResultSet(ResultSet rs) throws SQLException {
-        User subscriber = new User();
-        logger.trace("Create new subscriber");
-        subscriber.setId(rs.getInt(ID));
-        subscriber.setLogin(rs.getString(LOGIN));
-        subscriber.setPerson(new Person(rs.getString(FIRST_NAME), rs.getString(SURNAME), rs.getString(EMAIL)));
-        subscriber.setUserStatus(UserStatus.valueOf(rs.getString(STATUS).toUpperCase()));
-        subscriber.setSubscriberBalance(rs.getBigDecimal(PERSONAL_BALANCE));
+        User subscriber = new User.Builder()
+                .id(rs.getInt(ID))
+                .login(rs.getString(LOGIN))
+                .person(new Person(rs.getString(FIRST_NAME), rs.getString(SURNAME), rs.getString(EMAIL)))
+                .userStatus(UserStatus.valueOf(rs.getString(STATUS).toUpperCase()))
+                .balance(rs.getBigDecimal(PERSONAL_BALANCE))
+                .build();
 
         return subscriber;
     }

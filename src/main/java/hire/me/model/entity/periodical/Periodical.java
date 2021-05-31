@@ -3,104 +3,109 @@ package hire.me.model.entity.periodical;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+
 public class Periodical {
     private static final Logger logger = LogManager.getLogger(Periodical.class);
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     private int id;
     private String title;
     private String description;
-    private long pricePerItem;
+    private BigDecimal pricePerItem;
     private String theme;
     private PeriodicalStatus periodicalStatus;
     private PeriodicalType periodicalType;
 
-    public Periodical(String title, String description, long pricePerItem, String theme, PeriodicalStatus periodicalStatus, PeriodicalType periodicalType) {
-        this.title = title;
-        this.description = description;
-        this.pricePerItem = pricePerItem;
-        this.theme = theme;
-        this.periodicalStatus = periodicalStatus;
-        this.periodicalType = periodicalType;
+    public static Logger getLogger() {
+        return logger;
     }
 
-    public Periodical(Integer id, String title, String description, long pricePerItem, String theme, PeriodicalStatus periodicalStatus, PeriodicalType periodicalType) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.pricePerItem = pricePerItem;
-        this.theme = theme;
-        this.periodicalStatus = periodicalStatus;
-        this.periodicalType = periodicalType;
-    }
-
-    public Periodical() {
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public long getPricePerItem() {
+    public BigDecimal getPricePerItem() {
         return pricePerItem;
-    }
-
-    public void setPricePerItem(long pricePerItem) {
-        this.pricePerItem = pricePerItem;
     }
 
     public String getTheme() {
         return theme;
     }
 
-    public void setTheme(String theme) {
-        this.theme = theme;
-    }
-
     public PeriodicalStatus getPeriodicalStatus() {
         return periodicalStatus;
-    }
-
-    public void setPeriodicalStatus(PeriodicalStatus periodicalStatus) {
-        this.periodicalStatus = periodicalStatus;
     }
 
     public PeriodicalType getPeriodicalType() {
         return periodicalType;
     }
 
-    public void setPeriodicalType(PeriodicalType periodicalType) {
-        this.periodicalType = periodicalType;
+    public static class Builder {
+        private Periodical newPeriodical;
+
+        public Builder() {
+            newPeriodical = new Periodical();
+        }
+
+        public Builder id(int id) {
+            newPeriodical.id = id;
+            return this;
+        }
+
+        public Builder title(String title) {
+            newPeriodical.title = title;
+            return this;
+        }
+
+        public Builder description(String description) {
+            newPeriodical.description = description;
+            return this;
+        }
+
+        public Builder pricePerItem(BigDecimal pricePerItem) {
+            newPeriodical.pricePerItem = pricePerItem;
+            return this;
+        }
+
+        public Builder theme(String theme) {
+            newPeriodical.theme = theme;
+            return this;
+        }
+
+        public Builder periodicalStatus(PeriodicalStatus periodicalStatus) {
+            newPeriodical.periodicalStatus = periodicalStatus;
+            return this;
+        }
+
+        public Builder periodicalType(PeriodicalType periodicalType) {
+            newPeriodical.periodicalType = periodicalType;
+            return this;
+        }
+
+        public Periodical build() {
+            return newPeriodical;
+        }
     }
 
     @Override
-    public String toString() {
-        return "Periodical{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", pricePerItem=" + pricePerItem +
-                ", theme='" + theme + '\'' +
-                ", periodicalStatus=" + periodicalStatus +
-                ", periodicalType=" + periodicalType +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Periodical that = (Periodical) o;
+        return id == that.id && title.equals(that.title) && description.equals(that.description) && pricePerItem.equals(that.pricePerItem) && theme.equals(that.theme) && periodicalStatus == that.periodicalStatus && periodicalType == that.periodicalType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, pricePerItem, theme, periodicalStatus, periodicalType);
     }
 }

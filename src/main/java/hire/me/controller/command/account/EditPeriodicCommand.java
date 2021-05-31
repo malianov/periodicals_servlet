@@ -4,7 +4,6 @@ import hire.me.controller.command.Command;
 import hire.me.controller.command.CommandUtility;
 import hire.me.model.service.PeriodicalService;
 import hire.me.model.service.ServiceFactory;
-import hire.me.model.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,10 +26,6 @@ public class EditPeriodicCommand implements Command {
         final String periodicId = request.getParameter("periodic_id");
         logger.trace("Periodic id = {}", periodicId);
 
-
-
-
-
-return null;
+        return null;    // Not realized yet
     }
 }

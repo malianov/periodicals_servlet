@@ -25,12 +25,14 @@ public class CommandUtility {
 
     public static boolean checkUserIsLogged(HttpServletRequest request, String login) {
         logger.trace("Check is user with login = {} is logged", login);
+
         HashSet<String> loggedUsers = (HashSet<String>) request.getSession()
                 .getServletContext()
                 .getAttribute("loggedUsers");
 
         if(loggedUsers.stream().anyMatch(login::equals)) {
             logger.trace("User with login = {} is logged", login);
+
             return true;
         }
 
@@ -40,19 +42,17 @@ public class CommandUtility {
         request.getSession()
                 .getServletContext()
                 .setAttribute("loggedUsers", loggedUsers);
-
-        System.out.println("The quantity of loggedUsers are = " + loggedUsers);
         return false;
     }
 
     public static void loginUser(HttpServletRequest request, Long user_id, String login, String password, UserRole userRole, BigDecimal subscriberBalance){
         logger.trace("Set attributes with login = {}, password = {}, userRole = {} and balance = {}", login, password, userRole, subscriberBalance);
+
         request.getSession().setAttribute("password", password);
         request.getSession().setAttribute("user_id", user_id);
         request.getSession().setAttribute("login", login);
         request.getSession().setAttribute("role", userRole);
         request.getSession().setAttribute("subscriberBalance", subscriberBalance);
-        logger.trace("Subscriber balance = {}", subscriberBalance);
     }
 
     public static void logoutUser(HttpServletRequest request, String login) {
@@ -94,6 +94,7 @@ public class CommandUtility {
         response.addHeader("Cache-Control", "post-check=0, pre-check=0");
         response.setHeader("Pragma","no-cache");
         response.setDateHeader ("Expires", 0);
+
         if (session.getAttribute("login") == null || session.getAttribute("password") == null) {
             response.sendRedirect(path + "/WEB-INF/common/error/invalidSession.jsp");
         }

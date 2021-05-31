@@ -44,13 +44,8 @@ public class PrivateAccountService {
             connection.setAutoCommit(false);
 
             BigDecimal actualSubscriberBalance = getSubscriberBalance(connection, subscriberId, dao);
-            logger.trace("inside increaseBalance - actualSubscriberBalance = {}", actualSubscriberBalance);
-
             BigDecimal newActualSubscriberBalance = actualSubscriberBalance.add(additionToBalance);
-            logger.trace("inside increaseBalance - newActualSubscribedBalance =  {}", newActualSubscriberBalance);
-
             increaseBalance(connection, subscriberId, newActualSubscriberBalance, dao);
-
 
             connection.commit();
             connection.setAutoCommit(true);
@@ -66,9 +61,6 @@ public class PrivateAccountService {
             }
             e.printStackTrace();
         }
-
-
-//        privateAccountDao.increaseBalance(connection, subscriberId, additionToBalance);
     }
 
     public BigDecimal getSubscriberBalance(Long subscriberId) {

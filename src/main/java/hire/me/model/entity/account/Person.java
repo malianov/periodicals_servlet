@@ -3,6 +3,8 @@ package hire.me.model.entity.account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
+
 public class Person {
     private static final Logger logger = LogManager.getLogger(Person.class);
 
@@ -50,5 +52,18 @@ public class Person {
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return name.equals(person.name) && surname.equals(person.surname) && email.equals(person.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, surname, email);
     }
 }
