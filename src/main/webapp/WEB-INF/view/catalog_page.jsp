@@ -7,7 +7,6 @@
 <fmt:setBundle basename="messages"/>
 
 <jsp:include page="header.jsp"/>
-
 <body>
 <div class="container">
 
@@ -262,7 +261,7 @@
                                                         <div class="modal-content border border-primary border-3">
                                                             <div class="modal-header text-center">
                                                                 <p class="modal-title fs-6 fw-bold fst-italic">
-                                                                    "Кто много читает, тот многава ни знаит !"</p>
+                                                                    "Кто много читает, тот много знает!"</p>
                                                                 <button type="button" class="btn-close"
                                                                         data-bs-dismiss="modal"
                                                                         aria-label="Close"></button>
@@ -276,8 +275,8 @@
                                                                                 Order</h2>
                                                                             <p class="blog-post-meta">
                                                                                 Date: <span id="date"></span>
-                                                                                Time: <span id="time"></span> Created
-                                                                                by ${sessionScope.login}
+                                                                                Time: <span id="time"></span>
+                                                                                Created by ${sessionScope.login}
                                                                             </p>
                                                                             <hr>
                                                                             <h5 class="fst-italic">
@@ -397,11 +396,11 @@
                                                                             <hr>
 
                                                                             <h5 class="fst-italic">
-                                                                                <strong>Adress</strong></h5>
+                                                                                <strong>Address</strong></h5>
                                                                             <p><textarea
                                                                                     class="form-control btn-outline-primary"
                                                                                     id="message-text"
-                                                                                    name="new_description"></textarea>
+                                                                                    name="address"></textarea>
                                                                             </p>
                                                                             <input name="subscription_year" type="hidden" value="2021">
                                                                         </article>
@@ -418,6 +417,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                     <%--<div class="modal fade" id="modalSignUp" tabindex="-1" role="dialog"
                                                          aria-labelledby="modalHeaderFooterTitle"
                                                          aria-hidden="true">

@@ -101,6 +101,12 @@ public class UserService {
         return dao.getRoleByLogin(login);
     }
 
+    public Long getIdByLogin(String login) {
+        logger.info("Find ID by login");
+        UserDao dao = daoFactory.createUserDao();
+        return dao.getIdByLogin(login);
+    }
+
     public void changeUserStatus(String login, String status) {
         UserDao dao = daoFactory.createUserDao();
         dao.changeUserStatus(login, status);

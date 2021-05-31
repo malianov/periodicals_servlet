@@ -19,6 +19,7 @@ public interface UserDao extends AbstractDao<User> {
     boolean isLoginExist(String login);
     boolean isPasswordCorrectForLogin(String login, String password);
 
+    Long getIdByLogin(String login);
     UserRole getRoleByLogin(String login);
     UserService.PaginationResult searchSubscribersWithPagination(int lowerBound, int upperBound, String searchKey);
 

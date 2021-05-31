@@ -8,9 +8,7 @@ public class ServiceFactory {
 
     private static ServiceFactory serviceFactory;
 
-    private ServiceFactory() {
-
-    }
+    private ServiceFactory() {}
 
     public static ServiceFactory getInstance() {
         if (serviceFactory == null) {
@@ -33,6 +31,10 @@ public class ServiceFactory {
 
     public UserService getUsersService() {
         return UserService.getInstance();
+    }
+
+    public PrivateAccountService getPrivateAccountService() {
+        return PrivateAccountService.getInstance();
     }
 
     public SubscriptionService getSubscriptionService() {

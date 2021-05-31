@@ -33,9 +33,9 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
         return instance;
     }
 
-    public void isSubscriptionSuccessful(String subscriberLogin, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems) {
+    public void isSubscriptionSuccessful(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems) {
         try (PreparedStatement actualPrice = connection.prepareStatement("SELECT price_per_item FROM periodical where id=(?);");
-             PreparedStatement actualSubscriberBalance = connection.prepareStatement("SELECT balance FROM users where login=(?);")
+             PreparedStatement actualSubscriberBalance = connection.prepareStatement("SELECT balance FROM users where id=(?);")
         ) {
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,11 +64,11 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
         return new BigDecimal(0.0);     // Put here Exception (the price per item have to be!)
     }
 
-    public BigDecimal getSubscriberBalance(Connection serviceConnection, String subscriberLogin) {
+    public BigDecimal getSubscriberBalance(Connection serviceConnection, Long subscriberId) {
         logger.trace("getSubscriberBalance");
-        try (PreparedStatement ps = serviceConnection.prepareStatement("SELECT balance FROM users where login=(?);")) {
+        try (PreparedStatement ps = serviceConnection.prepareStatement("SELECT balance FROM users where id=(?);")) {
 
-            ps.setString(1, subscriberLogin);
+            ps.setLong(1, subscriberId);
 
             final ResultSet rs = ps.executeQuery();
 
@@ -82,12 +82,12 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
         return new BigDecimal(0.0);     // Put here Exception
     }
 
-    public void setSubscriberBalanceToNew(Connection serviceConnection, String subscriberLogin, BigDecimal newSubscriberBalance) {
+    public void setSubscriberBalanceToNew(Connection serviceConnection, Long subscriberId, BigDecimal newSubscriberBalance) {
         logger.trace("setSubscriberBalanceToNew");
-        try (PreparedStatement ps = serviceConnection.prepareStatement("UPDATE users SET balance=(?) WHERE login=(?);")) {
+        try (PreparedStatement ps = serviceConnection.prepareStatement("UPDATE users SET balance=(?) WHERE id=(?);")) {
 
             ps.setBigDecimal(1, newSubscriberBalance);
-            ps.setString(2, subscriberLogin);
+            ps.setLong(2, subscriberId);
 
             ps.execute();
 
@@ -96,16 +96,17 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
         }
     }
 
-    public void addSubscriptionRecord(Connection serviceConnection, String subscriberLogin, Integer subscribedPeriodicId, String item, String subscriptionYear, BigDecimal actualPeriodicPricePerItem) {
+    public void addSubscriptionRecord(Connection serviceConnection, Long subscriberId, Integer subscribedPeriodicId, String item, String subscriptionYear, BigDecimal actualPeriodicPricePerItem, String subscriberAddress) {
         logger.trace("addSubscriptionRecord");
 
-        try (PreparedStatement ps = serviceConnection.prepareStatement("INSERT INTO subscriptions (subscriber_id, periodic_id, periodic_item, periodic_year, item_price, subscription_date, subscription_time) VALUES ((?), (?), (?), (?), (?), now(), now());")) {
+        try (PreparedStatement ps = serviceConnection.prepareStatement("INSERT INTO subscriptions (subscriber_id, periodic_id, periodic_item, periodic_year, item_price, subscriber_address, subscription_date, subscription_time) VALUES ((?), (?), (?), (?), (?), (?), now(), now());")) {
 
-            ps.setString(1, subscriberLogin);
+            ps.setLong(1, subscriberId);
             ps.setLong(2, subscribedPeriodicId);
             ps.setString(3, item);
             ps.setString(4, subscriptionYear);
             ps.setBigDecimal(5, actualPeriodicPricePerItem);
+            ps.setString(6, subscriberAddress);
             ps.execute();
 
         } catch (SQLException e) {

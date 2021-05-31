@@ -24,7 +24,6 @@
         </div>
     </nav>
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 fs-5 text-muted">
-
         <c:choose>
             <c:when test="${page eq 'home'}">
                 <li><a href="${pageContext.request.contextPath}/app/to_home_page" class="nav-link px-2 link-primary"><fmt:message key="home"/></a></li>
@@ -41,9 +40,6 @@
                 <li><a href="${pageContext.request.contextPath}/app/to_catalog_page?current_page=1" class="nav-link px-2 link-dark"><fmt:message key="catalog"/></a></li>
             </c:otherwise>
         </c:choose>
-
-
-
         <c:choose>
             <c:when test="${sessionScope.role eq 'ADMIN'}">
                 <c:choose>
@@ -125,7 +121,6 @@
 <%--            </button>--%>
 <%--        </c:if>--%>
 
-
         <c:choose>
             <c:when test="${empty sessionScope.login}">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -137,12 +132,52 @@
                         data-bs-target="#modalPersonalAccount">Ваш баланс: ${sessionScope.subscriberBalance} ₴
                 </button>
             </c:when>
-
-
-
         </c:choose>
     </div>
 </header>
+
+
+
+<div class="modal fade" id="modalPersonalAccount" tabindex="-1" role="dialog" aria-hidden="true"
+     data-bs-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content border border-warning border-3">
+            <div class="modal-header">
+                <p class="modal-title fs-5 fw-bold text-center">
+                    "В газетах нет ни слова правды. Потому-то их и читают."</p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form  method="get" action="/app/app/to_increase_balance">
+                    <div class="mb-3">
+                        <article class="blog-post">
+                            <h2 class="blog-post-title">Private account</h2>
+                            <p class="blog-post-meta">
+                                For ${sessionScope.login},
+                                Date: <span id="date"></span>
+                                Time: <span id="time"></span>
+                            </p>
+                            <hr>
+
+                            <h5 class="fst-italic"><strong>You have already:</strong></h5>
+                            <p>${sessionScope.subscriberBalance} ₴</p>
+                            <h5 class="fst-italic"><strong>How much money you would like to add?</strong></h5>
+                            <div class="mb-3">
+                                <input name="addition_to_balance" type="text" class="form-control" placeholder="Enter your money here">
+                            </div>
+                        </article>
+                        <hr>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-warning" type="submit">Confirm addition</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="modalHeaderFooterTitle"
      aria-hidden="true">
@@ -241,3 +276,4 @@
         </div>
     </div>
 </div>
+<script src="${pageContext.request.contextPath}/resources/js/script.js"></script>

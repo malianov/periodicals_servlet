@@ -36,17 +36,22 @@ logger.trace("Execute");
         final Integer subscribedPeriodicId = Integer.valueOf((request.getParameter("periodic_id")));
         final String[] selectedPeriodicItems = request.getParameterValues("selected");
         final String subscriptionYear = request.getParameter("subscription_year");
+        final String subscriberAddress = request.getParameter("address");
 
         final HttpSession session = request.getSession();
-        final String subscriberLogin = session.getAttribute("login").toString();
+//        final String subscriberLogin = session.getAttribute("login").toString();
+        final Long subscriberId = (Long) session.getAttribute("user_id");
 //        final int monthsQuantityty = selectedPeriodicMonths.length;
 
+        logger.trace("SubscriberId = {}", subscriberId);
         logger.trace("Subscriber Periodic ID = {}", subscribedPeriodicId);
 
-        subscriptionService.isSubscriptionSuccessful(subscriberLogin, subscribedPeriodicId, subscriptionYear, selectedPeriodicItems);
+        subscriptionService.isSubscriptionSuccessful(subscriberId, subscribedPeriodicId, subscriptionYear, selectedPeriodicItems, subscriberAddress);
+
+        request.getSession().setAttribute("subscriberBalance", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));
 
 
         logger.trace("Execute - going to return null");
-        return null;
+        return "/WEB-INF/view/home_page.jsp";
     }
 }

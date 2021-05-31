@@ -204,6 +204,27 @@ public class JdbcUserDaoImpl implements UserDao {
         return role;
     }
 
+    @Override
+    public Long getIdByLogin(String login) {
+        logger.trace("login => {}", login);
+
+        try (PreparedStatement ps = connection.prepareStatement("SELECT id FROM users where login=(?);")) {
+            ps.setString(1, login);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                long id = rs.getLong("id");
+                logger.trace("Inside getIdByLogin, role exists and equal to {}", id);
+                return id;
+            }
+        } catch (SQLException e) {
+            logger.trace("Inside getIdByLogin: Exception {}", e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public UserService.PaginationResult searchSubscribersWithPagination(int lowerBound, int upperBound, String searchKey) {
         logger.info("Search users by pagination with lowerBound = {}, upperBound = {} and searchKey = {}", lowerBound, upperBound, searchKey);
 

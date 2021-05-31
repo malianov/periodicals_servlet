@@ -39,6 +39,7 @@ public class LoginCommand implements Command {
 
         final UserRole role = userService.getRoleByLogin(login);
         final BigDecimal privateAccount = userService.getPrivateAccountByLogin(login);
+        final Long userId = userService.getIdByLogin(login);
 
         logger.trace("Login {} has role as = {}", login, role);
 
@@ -50,7 +51,7 @@ public class LoginCommand implements Command {
                 return "/WEB-INF/view/common/error/multilogin.jsp";
             }
 
-            CommandUtility.loginUser(request, login, password, role, privateAccount);
+            CommandUtility.loginUser(request, userId, login, password, role, privateAccount);
         } else {
             logger.trace("Password is incorrect");
             return "/WEB-INF/view/common/login.jsp?passwordCorrect=false";

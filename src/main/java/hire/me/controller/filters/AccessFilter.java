@@ -45,7 +45,8 @@ public class AccessFilter implements Filter {
 						"to_catalog_page",
 						"",
 						"to_support_page",
-						"to_order_periodic")
+						"to_order_periodic",
+						"to_increase_balance")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
 		allowedPages.put(UserRole.ADMIN,

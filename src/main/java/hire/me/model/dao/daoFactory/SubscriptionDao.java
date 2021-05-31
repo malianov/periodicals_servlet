@@ -6,8 +6,8 @@ import java.sql.Connection;
 public interface SubscriptionDao {
 
     BigDecimal getPeriodicPricePerItem(Connection connection, Integer subscribedPeriodicId);
-    BigDecimal getSubscriberBalance(Connection connection, String subscriberLogin);
-    void isSubscriptionSuccessful(String subscriberLogin, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems);
-    void setSubscriberBalanceToNew(Connection connection, String subscriberLogin, BigDecimal newSubscriberBalance);
-    void addSubscriptionRecord(Connection connection, String subscriberLogin, Integer subscribedPeriodicId, String item, String subscriptionYear, BigDecimal actualPeriodicPricePerItem);
+    BigDecimal getSubscriberBalance(Connection connection, Long subscriberId);
+    void isSubscriptionSuccessful(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems);
+    void setSubscriberBalanceToNew(Connection connection, Long subscriberId, BigDecimal newSubscriberBalance);
+    void addSubscriptionRecord(Connection connection, Long subscriberId, Integer subscribedPeriodicId, String item, String subscriptionYear, BigDecimal actualPeriodicPricePerItem, String subscriberAddress);
 }

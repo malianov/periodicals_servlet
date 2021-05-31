@@ -35,7 +35,7 @@ public class SubscriptionService {
         return instance;
     }
 
-    public boolean isSubscriptionSuccessful(String subscriberLogin, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems) {
+    public boolean isSubscriptionSuccessful(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems, String subscriberAddress) {
         logger.trace("isSubscriptionSuccessful");
 
         SubscriptionDao dao = daoFactory.createSubscriptionDao();
@@ -48,21 +48,24 @@ public class SubscriptionService {
             connection.setAutoCommit(false);
 
             BigDecimal actualPeriodicPricePerItem = getPeriodicPricePerItem(connection, subscribedPeriodicId, dao);
-
-            BigDecimal actualSubscriberBalance = getSubscriberBalance(connection, subscriberLogin, dao);
-
             logger.trace("actualPeriodicPricePerItem - {}", actualPeriodicPricePerItem);
+
+            BigDecimal actualSubscriberBalance = getSubscriberBalance(connection, subscriberId, dao);
             logger.trace("actualSubscriberBalance - {}", actualSubscriberBalance);
+
             if (isSubscriberBalanceIsEnoughForSubscription(actualSubscriberBalance, actualPeriodicPricePerItem, quantityOfItems)) {
                 logger.trace("isSubscriptionSuccessful_inside try _ if");
 
                 BigDecimal newSubscriberBalance = newSubscriberBalance(actualSubscriberBalance, actualPeriodicPricePerItem, quantityOfItems);
                 logger.trace("newSubscriberBalance = {}", newSubscriberBalance);
-                setSubscriberBalanceToNew(connection, subscriberLogin, newSubscriberBalance, dao);
+                setSubscriberBalanceToNew(connection, subscriberId, newSubscriberBalance, dao);
 
                 logger.trace("going to add record");
 
-                addSubscriptionRecord(connection, subscriberLogin, subscribedPeriodicId, selectedPeriodicItems, subscriptionYear, actualPeriodicPricePerItem, dao);
+
+
+
+                addSubscriptionRecord(connection, subscriberId, subscribedPeriodicId, selectedPeriodicItems, subscriptionYear, actualPeriodicPricePerItem, subscriberAddress, dao);
 
                 connection.commit();
                 connection.setAutoCommit(true);
@@ -90,9 +93,9 @@ public class SubscriptionService {
         return true;
     }
 
-    private void addSubscriptionRecord(Connection connection, String subscriberLogin, Integer subscribedPeriodicId, String[] selectedPeriodicItems, String subscriptionYear, BigDecimal actualPeriodicPricePerItem, SubscriptionDao dao) {
+    private void addSubscriptionRecord(Connection connection, Long subscriberId, Integer subscribedPeriodicId, String[] selectedPeriodicItems, String subscriptionYear, BigDecimal actualPeriodicPricePerItem, String subscriberAddress, SubscriptionDao dao) {
         for(String item: selectedPeriodicItems) {
-            dao.addSubscriptionRecord(connection, subscriberLogin, subscribedPeriodicId, item, subscriptionYear, actualPeriodicPricePerItem);
+            dao.addSubscriptionRecord(connection, subscriberId, subscribedPeriodicId, item, subscriptionYear, actualPeriodicPricePerItem, subscriberAddress);
         }
     }
 
@@ -102,8 +105,8 @@ public class SubscriptionService {
         return dao.getPeriodicPricePerItem(connection, subscribedPeriodicId);
     }
 
-    private BigDecimal getSubscriberBalance(Connection connection, String subscriberLogin, SubscriptionDao dao) {
-        return dao.getSubscriberBalance(connection, subscriberLogin);
+    private BigDecimal getSubscriberBalance(Connection connection, Long subscriberId, SubscriptionDao dao) {
+        return dao.getSubscriberBalance(connection, subscriberId);
     }
 
     private boolean isSubscriberBalanceIsEnoughForSubscription(BigDecimal actualSubscriberBalance, BigDecimal periodicPricePerItem, int quantityOfItems) {
@@ -114,7 +117,7 @@ public class SubscriptionService {
         return actualSubscriberBalance.subtract(periodicPricePerItem.multiply(new BigDecimal(quantityOfItems)));
     }
 
-    private void setSubscriberBalanceToNew(Connection connection, String subscriberLogin, BigDecimal newSubscriberBalance, SubscriptionDao dao) {
-        dao.setSubscriberBalanceToNew(connection, subscriberLogin, newSubscriberBalance);
+    private void setSubscriberBalanceToNew(Connection connection, Long subscriberId, BigDecimal newSubscriberBalance, SubscriptionDao dao) {
+        dao.setSubscriberBalanceToNew(connection, subscriberId, newSubscriberBalance);
     }
 }

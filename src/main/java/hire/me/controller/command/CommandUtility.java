@@ -45,9 +45,10 @@ public class CommandUtility {
         return false;
     }
 
-    public static void loginUser(HttpServletRequest request, String login, String password, UserRole userRole, BigDecimal subscriberBalance){
+    public static void loginUser(HttpServletRequest request, Long user_id, String login, String password, UserRole userRole, BigDecimal subscriberBalance){
         logger.trace("Set attributes with login = {}, password = {}, userRole = {} and balance = {}", login, password, userRole, subscriberBalance);
         request.getSession().setAttribute("password", password);
+        request.getSession().setAttribute("user_id", user_id);
         request.getSession().setAttribute("login", login);
         request.getSession().setAttribute("role", userRole);
         request.getSession().setAttribute("subscriberBalance", subscriberBalance);

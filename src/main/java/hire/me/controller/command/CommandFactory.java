@@ -30,6 +30,7 @@ public class CommandFactory {
         commands.put(EDIT_PERIODIC.getPath(), new EditPeriodicCommand());
         commands.put(MAKE_ORDER_NONORDER_PERIODIC.getPath(), new OrderableNonorderableCommand());
         commands.put(MAKE_SUBSCRIPTION.getPath(), new MakeSubscriptionCommand());
+        commands.put(ADDITION_TO_BALANCE.getPath(),new PrivateAccountCommand());
     }
 
     public static Command getCommand(String url) throws NotFoundCommandException {
