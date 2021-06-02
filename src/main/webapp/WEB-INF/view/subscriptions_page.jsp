@@ -10,11 +10,8 @@
 
 <body>
 <div class="container">
-
     <jsp:include page="navbar.jsp"/>
-
     <div class="nav justify-content-between fs-5 text-muted">
-
         <c:choose>
             <c:when test="${sessionScope.role eq 'SUBSCRIBER'}">
                 <h4 class="h5 text-muted mt-1 mb-2"><fmt:message key="subscriptions.my-subscriptions"/></h4>
@@ -23,10 +20,7 @@
                 <h4 class="h5 text-muted mt-1 mb-2"><fmt:message key="subscriptions.current-subscriptions"/></h4>
             </c:otherwise>
         </c:choose>
-
     </div>
-
-
     <table class="table table-hover table-bordered border-primary border border-2 text-muted">
         <thead class="border-primary border border-2 table-primary">
         <tr>
@@ -39,28 +33,22 @@
         </tr>
         </thead>
         <tbody>
-
-
         <c:forEach items="${subscriptions}" var="all_subscriptions_list">
             <tr>
-                    <td class="align-middle"><c:out value="${all_subscriptions_list.getId()}"/></td>
-                    <td class="align-middle"><c:out value="${all_subscriptions_list.getDate()}"/></td>
-                    <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodical().getTitle()}"/></td>
-                    <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodicYear()}"/></td>
-                    <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodicItem()}"/></td>
-                    <td class="align-middle"><c:out value="${all_subscriptions_list.getItemPrice()}"/></td>
+                <td class="align-middle"><c:out value="${all_subscriptions_list.getId()}"/></td>
+                <td class="align-middle"><c:out value="${all_subscriptions_list.getDate()}"/></td>
+                <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodical().getTitle()}"/></td>
+                <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodicYear()}"/></td>
+                <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodicItem()}"/></td>
+                <td class="align-middle"><c:out value="${all_subscriptions_list.getItemPrice()}"/></td>
             </tr>
         </c:forEach>
-
         </tbody>
     </table>
-
 </div>
-
 <div class="container my-0 fixed-bottom">
     <nav>
         <ul class="pagination justify-content-center ">
-
             <c:if test="${currentPage != 1}">
                 <li class="page-item"><a
                         href="${pageContext.request.contextPath}/app/to_my_subscriptions_page?search_input=${searchInput}&current_page=${currentPage - 1}"
@@ -72,7 +60,6 @@
                         class="page-link border-secondary text-secondary"><fmt:message key="pagination.previous"/></a>
                 </li>
             </c:if>
-
             <c:forEach begin="1" end="${nuOfPages}" var="i">
                 <c:choose>
                     <c:when test="${currentPage eq i}">
@@ -87,7 +74,6 @@
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
-
             <c:if test="${currentPage lt nuOfPages}">
                 <li class="page-item"><a
                         href="${pageContext.request.contextPath}/app/to_my_subscriptions_page?search_input=${searchInput}&current_page=${currentPage + 1}"
@@ -98,11 +84,8 @@
                         href="${pageContext.request.contextPath}/app/to_my_subscriptions_page?search_input=${searchInput}&current_page=${currentPage}"
                         class="page-link border-secondary text-secondary"><fmt:message key="pagination.next"/></a></li>
             </c:if>
-
-
         </ul>
     </nav>
-
     <footer>
         <div class="text-center text-white p-3 bg-primary">
             <fmt:message key="footer.copyright"/>
@@ -112,5 +95,4 @@
 </div>
 <script src="${pageContext.request.contextPath}/resources/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

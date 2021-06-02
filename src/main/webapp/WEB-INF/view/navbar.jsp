@@ -10,8 +10,8 @@
     <nav class="navbar navbar-light border border-primary border-2 rounded-pill">
         <div class="container-fluid">
             <a class="navbar-brand fs-3 fw-bold" href="${pageContext.request.contextPath}/app/to_home_page">
-                <img src="${pageContext.request.contextPath}/resources/images/logo.svg" alt="" width="50"
-                     height="40" class="d-inline-block align-text">
+                <%--<img src="${pageContext.request.contextPath}/app/resources/images/logo.svg" alt="" width="50"
+                     height="40" class="d-inline-block align-text">--%>
                 <c:choose>
                     <c:when test="${not empty sessionScope.login}">
                         <fmt:message key="good-day-user"/>${sessionScope.login}
@@ -82,22 +82,6 @@
                 </c:choose>
             </c:otherwise>
         </c:choose>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <%--        <c:choose>
             <c:when test="${page eq 'support'}">
                 <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-primary"><fmt:message key="support"/></a></li>
@@ -106,15 +90,8 @@
                 <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-dark"><fmt:message key="support"/></a></li>
             </c:otherwise>
         </c:choose>--%>
-
-
-
-
-
     </ul>
     <div class="col-md-4 text-end">
-
-
         <button class="btn btn-primary me-3" type="button" id="dropdownMenuBtn1" data-bs-toggle="dropdown">
             <c:choose>
                 <c:when test="${language eq 'ua'}">
@@ -136,7 +113,6 @@
             <li><a class="dropdown-item" href="?language=ua&search_input=${searchInput}&current_page=${currentPage}"><fmt:message key="language.ukrainian"/></a></li>
             <li><a class="dropdown-item" href="?language=ru&search_input=${searchInput}&current_page=${currentPage}"><fmt:message key="language.russian"/></a></li>
         </ul>
-
         <c:choose>
             <c:when test="${not empty sessionScope.login}">
                 <a href="${pageContext.request.contextPath}/app/logout" class="btn btn-outline-primary me-3"><fmt:message key="logout"/></a>
@@ -147,13 +123,11 @@
                 </button>
             </c:otherwise>
         </c:choose>
-
 <%--        <c:if test="${empty sessionScope.login}">--%>
 <%--            <button type="button" class="btn btn-primary" data-bs-toggle="modal"--%>
 <%--                    data-bs-target="#modalSignUp"><fmt:message key="sign-up"/>--%>
 <%--            </button>--%>
 <%--        </c:if>--%>
-
         <c:choose>
             <c:when test="${empty sessionScope.login}">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -162,46 +136,43 @@
             </c:when>
             <c:when test="${!empty sessionScope.login && sessionScope.role eq 'SUBSCRIBER'}">
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                        data-bs-target="#modalPersonalAccount">Ваш баланс: ${sessionScope.subscriberBalance} ₴
+                        data-bs-target="#modalPersonalAccount"><fmt:message key="navbar.your-account"/> ${sessionScope.subscriberBalance} ₴
                 </button>
             </c:when>
         </c:choose>
     </div>
 </header>
-
-
-
 <div class="modal fade" id="modalPersonalAccount" tabindex="-1" role="dialog" aria-hidden="true"
      data-bs-backdrop="static">
     <div class="modal-dialog" role="document">
         <div class="modal-content border border-warning border-3">
             <div class="modal-header">
                 <p class="modal-title fs-5 fw-bold text-center">
-                    "В газетах нет ни слова правды. Потому-то их и читают."</p>
+                    <fmt:message key="navbar.newspapers-has-no-true"/></p>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form  method="get" action="/app/app/to_increase_balance">
                     <div class="mb-3">
                         <article class="blog-post">
-                            <h2 class="blog-post-title">Private account</h2>
+                            <h2 class="blog-post-title"><fmt:message key="navbar.your-private-account"/></h2>
                             <p class="blog-post-meta">
-                                For ${sessionScope.login},
-                                Date: <span id="date"></span>
-                                Time: <span id="time"></span>
+                                <fmt:message key="navbar.for"/> ${sessionScope.login},
+                                <fmt:message key="navbar.date"/><span id="date"></span>
+                                <fmt:message key="navbar.time"/><span id="time"></span>
                             </p>
                             <hr>
 
-                            <h5 class="fst-italic"><strong>You have already:</strong></h5>
+                            <h5 class="fst-italic"><strong><fmt:message key="navbar.you-have-already"/></strong></h5>
                             <p>${sessionScope.subscriberBalance} ₴</p>
-                            <h5 class="fst-italic"><strong>How much money you would like to add?</strong></h5>
+                            <h5 class="fst-italic"><strong><fmt:message key="navbar.how-much-money"/></strong></h5>
                             <div class="mb-3">
-                                <input name="addition_to_balance" type="text" class="form-control" placeholder="Enter your money here">
+                                <input name="addition_to_balance" type="text" class="form-control" placeholder="<fmt:message key="navbar.enter-your-money-here"/>">
                             </div>
                         </article>
                         <hr>
                         <div class="d-grid gap-2">
-                            <button class="btn btn-warning" type="submit">Confirm addition</button>
+                            <button class="btn btn-warning" type="submit"><fmt:message key="navbar.сonfirm-addition"/></button>
                         </div>
                     </div>
                 </form>
@@ -209,9 +180,6 @@
         </div>
     </div>
 </div>
-
-
-
 <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="modalHeaderFooterTitle"
      aria-hidden="true">
     <div class="modal-dialog" role="document">

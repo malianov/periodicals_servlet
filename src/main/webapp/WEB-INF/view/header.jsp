@@ -13,7 +13,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>periodics</title>
+    <title><fmt:message key="header.periodics"/></title>
 
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/all.min.css"/>

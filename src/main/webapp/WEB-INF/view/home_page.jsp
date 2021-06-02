@@ -21,11 +21,9 @@
                      height="500" loading="lazy">
             </div>
             <div class="col-lg-6">
-                <h1 class="display-6 fw-bold lh-1 mb-3">Мы работаем для Вас и Ваших родных!</h1>
-                <p class="lead">В современном мире проводов и радиоизлучений, еще осталось что-то, что может
-                    навевать стариной,
-                    давно забытыми чувствами и воспоминаниями. <br><br>Что это? <br><br>Это газеты, журналы и другая
-                    периодика, на которую Вы можете подписаться у нас по самым демократическим ценам.
+                <h1 class="display-6 fw-bold lh-1 mb-3"><fmt:message key="home.we-work-for-you-and-your-parents"/></h1>
+                <p class="lead"><fmt:message key="home.bla-bla-bla"/><br><br><fmt:message key="home.what-is-this"/><br><br>
+                    <fmt:message key="home.this-is-newspapers-bla-bla"/>
                     <br><br>
                     <br><br>
                     <br><br>
@@ -39,8 +37,8 @@
 <div class="container my-0 fixed-bottom">
     <footer>
         <div class="text-center text-white p-3 bg-primary">
-            © 2021 Copyright:
-            <a class="text-white" href="ma_igor@ukr.net">Malianov Igor</a>
+            <fmt:message key="support.copyright"/>
+            <a class="text-white" href="ma_igor@ukr.net"><fmt:message key="support.malianov-igor"/></a>
         </div>
     </footer>
 </div>
