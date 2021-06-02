@@ -53,7 +53,7 @@ public class SingleUserSubscriptionsPage implements Command {
         request.getSession().setAttribute("subscriptions", subscriptions);
         request.getSession().setAttribute("nuOfPages", nuOfPages);
         request.getSession().setAttribute("currentPage", currentPage);
-        request.getSession().setAttribute("page", "subscriptions");
+        request.getSession().setAttribute("page", "my_subscriptions");
 
         return "/WEB-INF/view/subscriptions_page.jsp";
     }

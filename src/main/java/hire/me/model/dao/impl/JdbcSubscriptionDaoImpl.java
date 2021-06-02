@@ -122,20 +122,14 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
                      "WHERE subscriptions.subscriber_id LIKE ? ORDER BY subscriptions.id LIMIT ?, ?");
              PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) FROM subscriptions WHERE subscriptions.subscriber_id LIKE ?;")) {
 
-            logger.trace("try to get queryList");
-
             countRowsPS.setString(1, "%" + searchKey + "%");
-            logger.trace("1");
             subscriptionsPS.setString(1, "%" + searchKey + "%");
             subscriptionsPS.setInt(2, lowerBound);
-            logger.trace("2");
             subscriptionsPS.setInt(3, upperBound);
-            logger.trace("3");
 
             ResultSet rs = subscriptionsPS.executeQuery();
 
             while (rs.next()) {
-                logger.info("We have smth inside rs_1");
                 Subscription subscription = subscriptionMapper.extractFromResultSet(rs);
                 subscriptions.add(subscription);
             }
@@ -145,13 +139,11 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
             rs = countRowsPS.executeQuery();
 
             if (rs.next()) {
-                logger.info("We have smth inside rs_2");
                 paginationResult.setNuOfRows(rs.getInt(1));
             }
             rs.close();
 
         } catch (SQLException e) {
-            logger.trace("Catched SQLException {}", e);
             e.printStackTrace();
         }
 

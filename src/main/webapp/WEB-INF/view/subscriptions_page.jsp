@@ -24,10 +24,6 @@
             </c:otherwise>
         </c:choose>
 
-        <form class="col-12 col-lg-4 mb-3 mt-mb-lg-0">
-            <input type="search" class="form-control" placeholder="<fmt:message key="subscriptions.search-in-users"/>"
-                   aria-label="Search" name="search_input">
-        </form>
     </div>
 
 
@@ -36,7 +32,6 @@
         <tr>
             <th class="text-center"><fmt:message key="subscriptions.id"/></th>
             <th class="text-center"><fmt:message key="subscriptions.subscription-date"/></th>
-            <th class="text-center"><fmt:message key="subscriptions.subscriber-login"/></th>
             <th class="text-center"><fmt:message key="subscriptions.periodic-title"/></th>
             <th class="text-center"><fmt:message key="subscriptions.periodic-year"/></th>
             <th class="text-center"><fmt:message key="subscriptions.periodic-item"/></th>
@@ -50,7 +45,6 @@
             <tr>
                     <td class="align-middle"><c:out value="${all_subscriptions_list.getId()}"/></td>
                     <td class="align-middle"><c:out value="${all_subscriptions_list.getDate()}"/></td>
-                    <td class="align-middle"><c:out value="${all_subscriptions_list.getUser().getLogin()}"/></td>
                     <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodical().getTitle()}"/></td>
                     <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodicYear()}"/></td>
                     <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodicItem()}"/></td>
@@ -69,12 +63,12 @@
 
             <c:if test="${currentPage != 1}">
                 <li class="page-item"><a
-                        href="${pageContext.request.contextPath}/app/to_subscriptions_page?search_input=${searchInput}&current_page=${currentPage - 1}"
+                        href="${pageContext.request.contextPath}/app/to_my_subscriptions_page?search_input=${searchInput}&current_page=${currentPage - 1}"
                         class="page-link border-primary"><fmt:message key="pagination.previous"/></a></li>
             </c:if>
             <c:if test="${currentPage == 1}">
                 <li class="page-item"><a
-                        href="${pageContext.request.contextPath}/app/to_subscriptions_page?search_input=${searchInput}&current_page=${currentPage}"
+                        href="${pageContext.request.contextPath}/app/to_my_subscriptions_page?search_input=${searchInput}&current_page=${currentPage}"
                         class="page-link border-secondary text-secondary"><fmt:message key="pagination.previous"/></a>
                 </li>
             </c:if>
@@ -83,12 +77,12 @@
                 <c:choose>
                     <c:when test="${currentPage eq i}">
                         <li class="page-item"><a
-                                href="${pageContext.request.contextPath}/app/to_subscriptions_page?search_input=${searchInput}&current_page=${i}"
+                                href="${pageContext.request.contextPath}/app/to_my_subscriptions_page?search_input=${searchInput}&current_page=${i}"
                                 class="page-link border-primary bg-primary text-white">${i}</a></li>
                     </c:when>
                     <c:otherwise>
                         <li class="page-item"><a
-                                href="${pageContext.request.contextPath}/app/to_subscriptions_page?search_input=${searchInput}&current_page=${i}"
+                                href="${pageContext.request.contextPath}/app/to_my_subscriptions_page?search_input=${searchInput}&current_page=${i}"
                                 class="page-link border-primary">${i}</a></li>
                     </c:otherwise>
                 </c:choose>
@@ -96,12 +90,12 @@
 
             <c:if test="${currentPage lt nuOfPages}">
                 <li class="page-item"><a
-                        href="${pageContext.request.contextPath}/app/to_subscriptions_page?search_input=${searchInput}&current_page=${currentPage + 1}"
+                        href="${pageContext.request.contextPath}/app/to_my_subscriptions_page?search_input=${searchInput}&current_page=${currentPage + 1}"
                         class="page-link border-primary"><fmt:message key="pagination.next"/></a></li>
             </c:if>
             <c:if test="${currentPage == nuOfPages}">
                 <li class="page-item"><a
-                        href="${pageContext.request.contextPath}/app/to_subscriptions_page?search_input=${searchInput}&current_page=${currentPage}"
+                        href="${pageContext.request.contextPath}/app/to_my_subscriptions_page?search_input=${searchInput}&current_page=${currentPage}"
                         class="page-link border-secondary text-secondary"><fmt:message key="pagination.next"/></a></li>
             </c:if>
 

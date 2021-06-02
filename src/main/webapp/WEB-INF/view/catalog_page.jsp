@@ -237,7 +237,7 @@
                                 </div>
                             </c:when>
                             <c:when test="${sessionScope.role eq 'SUBSCRIBER'}">
-                                <form method="get" action="/app/app/to_order_periodic">
+                                <form method="post" action="/app/app/to_order_periodic">
                                     <input name="periodic_id" type="hidden" value="${all_periodics_list.getId()}">
                                         <%--                                    <input name="status" type="hidden" value="unblock">--%>
 
@@ -267,15 +267,15 @@
                                                                         aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <form method="get" action="/app/app/to_order_periodic">
+                                                                <form method="post" action="/app/app/to_order_periodic">
                                                                     <div class="mb-3">
 
                                                                         <article class="blog-post">
                                                                             <h2 class="blog-post-title">Purchase
                                                                                 Order</h2>
                                                                             <p class="blog-post-meta">
-                                                                                Date: <span id="date"></span>
-                                                                                Time: <span id="time"></span>
+                                                                                <%--Date: <span id="date"></span>
+                                                                                Time: <span id="time"></span>--%>
                                                                                 Created by ${sessionScope.login}
                                                                             </p>
                                                                             <hr>
@@ -418,28 +418,6 @@
                                                     </div>
                                                 </div>
 
-                                                    <%--<div class="modal fade" id="modalSignUp" tabindex="-1" role="dialog"
-                                                         aria-labelledby="modalHeaderFooterTitle"
-                                                         aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="modalHeaderFooterTitle">Edit subscriber
-                                                                        information</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                            aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p>You are going to change the information for the following
-                                                                        subscriber:_______</p>
-                                                                    <form class="form-floating" method="GET"
-                                                                          action="/app/to_registration_page">
-
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>--%>
                                             </div>
                                         </c:when>
                                     </c:choose>

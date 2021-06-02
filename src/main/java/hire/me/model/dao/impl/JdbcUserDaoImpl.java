@@ -301,7 +301,6 @@ public class JdbcUserDaoImpl implements UserDao {
             final ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                logger.info("We have smth inside rs_1");
                 user = userMapper.extractFromResultSet(rs);
                 return user;
             }
