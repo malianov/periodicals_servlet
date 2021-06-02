@@ -1,6 +1,13 @@
 package hire.me.model.dao.impl;
 
+import hire.me.connection.ConnectionPool;
 import hire.me.model.dao.daoFactory.SubscriptionDao;
+import hire.me.model.dao.mapper.PeriodicalMapper;
+import hire.me.model.dao.mapper.SubscriptionMapper;
+import hire.me.model.entity.periodical.Periodical;
+import hire.me.model.entity.subscription.Subscription;
+import hire.me.model.service.PeriodicalService;
+import hire.me.model.service.SubscriptionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,6 +16,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static hire.me.connection.ConnectionPool.getConnection;
 
@@ -100,4 +109,82 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
         }
     }
 
+    public SubscriptionService.PaginationResult searchSubscriptionsWithPagination(int lowerBound, int upperBound, String searchKey) {
+        logger.info("Search subscription by pagination with lowerBound = {}, upperBound = {} and searchKey = {}", lowerBound, upperBound, searchKey);
+
+        SubscriptionService.PaginationResult paginationResult = new SubscriptionService.PaginationResult();
+        SubscriptionMapper subscriptionMapper = new SubscriptionMapper();
+        List<Subscription> subscriptions = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement subscriptionsPS = connection.prepareStatement("" +
+                     "SELECT subscriptions.id, subscriptions.subscriber_id, subscriptions.periodic_id, subscriptions.periodic_item, subscriptions.subscription_date, subscriptions.subscriber_address, subscriptions.item_price, subscriptions.periodic_year FROM subscriptions " +
+                     "ORDER BY subscriptions.id LIMIT ?, ?");
+             PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) FROM subscriptions WHERE subscriptions.subscriber_id LIKE ?;")) {
+
+            logger.trace("try to get queryList");
+
+            countRowsPS.setString(1, "%" + searchKey + "%");
+            logger.trace("1");
+            subscriptionsPS.setInt(1, lowerBound);
+            logger.trace("2");
+            subscriptionsPS.setInt(2, upperBound);
+            logger.trace("3");
+
+            ResultSet rs = subscriptionsPS.executeQuery();
+
+            while (rs.next()) {
+                logger.info("We have smth inside rs_1");
+                Subscription subscription = subscriptionMapper.extractFromResultSet(rs);
+                subscriptions.add(subscription);
+            }
+            rs.close();
+
+            countRowsPS.setString(1, "%" + searchKey + "%");
+            rs = countRowsPS.executeQuery();
+
+            if (rs.next()) {
+                logger.info("We have smth inside rs_2");
+                paginationResult.setNuOfRows(rs.getInt(1));
+            }
+            rs.close();
+
+        } catch (SQLException e) {
+            logger.trace("Catched SQLException {}", e);
+            e.printStackTrace();
+        }
+
+        paginationResult.setSubscriptionsList(new ArrayList<>(subscriptions));
+        return paginationResult;
+    }
+
+    @Override
+    public void create(Subscription entity) {
+
+    }
+
+    @Override
+    public Subscription findById(long id) {
+        return null;
+    }
+
+    @Override
+    public List<Subscription> findAll() {
+        return null;
+    }
+
+    @Override
+    public void update(Subscription subscription) {
+
+    }
+
+    @Override
+    public void delete(long id) {
+
+    }
+
+    @Override
+    public void close() {
+
+    }
 }

@@ -14,7 +14,9 @@ public enum Operation {
     EDIT_PERIODIC("to_edit_periodic"),
     MAKE_ORDER_NONORDER_PERIODIC("to_make_order_nonorder_periodic"),
     MAKE_SUBSCRIPTION("to_order_periodic"),
-    ADDITION_TO_BALANCE("to_increase_balance");
+    ADDITION_TO_BALANCE("to_increase_balance"),
+    SHOW_ALL_SUBSCRIPTIONS("to_subscriptions_page"),
+    SHOW_ALL_SINGLE_USER("to_my_subscriptions_page");
 
     private String path;
 

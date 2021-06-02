@@ -45,6 +45,7 @@ public class AccessFilter implements Filter {
 						"",
 						"to_support_page",
 						"to_order_periodic",
+						"to_my_subscriptions_page",
 						"to_increase_balance")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
@@ -60,6 +61,7 @@ public class AccessFilter implements Filter {
 						"to_block_unblock_user",
 						"to_edit_periodic",
 						"to_make_order_nonorder_periodic",
+						"to_subscriptions_page",
 						"to_support_page")
 						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 	}

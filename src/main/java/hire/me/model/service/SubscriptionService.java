@@ -2,12 +2,15 @@ package hire.me.model.service;
 
 import hire.me.model.dao.daoFactory.DaoFactory;
 import hire.me.model.dao.daoFactory.SubscriptionDao;
+import hire.me.model.entity.periodical.Periodical;
+import hire.me.model.entity.subscription.Subscription;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import static hire.me.connection.ConnectionPool.getConnection;
 
@@ -51,7 +54,6 @@ public class SubscriptionService {
             if (isSubscriberBalanceIsEnoughForSubscription(actualSubscriberBalance, actualPeriodicPricePerItem, quantityOfItems)) {
                 BigDecimal newSubscriberBalance = newSubscriberBalance(actualSubscriberBalance, actualPeriodicPricePerItem, quantityOfItems);
                 setSubscriberBalanceToNew(connection, subscriberId, newSubscriberBalance, dao);
-
                 addSubscriptionRecord(connection, subscriberId, subscribedPeriodicId, selectedPeriodicItems, subscriptionYear, actualPeriodicPricePerItem, subscriberAddress, dao);
 
                 connection.commit();
@@ -78,7 +80,7 @@ public class SubscriptionService {
             dao.addSubscriptionRecord(connection, subscriberId, subscribedPeriodicId, item, subscriptionYear, actualPeriodicPricePerItem, subscriberAddress);
         }
     }
-    
+
     private BigDecimal getPeriodicPricePerItem(Connection connection, Integer subscribedPeriodicId, SubscriptionDao dao) {
         return dao.getPeriodicPricePerItem(connection, subscribedPeriodicId);
     }
@@ -97,5 +99,40 @@ public class SubscriptionService {
 
     private void setSubscriberBalanceToNew(Connection connection, Long subscriberId, BigDecimal newSubscriberBalance, SubscriptionDao dao) {
         dao.setSubscriberBalanceToNew(connection, subscriberId, newSubscriberBalance);
+    }
+
+    public SubscriptionService.PaginationResult getSearchSubscriptionWithPagination(int lowerBound, int upperBound, String searchKey) {
+
+        logger.trace("Inside getSearchSubscriptionWithPagination, lowerBound = {}, upperBound = {}, searchKey = {}", lowerBound, upperBound, searchKey);
+        return daoFactory.createSubscriptionDao().searchSubscriptionsWithPagination(lowerBound, upperBound, searchKey);
+    }
+
+
+
+
+
+
+    public static class PaginationResult {
+        private int nuOfRows;
+        private List<Subscription> subscriptionsList;
+
+        public int getNuOfRows() {
+            return nuOfRows;
+        }
+
+        public void setNuOfRows(int nuOfRows) {
+            logger.trace("setNuOfRows request, nuOfRows = {}", nuOfRows);
+            this.nuOfRows = nuOfRows;
+        }
+
+        public List<Subscription> getSubscriptionsList() {
+            logger.trace("getSubscriptionsList");
+            return subscriptionsList;
+        }
+
+        public void setSubscriptionsList(List<Subscription> resultList) {
+            logger.trace("setSubscriptionsList");
+            this.subscriptionsList = resultList;
+        }
     }
 }

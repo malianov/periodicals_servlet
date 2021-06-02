@@ -65,6 +65,38 @@
 
 
 
+
+
+
+
+            <c:if test="${sessionScope.role eq 'ADMIN'}">
+                <c:choose>
+                    <c:when test="${page eq 'subscriptions'}">
+                        <li><a href="${pageContext.request.contextPath}/app/to_subscriptions_page?current_page=1" class="nav-link px-2 link-primary"><fmt:message key="catalog.subscriptions"/></a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li><a href="${pageContext.request.contextPath}/app/to_subscriptions_page?current_page=1" class="nav-link px-2 link-dark"><fmt:message key="catalog.subscriptions"/></a></li>
+                    </c:otherwise>
+                </c:choose>
+            </c:if>
+            <c:if test="${sessionScope.role eq 'SUBSCRIBER'}">
+                <c:choose>
+                    <c:when test="${page eq 'supscriptions'}">
+                        <li><a href="${pageContext.request.contextPath}/app/to_my_subscriptions_page" class="nav-link px-2 link-primary"><fmt:message key="catalog.my-subscriptions"/></a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li><a href="${pageContext.request.contextPath}/app/to_my_subscriptions_page" class="nav-link px-2 link-dark"><fmt:message key="catalog.my-subscriptions"/></a></li>
+                    </c:otherwise>
+                </c:choose>
+            </c:if>
+
+
+
+
+
+
+
+
 <%--        <c:choose>
             <c:when test="${page eq 'support'}">
                 <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-primary"><fmt:message key="support"/></a></li>

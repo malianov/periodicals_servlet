@@ -64,11 +64,6 @@ public class JdbcUserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findById(long id) {
-        return null;
-    }
-
-    @Override
     public List<User> findAll() {
         return null;
     }
@@ -293,5 +288,28 @@ public class JdbcUserDaoImpl implements UserDao {
             e.printStackTrace();
         }
         return subscriberBalance;
+    }
+
+    @Override
+    public User findById(long id) {
+
+        UserMapper userMapper = new UserMapper();
+        User user;
+
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users where id=(?);")) {
+            ps.setLong(1, id);
+            final ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                logger.info("We have smth inside rs_1");
+                user = userMapper.extractFromResultSet(rs);
+                return user;
+            }
+            rs.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

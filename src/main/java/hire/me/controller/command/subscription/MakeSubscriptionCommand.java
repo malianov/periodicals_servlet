@@ -41,6 +41,6 @@ public class MakeSubscriptionCommand implements Command {
 
         request.getSession().setAttribute("subscriberBalance", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));
 
-        return "/WEB-INF/view/home_page.jsp";
+        return "/WEB-INF/view/catalog_page.jsp";
     }
 }

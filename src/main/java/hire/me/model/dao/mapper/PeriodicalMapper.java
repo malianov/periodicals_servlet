@@ -16,12 +16,14 @@ public class PeriodicalMapper implements ObjectMapper<Periodical> {
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
     private static final String PRICE_PER_ITEM = "price_per_item";
-    private static final String THEME = "id_theme";
+    private static final String THEME = "name";
     private static final String STATUS = "status";
     private static final String TYPE = "type";
 
     @Override
     public Periodical extractFromResultSet(ResultSet rs) throws SQLException {
+
+        logger.trace("PeriodicalStatus.valueOf(rs.getString(STATUS).toUpperCase())) = {}", PeriodicalStatus.valueOf(rs.getString(STATUS).toUpperCase()));
 
         Periodical periodical = new Periodical.Builder()
                 .id(rs.getInt(ID))

@@ -36,6 +36,11 @@ public class PeriodicalService {
 //        periodicalDao.edit(id);
     }
 
+    public Periodical getPeriodicById(Long id) {
+        PeriodicalDao dao = daoFactory.createPeriodicalDao();
+        return dao.findById(id);
+    }
+
     public List<Periodical> getAllPeriodics() {
         PeriodicalDao dao = daoFactory.createPeriodicalDao();
         return dao.findAll();

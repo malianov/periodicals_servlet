@@ -3,6 +3,8 @@ package hire.me.model.dao.impl;
 import hire.me.connection.ConnectionPool;
 import hire.me.model.dao.daoFactory.PeriodicalDao;
 import hire.me.model.dao.mapper.PeriodicalMapper;
+import hire.me.model.dao.mapper.UserMapper;
+import hire.me.model.entity.account.User;
 import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.service.PeriodicalService;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +18,7 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 
 public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
     private static final Logger logger = getLogger(JdbcPeriodicalDaoImpl.class);
-    
+
     final private Connection connection = getConnection();
     private static JdbcPeriodicalDaoImpl instance;
 
@@ -64,7 +66,12 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
         List<Periodical> periodicals = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement periodicalsPS = connection.prepareStatement("SELECT periodical.id, periodical.title, periodical.description, periodical.price_per_item, types.type, periodical.id_theme, periodic_status.status FROM periodical INNER JOIN periodic_status ON periodical.id_status = periodic_status.id INNER JOIN types ON periodical.id_type = types.id WHERE periodical.title LIKE ? ORDER BY periodical.id LIMIT ?, ?;");
+             PreparedStatement periodicalsPS = connection.prepareStatement("SELECT p.id, p.title, p.description, t.name, ps.status, \n" +
+                     "tp.type, p.price_per_item FROM myPeriodics.periodical p \n" +
+                     "INNER JOIN periodic_status ps ON p.id_status = ps.id \n" +
+                     "INNER JOIN themes t ON p.id_theme = t.id \n" +
+                     "INNER JOIN types tp ON p.id_type = tp.id\n" +
+                     "WHERE p.id LIKE ? ORDER BY p.id LIMIT ?, ?;");
              PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) FROM periodical WHERE title LIKE ?;")) {
 
             logger.trace("try to get queryList");
@@ -115,6 +122,34 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
 
     @Override
     public Periodical findById(long id) {
+        PeriodicalMapper periodicalMapper = new PeriodicalMapper();
+        Periodical periodical;
+
+        try (PreparedStatement ps = connection.prepareStatement("SELECT p.id, p.title, p.description, t.name, ps.status, \n" +
+                        "tp.type, p.price_per_item FROM myPeriodics.periodical p \n" +
+                        "INNER JOIN periodic_status ps ON p.id_status = ps.id \n" +
+                        "INNER JOIN themes t ON p.id_theme = t.id \n" +
+                        "INNER JOIN types tp ON p.id_type = tp.id\n" +
+                        "WHERE p.id LIKE ?;")) {
+
+
+
+                // "SELECT * FROM periodical where id=(?);")) {
+            ps.setLong(1, id);
+            final ResultSet rs = ps.executeQuery();
+
+            while (!rs.next()) {
+                return null;
+            }
+            logger.info("We have smth inside rs_1");
+            periodical = periodicalMapper.extractFromResultSet(rs);
+
+            rs.close();
+            return periodical;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
