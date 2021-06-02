@@ -1,8 +1,6 @@
-#This gitHub contains my project. 
+### Task description:
 
-##Task description:
-
-###Periodicals.
+#### Periodicals.
 
 Implement the system of Periodicals. The system has a list of publications that are grouped by topic.
 
@@ -21,6 +19,6 @@ The system administrator has the rights to:
 - adding, deleting and editing publications;
 - blocking, unlocking the user.
 
-####Comments:
+#### Comments:
 The functionality of the program is not fully implemented.
                                                              
