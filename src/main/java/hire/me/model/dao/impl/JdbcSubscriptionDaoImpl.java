@@ -119,16 +119,17 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement subscriptionsPS = connection.prepareStatement("" +
                      "SELECT subscriptions.id, subscriptions.subscriber_id, subscriptions.periodic_id, subscriptions.periodic_item, subscriptions.subscription_date, subscriptions.subscriber_address, subscriptions.item_price, subscriptions.periodic_year FROM subscriptions " +
-                     "ORDER BY subscriptions.id LIMIT ?, ?");
+                     "WHERE subscriptions.subscriber_id LIKE ? ORDER BY subscriptions.id LIMIT ?, ?");
              PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) FROM subscriptions WHERE subscriptions.subscriber_id LIKE ?;")) {
 
             logger.trace("try to get queryList");
 
             countRowsPS.setString(1, "%" + searchKey + "%");
             logger.trace("1");
-            subscriptionsPS.setInt(1, lowerBound);
+            subscriptionsPS.setString(1, "%" + searchKey + "%");
+            subscriptionsPS.setInt(2, lowerBound);
             logger.trace("2");
-            subscriptionsPS.setInt(2, upperBound);
+            subscriptionsPS.setInt(3, upperBound);
             logger.trace("3");
 
             ResultSet rs = subscriptionsPS.executeQuery();

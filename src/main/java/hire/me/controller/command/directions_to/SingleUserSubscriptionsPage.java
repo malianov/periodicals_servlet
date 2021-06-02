@@ -28,7 +28,9 @@ public class SingleUserSubscriptionsPage implements Command {
         int currentPage = 1;
 
         final HttpSession session = request.getSession();
-        final String subscriberId = (String) session.getAttribute("user_id");
+        final String subscriberId = String.valueOf(session.getAttribute("user_id"));
+
+        logger.trace("subscriberId ========================= {}", subscriberId);
 
         if(request.getParameter("current_page") != null) {
             currentPage = Integer.parseInt(request.getParameter("current_page"));
