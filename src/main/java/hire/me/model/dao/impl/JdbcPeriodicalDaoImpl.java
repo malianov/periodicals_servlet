@@ -5,6 +5,7 @@ import hire.me.model.dao.daoFactory.PeriodicalDao;
 import hire.me.model.dao.mapper.PeriodicalMapper;
 import hire.me.model.dao.mapper.UserMapper;
 import hire.me.model.entity.account.User;
+import hire.me.model.entity.account.UserRole;
 import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.service.PeriodicalService;
 import org.apache.logging.log4j.Logger;
@@ -126,15 +127,14 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
         Periodical periodical;
 
         try (PreparedStatement ps = connection.prepareStatement("SELECT p.id, p.title, p.description, t.name, ps.status, \n" +
-                        "tp.type, p.price_per_item FROM myPeriodics.periodical p \n" +
-                        "INNER JOIN periodic_status ps ON p.id_status = ps.id \n" +
-                        "INNER JOIN themes t ON p.id_theme = t.id \n" +
-                        "INNER JOIN types tp ON p.id_type = tp.id\n" +
-                        "WHERE p.id LIKE ?;")) {
+                "tp.type, p.price_per_item FROM myPeriodics.periodical p \n" +
+                "INNER JOIN periodic_status ps ON p.id_status = ps.id \n" +
+                "INNER JOIN themes t ON p.id_theme = t.id \n" +
+                "INNER JOIN types tp ON p.id_type = tp.id\n" +
+                "WHERE p.id LIKE ?;")) {
 
 
-
-                // "SELECT * FROM periodical where id=(?);")) {
+            // "SELECT * FROM periodical where id=(?);")) {
             ps.setLong(1, id);
             final ResultSet rs = ps.executeQuery();
 
@@ -160,6 +160,17 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
 
     @Override
     public void update(Periodical periodical) {
+
+        try (PreparedStatement ps = connection.prepareStatement("UPDATE periodical SET title = (?), description = (?), price_per_item = (?) WHERE (id = (?))")) {
+            ps.setString(1, periodical.getTitle());
+            ps.setString(2, periodical.getDescription());
+            ps.setString(3, periodical.getPricePerItem().toString());
+            ps.setLong(4, periodical.getId());
+            ps.execute();
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Override

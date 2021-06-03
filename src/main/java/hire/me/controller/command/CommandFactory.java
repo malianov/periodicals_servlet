@@ -25,12 +25,12 @@ public class CommandFactory {
         commands.put(TO_SUBSCRIBERS_PAGE.getPath(), new SubscribersPage());
         commands.put(LOGOUT.getPath(),new LogOutCommand());
         commands.put(BLOCK_UNBLOCK.getPath(), new BlockUnblockCommand());
-        commands.put(EDIT_PERIODIC.getPath(), new EditPeriodicCommand());
         commands.put(MAKE_ORDER_NONORDER_PERIODIC.getPath(), new OrderableNonorderableCommand());
         commands.put(MAKE_SUBSCRIPTION.getPath(), new MakeSubscriptionCommand());
         commands.put(ADDITION_TO_BALANCE.getPath(),new PrivateAccountCommand());
         commands.put(SHOW_ALL_SUBSCRIPTIONS.getPath(), new SubscriptionsPage());
         commands.put(SHOW_ALL_SINGLE_USER.getPath(), new SingleUserSubscriptionsPage());
+        commands.put(EDIT_PERIODIC.getPath(), new EditPeriodicCommand());
     }
 
     public static Command getCommand(String url) throws NotFoundCommandException {

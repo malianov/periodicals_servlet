@@ -54,6 +54,7 @@ public class SubscriptionService {
             if (isSubscriberBalanceIsEnoughForSubscription(actualSubscriberBalance, actualPeriodicPricePerItem, quantityOfItems)) {
                 BigDecimal newSubscriberBalance = newSubscriberBalance(actualSubscriberBalance, actualPeriodicPricePerItem, quantityOfItems);
                 setSubscriberBalanceToNew(connection, subscriberId, newSubscriberBalance, dao);
+
                 addSubscriptionRecord(connection, subscriberId, subscribedPeriodicId, selectedPeriodicItems, subscriptionYear, actualPeriodicPricePerItem, subscriberAddress, dao);
 
                 connection.commit();

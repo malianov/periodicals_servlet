@@ -81,8 +81,6 @@ public class AccessFilter implements Filter {
 				.replace(req.getServletPath(), "")
 				.replace("/", "");
 
-
-
 		if (req.getSession().getAttribute("role") == null) {
 			req.getSession().setAttribute("role", UserRole.GUEST);
 		}

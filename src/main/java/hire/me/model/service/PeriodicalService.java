@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Map;
 
 public class PeriodicalService {
     private static final Logger logger = LogManager.getLogger(PeriodicalService.class);
@@ -31,12 +32,14 @@ public class PeriodicalService {
         return instance;
     }
 
-    public void editPeriodic(int id) {
+    public void updatePeriodic(Periodical periodical) {
         PeriodicalDao periodicalDao = daoFactory.createPeriodicalDao();
-//        periodicalDao.edit(id);
+        periodicalDao.update(periodical);
     }
 
     public Periodical getPeriodicById(Long id) {
+        logger.trace("getPeriodicById = {}", id);
+
         PeriodicalDao dao = daoFactory.createPeriodicalDao();
         return dao.findById(id);
     }

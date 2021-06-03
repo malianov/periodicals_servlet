@@ -129,7 +129,7 @@
                                 <div class="d-flex">
                                     <button type="button" class="btn btn-outline-primary me-3 btn-sm flex-fill"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#modalInformation_${all_periodics_list.getId()}">Edit
+                                            data-bs-target="#modalInformation_${all_periodics_list.getId()}"><fmt:message key="catalog.edit"/>
                                     </button>
                                     <c:choose>
                                         <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
@@ -171,6 +171,8 @@
                                                         <label class="form-label"><fmt:message key="catalog.title-per"/></label>
                                                         <input type="text" class="form-control btn-outline-primary"
                                                                name="new_title">
+                                                        <input name="id" type="hidden"
+                                                               value="${all_periodics_list.getId()}">
                                                         <div class="form-text"><c:out
                                                                 value="${all_periodics_list.getTitle()}"/></div>
                                                     </div>
@@ -181,30 +183,6 @@
                                                                   id="message-text" name="new_description"></textarea>
                                                         <div class="form-text">"<c:out
                                                                 value="${all_periodics_list.getDescription()}"></c:out></div>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label"><fmt:message key="catalog.theme"/></label>
-                                                        <select class="form-select btn-outline-primary"
-                                                                name="new_theme">
-                                                            <option selected></option>
-                                                            <option value="theme_1">One</option>
-                                                            <option value="theme_2">Two</option>
-                                                            <option value="theme_3">Three</option>
-                                                        </select>
-                                                        <div class="form-text"><c:out
-                                                                value="${all_periodics_list.getTheme()}"></c:out></div>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label"><fmt:message key="type"/></label>
-                                                        <select class="form-select btn-outline-primary" name="new_type">
-                                                            <option selected></option>
-                                                            <option value="type_1"><fmt:message key="catalog.magazine"/></option>
-                                                            <option value="type_2"><fmt:message key="catalog.newspaper"/></option>
-                                                            <option value="type_3"><fmt:message key="catalog.electronic"/></option>
-                                                        </select>
-                                                        <div class="form-text">
-                                                            <c:out value="${all_periodics_list.getPeriodicalType()}"></c:out>
-                                                        </div>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label"><fmt:message key="catalog.price-per-item"/></label>
