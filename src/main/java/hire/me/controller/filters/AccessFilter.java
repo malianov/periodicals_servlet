@@ -71,12 +71,17 @@ public class AccessFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
 
+//		String previousPath = req.getRequestURI();
+//		req.getSession().setAttribute("previous_path", previousPath);
+//
+//		logger.trace("&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ previousPath = {}", previousPath);
+
 		String path = req.getRequestURI()
 				.replace(req.getContextPath(), "")
 				.replace(req.getServletPath(), "")
 				.replace("/", "");
 
-		logger.trace("current role before -> " + (UserRole) req.getSession().getAttribute("role"));
+
 
 		if (req.getSession().getAttribute("role") == null) {
 			req.getSession().setAttribute("role", UserRole.GUEST);

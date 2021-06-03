@@ -46,9 +46,9 @@ public class CatalogPage implements Command {
         int nuOfPages = (int) Math.ceil(nuOfRows * 1.0 / ROWS_PER_PAGE);
 
         request.getSession().setAttribute("periodicals", periodicals);
-        request.getSession().setAttribute("nuOfPages", nuOfPages);
-        request.getSession().setAttribute("currentPage", currentPage);
-        request.getSession().setAttribute("searchInput", searchInput);
+        request.getSession().setAttribute("nu_of_pages", nuOfPages);
+        request.getSession().setAttribute("current_page", currentPage);
+        request.getSession().setAttribute("search_input", searchInput);
         request.getSession().setAttribute("page", "catalog");
 
         return "/WEB-INF/view/catalog_page.jsp";

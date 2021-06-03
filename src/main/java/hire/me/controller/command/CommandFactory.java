@@ -30,7 +30,6 @@ public class CommandFactory {
         commands.put(MAKE_SUBSCRIPTION.getPath(), new MakeSubscriptionCommand());
         commands.put(ADDITION_TO_BALANCE.getPath(),new PrivateAccountCommand());
         commands.put(SHOW_ALL_SUBSCRIPTIONS.getPath(), new SubscriptionsPage());
-
         commands.put(SHOW_ALL_SINGLE_USER.getPath(), new SingleUserSubscriptionsPage());
     }
 

@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 public class Subscription {
     private static final Logger logger = LogManager.getLogger(Subscription.class);
@@ -61,7 +60,7 @@ public class Subscription {
 
 
     public static class Builder {
-        private Subscription newSubscription;
+        private final Subscription newSubscription;
 
         public Builder() {
             newSubscription = new Subscription();

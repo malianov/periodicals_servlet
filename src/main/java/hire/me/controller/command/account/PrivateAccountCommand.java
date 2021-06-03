@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Map;
 
 public class PrivateAccountCommand implements Command {
     private static final Logger logger = LogManager.getLogger(PrivateAccountCommand.class);
@@ -29,10 +30,19 @@ public class PrivateAccountCommand implements Command {
         final BigDecimal additionToBalance = new BigDecimal(request.getParameter("addition_to_balance"));
         final HttpSession session = request.getSession();
         final Long subscriberId = (Long) session.getAttribute("user_id");
+        String pager = request.getParameter("pager");
+        String path = request.getServletContext().getContextPath();
+        logger.trace("current_page current_page current_page current_page ppage = {}", "ppage");
+
+        Map<String, String> previous_page = Map.of(
+                "home","/app/to_home_page",
+                "catalog","/app/to_catalog_page",
+                "my_subscriptions","/app/to_my_subscriptions_page",
+                "support","/app/to_support_page");
 
         privateAccountService.increaseBalance(subscriberId, additionToBalance);
         request.getSession().setAttribute("subscriberBalance", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));
 
-        return "/WEB-INF/view/home_page.jsp";
+        return "redirect@" + path + previous_page.get(pager);
     }
 }

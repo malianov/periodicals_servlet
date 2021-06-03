@@ -51,8 +51,8 @@ public class SingleUserSubscriptionsPage implements Command {
         int nuOfPages = (int) Math.ceil(nuOfRows * 1.0 / ROWS_PER_PAGE);
 
         request.getSession().setAttribute("subscriptions", subscriptions);
-        request.getSession().setAttribute("nuOfPages", nuOfPages);
-        request.getSession().setAttribute("currentPage", currentPage);
+        request.getSession().setAttribute("nu_of_pages", nuOfPages);
+        request.getSession().setAttribute("current_page", currentPage);
         request.getSession().setAttribute("page", "my_subscriptions");
 
         return "/WEB-INF/view/subscriptions_page.jsp";

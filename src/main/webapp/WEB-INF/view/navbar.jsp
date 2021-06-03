@@ -109,9 +109,9 @@
             </c:choose>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuBtn1">
-            <li><a class="dropdown-item" href="?language=en&search_input=${searchInput}&current_page=${currentPage}"><fmt:message key="language.english"/></a></li>
-            <li><a class="dropdown-item" href="?language=ua&search_input=${searchInput}&current_page=${currentPage}"><fmt:message key="language.ukrainian"/></a></li>
-            <li><a class="dropdown-item" href="?language=ru&search_input=${searchInput}&current_page=${currentPage}"><fmt:message key="language.russian"/></a></li>
+            <li><a class="dropdown-item" href="?language=en&search_input=${search_input}&current_page=${current_page}"><fmt:message key="language.english"/></a></li>
+            <li><a class="dropdown-item" href="?language=ua&search_input=${search_input}&current_page=${current_page}"><fmt:message key="language.ukrainian"/></a></li>
+            <li><a class="dropdown-item" href="?language=ru&search_input=${search_input}&current_page=${current_page}"><fmt:message key="language.russian"/></a></li>
         </ul>
         <c:choose>
             <c:when test="${not empty sessionScope.login}">
@@ -152,7 +152,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form  method="get" action="/app/app/to_increase_balance">
+                <form method="post" action="/app/app/to_increase_balance?pager=${page}">
                     <div class="mb-3">
                         <article class="blog-post">
                             <h2 class="blog-post-title"><fmt:message key="navbar.your-private-account"/></h2>

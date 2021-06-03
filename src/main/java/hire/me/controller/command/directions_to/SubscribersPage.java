@@ -46,9 +46,9 @@ public class SubscribersPage implements Command {
         int nuOfPages = (int) Math.ceil(nuOfRows * 1.0 / ROWS_PER_PAGE);
 
         request.getSession().setAttribute("subscribers", subscribers);
-        request.getSession().setAttribute("nuOfPages", nuOfPages);
-        request.getSession().setAttribute("currentPage", currentPage);
-        request.getSession().setAttribute("searchInput", searchInput);
+        request.getSession().setAttribute("nu_of_pages", nuOfPages);
+        request.getSession().setAttribute("current_page", currentPage);
+        request.getSession().setAttribute("search_input", searchInput);
         request.getSession().setAttribute("page", "subscribers");
 
         return "/WEB-INF/view/subscribers_page.jsp";

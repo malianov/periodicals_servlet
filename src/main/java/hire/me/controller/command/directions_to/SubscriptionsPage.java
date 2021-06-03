@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class SubscriptionsPage implements Command {
     private static final Logger logger = LogManager.getLogger(SubscriptionsPage.class);
@@ -29,6 +30,8 @@ public class SubscriptionsPage implements Command {
         int currentPage = 1;
         String searchInput = "%";
 
+
+
         if(request.getParameter("current_page") != null) {
             currentPage = Integer.parseInt(request.getParameter("current_page"));
         }
@@ -39,26 +42,29 @@ public class SubscriptionsPage implements Command {
 
         int lowerBound = (currentPage - 1) * ROWS_PER_PAGE;
 
-        logger.trace("lowerBound = {}, ROWS_PER_PaGE = {}, searchInput = {}", lowerBound, ROWS_PER_PAGE, searchInput);
         SubscriptionService.PaginationResult paginationResult =
                 subscriptionService.getSearchSubscriptionWithPagination(lowerBound, ROWS_PER_PAGE, searchInput);
 
         List<Subscription> subscriptions = paginationResult.getSubscriptionsList();
 
-        logger.trace("==========================================================================" +
-                "==================================================================" +
-                "subscriptions = {}", subscriptions.size());
-
         int nuOfRows = paginationResult.getNuOfRows();
         int nuOfPages = (int) Math.ceil(nuOfRows * 1.0 / ROWS_PER_PAGE);
 
         request.getSession().setAttribute("subscriptions", subscriptions);
-        request.getSession().setAttribute("nuOfPages", nuOfPages);
-        request.getSession().setAttribute("currentPage", currentPage);
-        request.getSession().setAttribute("searchInput", searchInput);
+        request.getSession().setAttribute("nu_of_pages", nuOfPages);
+        request.getSession().setAttribute("current_page", currentPage);
+        request.getSession().setAttribute("search_input", searchInput);
         request.getSession().setAttribute("page", "subscriptions");
 
-        return "/WEB-INF/view/subscriptions_page.jsp";
+
+
+
+//        return previous_page.get(request.getServletContext().getContextPath());
+//
+////                "/WEB-INF/view/support.jsp";
+////                "/WEB-INF/view/catalog.jsp";
+////                "/WEB-INF/view/home_page.jsp";
+        return  "/WEB-INF/view/subscriptions_page.jsp";
     }
 }
 
