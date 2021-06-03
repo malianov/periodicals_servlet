@@ -20,6 +20,11 @@ public class DataValidator {
         return login != null && Pattern.matches("(^[\\w\\.-_]+)$", login);
     }
 
-    //TODO
-    // Add account name, surname and login validation
+    public static boolean validateName(String name) {
+        return name != null && Pattern.matches("(^[\\w\\.-_]+)$", name);
+    }
+
+    public static boolean validateSurname(String surname) {
+        return surname != null && Pattern.matches("(^[\\w\\.-_]+)$", surname);
+    }
 }

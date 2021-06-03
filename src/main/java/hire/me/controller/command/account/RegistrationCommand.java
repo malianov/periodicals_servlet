@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class RegistrationCommand implements Command, Password {
@@ -39,21 +40,13 @@ public class RegistrationCommand implements Command, Password {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.trace("execute");
+
+        Map<String, String> collectedErrors = new HashMap<>();
 
         final String password = request.getParameter("password");
         final String confirmedPassword = request.getParameter("confirmedPassword");
 
-        if (!password.equals(confirmedPassword)) {
-            return "/WEB-INF/common/registration.jsp?passwordsAreDifferent=true";
-        }
-
-        try {
-            String hashedPassword = Password.generateStrongPasswordHash(password);
-            setHashedPassword(hashedPassword);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
+        createHashedPassword(password);
 
         Map<String, String> registrationData = Map.of(
                 "login", request.getParameter("login"),
@@ -64,33 +57,78 @@ public class RegistrationCommand implements Command, Password {
                 "role", request.getParameter("role"),
                 "personal_account", "0.0");
 
+        arePasswordsEqual(password, confirmedPassword, collectedErrors);
+        isLoginValid(registrationData, collectedErrors);
+        isNameValid(registrationData, collectedErrors);
+        isSurnameValid(registrationData, collectedErrors);
+        isEmailValid(registrationData, collectedErrors);
+        isPasswordValid(registrationData, collectedErrors);
 
-        if (!DataValidator.validateLogin(registrationData.get("login"))) {
-            logger.trace("validate login");
-            return "/WEB-INF/common/registration.jsp?invalidLogin=true";
+        if(!collectedErrors.isEmpty()) {
+            request.setAttribute("errorMessages", collectedErrors);
+            logger.trace("inside collectedErrors are {} errors", collectedErrors.size());
+            return "/WEB-INF/view/error_message.jsp";
         }
 
-        if (!DataValidator.validateEmail(registrationData.get("email"))) {
-            logger.trace("validate email");
-            return "/WEB-INF/common/registration.jsp?invalidEmail=true";
-        }
-
-        if (!DataValidator.validatePassword(password)) {
-            logger.trace("validate password");
-            return "/WEB-INF/common/registration.jsp?invalidPassword=true";
-        }
-
+        createHashedPassword(password);
         User user = newUserRegistration(registrationData);
 
         try {
             userService.registerUser(user);
         } catch (Exception e) {
             e.printStackTrace();
-            return "/WEB-INF/common/registration.jsp?alreadyExist=true";
+            collectedErrors.put("errorDuringUserRegistration", "Oops. Smth was wrong. Please, try again.");
+            request.setAttribute("errorMessages", collectedErrors);
+            return "/WEB-INF/view/error_message.jsp";
         }
 
         String path = request.getServletContext().getContextPath();
         return "redirect@" + path + "/app/to_home_page";
+    }
+
+    private void createHashedPassword(String password) {
+        try {
+            String hashedPassword = Password.generateStrongPasswordHash(password);
+            setHashedPassword(hashedPassword);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void arePasswordsEqual(String password, String confirmedPassword, Map<String, String> collectedErrors) {
+        if (!password.equals(confirmedPassword)) {
+            collectedErrors.put("errorPasswordEquality", "The entered passwords are different");
+        }
+    }
+
+    private void isLoginValid(Map<String, String> registrationData, Map<String, String> collectedErrors) {
+        if (!DataValidator.validateLogin(registrationData.get("login"))) {
+            collectedErrors.put("errorLoginNotValid", "The entered login is incorrect. Please, imagine another one.");
+        }
+    }
+
+    private void isNameValid(Map<String, String> registrationData, Map<String, String> collectedErrors) {
+        if (!DataValidator.validateName(registrationData.get("name"))) {
+            collectedErrors.put("errorNameNotValid", "The entered name is incorrect. Please, imagine another one.");
+        }
+    }
+
+    private void isSurnameValid(Map<String, String> registrationData, Map<String, String> collectedErrors) {
+        if (!DataValidator.validateSurname(registrationData.get("surname"))) {
+            collectedErrors.put("errorSurnameNotValid", "The entered surname is incorrect. Please, imagine another one.");
+        }
+    }
+
+    private void isEmailValid(Map<String, String> registrationData, Map<String, String> collectedErrors) {
+        if (!DataValidator.validateEmail(registrationData.get("email"))) {
+            collectedErrors.put("errorEmailNotValid", "The entered email is incorrect");
+        }
+    }
+
+    private void isPasswordValid(Map<String, String> registrationData, Map<String, String> collectedErrors) {
+        if (!DataValidator.validatePassword(registrationData.get("password"))) {
+            collectedErrors.put("errorPasswordNotValid", "The entered password is incorrect");
+        }
     }
 
     private User newUserRegistration(Map<String, String> registrationData) {

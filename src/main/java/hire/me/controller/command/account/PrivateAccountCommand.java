@@ -3,6 +3,7 @@ package hire.me.controller.command.account;
 import hire.me.controller.command.Command;
 import hire.me.model.service.PrivateAccountService;
 import hire.me.model.service.ServiceFactory;
+import hire.me.model.validator.DataValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PrivateAccountCommand implements Command {
@@ -27,7 +29,15 @@ public class PrivateAccountCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+        Map<String, String> collectedErrors = new HashMap<>();
         final BigDecimal additionToBalance = new BigDecimal(request.getParameter("addition_to_balance"));
+
+        if (additionToBalance.signum() < 0) {
+            collectedErrors.put("errorLoginNotValid", "The entered value is below 0, this is incorrect value.");
+            request.setAttribute("errorMessages", collectedErrors);
+            return "/WEB-INF/view/error_message.jsp";
+        }
+
         final HttpSession session = request.getSession();
         final Long subscriberId = (Long) session.getAttribute("user_id");
         String pager = request.getParameter("pager");
@@ -35,10 +45,10 @@ public class PrivateAccountCommand implements Command {
         logger.trace("current_page current_page current_page current_page ppage = {}", "ppage");
 
         Map<String, String> previous_page = Map.of(
-                "home","/app/to_home_page",
-                "catalog","/app/to_catalog_page",
-                "my_subscriptions","/app/to_my_subscriptions_page",
-                "support","/app/to_support_page");
+                "home", "/app/to_home_page",
+                "catalog", "/app/to_catalog_page",
+                "my_subscriptions", "/app/to_my_subscriptions_page",
+                "support", "/app/to_support_page");
 
         privateAccountService.increaseBalance(subscriberId, additionToBalance);
         request.getSession().setAttribute("subscriberBalance", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));

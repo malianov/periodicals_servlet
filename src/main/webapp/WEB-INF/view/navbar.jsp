@@ -191,6 +191,16 @@
             <div class="modal-body">
                 <p><fmt:message key="please-enter-your-login-information"/></p>
                 <form method="GET" action="${pageContext.request.contextPath}/app/app/login">
+
+
+
+<%--                    <c:if test="${param.dataInvalid == true}">--%>
+<%--                        <p style="color: orange"><fmt:message key="invalid.input"/></p>--%>
+<%--                    </c:if>--%>
+
+
+
+
                     <div class="row mb-3">
                         <label for="horizontalLogin" class="col-md-2 col-form-label"><fmt:message key="login"/></label>
                         <div class="col-md-10">

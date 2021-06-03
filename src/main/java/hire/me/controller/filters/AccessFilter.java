@@ -94,7 +94,7 @@ public class AccessFilter implements Filter {
 			if(currentRole.equals(UserRole.GUEST)) {
 				req.getRequestDispatcher("/WEB-INF/view/home_page.jsp").forward(req, resp);
 			} else {
-				req.getRequestDispatcher("/WEB-INF/common/error/403.jsp").forward(req, resp);
+				req.getRequestDispatcher("/WEB-INF/view/error_403.jsp").forward(req, resp);
 			}
 		}
 	}
