@@ -68,15 +68,10 @@
     <url-pattern>/app/*</url-pattern>
   </filter-mapping>
 
-<!--  <error-page>
+  <error-page>
     <error-code>403</error-code>
     <location>/WEB-INF/view/error_403.jsp</location>
   </error-page>
-
-  <error-page>
-    <error-code>404</error-code>
-    <location>/WEB-INF/view/error_404.jsp</location>
-  </error-page>-->
 
   <error-page>
     <location>/WEB-INF/view/error_403.jsp</location>

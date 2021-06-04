@@ -27,7 +27,9 @@
             <th class="text-center"><fmt:message key="subscriptions.id"/></th>
             <th class="text-center"><fmt:message key="subscriptions.subscription-date"/></th>
             <th class="text-center"><fmt:message key="subscriptions.periodic-title"/></th>
-            <th class="text-center"><fmt:message key="subscriptions.subscriber-login"/></th>
+            <c:if test="${sessionScope.role eq 'ADMIN'}">
+                <th class="text-center"><fmt:message key="subscriptions.subscriber-login"/></th>
+            </c:if>
             <th class="text-center"><fmt:message key="subscriptions.periodic-year"/></th>
             <th class="text-center"><fmt:message key="subscriptions.periodic-item"/></th>
             <th class="text-center"><fmt:message key="subscriptions.paid"/></th>
@@ -39,7 +41,9 @@
                 <td class="align-middle"><c:out value="${all_subscriptions_list.getId()}"/></td>
                 <td class="align-middle"><c:out value="${all_subscriptions_list.getDate()}"/></td>
                 <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodical().getTitle()}"/></td>
-                <td class="align-middle"><c:out value="${all_subscriptions_list.getUser().getLogin()}"/></td>
+                <c:if test="${sessionScope.role eq 'ADMIN'}">
+                    <td class="align-middle"><c:out value="${all_subscriptions_list.getUser().getLogin()}"/></td>
+                </c:if>
                 <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodicYear()}"/></td>
                 <td class="align-middle"><c:out value="${all_subscriptions_list.getPeriodicItem()}"/></td>
                 <td class="align-middle"><c:out value="${all_subscriptions_list.getItemPrice()}"/></td>
