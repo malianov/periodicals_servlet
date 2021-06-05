@@ -59,14 +59,14 @@
             <td class="text-center">
                 <c:choose>
                     <c:when test="${all_subscribers_list.getUserStatus() eq 'BLOCKED'}">
-                        <form method="get" action="/app/app/to_block_unblock_user">
+                        <form method="get" action="/app/app/to_block_unblock_user" style="margin-bottom: 0px;">
                             <input name="user_login" type="hidden" value="${all_subscribers_list.getLogin()}">
                             <input name="status" type="hidden" value="unblock">
                             <button class="btn btn-sm btn-outline-success" type="submit"><fmt:message key="subscribers.unblock"/></button>
                         </form>
                     </c:when>
                     <c:otherwise>
-                        <form method="get" action="/app/app/to_block_unblock_user">
+                        <form method="get" action="/app/app/to_block_unblock_user" style="margin-bottom: 0px;">
                             <input name="user_login" type="hidden" value="${all_subscribers_list.getLogin()}">
                             <input name="status" type="hidden" value="block">
                             <button class="btn btn-sm btn-outline-danger" type="submit"><fmt:message key="subscribers.block"/></button>

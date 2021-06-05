@@ -37,6 +37,15 @@ public class PrivateAccountService {
     public void increaseBalance(Long subscriberId, BigDecimal additionToBalance) {
         logger.trace("inside increaseBalance");
         PrivateAccountDao dao = daoFactory.createPrivateAccountDao();
+
+        dao.increaseBalance(subscriberId, additionToBalance);
+
+
+    }
+
+/*    public void increaseBalance(Long subscriberId, BigDecimal additionToBalance) {
+        logger.trace("inside increaseBalance");
+        PrivateAccountDao dao = daoFactory.createPrivateAccountDao();
         final Connection connection = getConnection();
 
         try {
@@ -61,7 +70,7 @@ public class PrivateAccountService {
             }
             e.printStackTrace();
         }
-    }
+    }*/
 
     public BigDecimal getSubscriberBalance(Long subscriberId) {
         logger.trace("inside getSubscriberBalance");
@@ -69,13 +78,13 @@ public class PrivateAccountService {
         return dao.getSubscriberBalance(subscriberId);
     }
 
-    public BigDecimal getSubscriberBalance(Connection connection, Long subscriberId, PrivateAccountDao dao) {
-        logger.trace("inside getSubscriberBalance");
-        return dao.getSubscriberBalance(connection, subscriberId);
-    }
+//    public BigDecimal getSubscriberBalance(Connection connection, Long subscriberId, PrivateAccountDao dao) {
+//        logger.trace("inside getSubscriberBalance");
+//        return dao.getSubscriberBalance(connection, subscriberId);
+//    }
 
-    private void increaseBalance(Connection connection, Long subscriberId, BigDecimal newActualSubscriberBalance, PrivateAccountDao dao) {
-        logger.trace("inside increaseBalance");
-        dao.increaseBalance(connection, subscriberId, newActualSubscriberBalance);
-    }
+//    private void increaseBalance(Connection connection, Long subscriberId, BigDecimal newActualSubscriberBalance, PrivateAccountDao dao) {
+//        logger.trace("inside increaseBalance");
+//        dao.increaseBalance(connection, subscriberId, newActualSubscriberBalance);
+//    }
 }

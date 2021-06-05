@@ -26,7 +26,7 @@ public class SubscriptionsPage implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("SERVICE to subscriptions page");
 
-        final int ROWS_PER_PAGE = 14;
+        final int ROWS_PER_PAGE = 15;
         int currentPage = 1;
         String searchInput = "%";
 

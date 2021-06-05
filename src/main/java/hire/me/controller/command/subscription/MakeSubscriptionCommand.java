@@ -27,7 +27,7 @@ public class MakeSubscriptionCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.trace("Execute");
+        logger.trace("Execute {}", request.getParameter("periodic_id"));
 
         final Integer subscribedPeriodicId = Integer.valueOf((request.getParameter("periodic_id")));
         final String[] selectedPeriodicItems = request.getParameterValues("selected");
@@ -41,6 +41,13 @@ public class MakeSubscriptionCommand implements Command {
 
         request.getSession().setAttribute("subscriberBalance", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));
 
-        return "/WEB-INF/view/catalog_page.jsp";
+//        return "/WEB-INF/view/catalog_page.jsp";
+
+        String path = request.getServletContext().getContextPath();
+
+        logger.trace("path = {}", path);
+
+        return "redirect@" + path + "/app/to_catalog_page";
+//        return "/WEB-INF/view/catalog_page.jsp";
     }
 }

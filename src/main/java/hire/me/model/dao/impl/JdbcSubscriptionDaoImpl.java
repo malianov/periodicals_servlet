@@ -2,11 +2,8 @@ package hire.me.model.dao.impl;
 
 import hire.me.connection.ConnectionPool;
 import hire.me.model.dao.daoFactory.SubscriptionDao;
-import hire.me.model.dao.mapper.PeriodicalMapper;
 import hire.me.model.dao.mapper.SubscriptionMapper;
-import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.entity.subscription.Subscription;
-import hire.me.model.service.PeriodicalService;
 import hire.me.model.service.SubscriptionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,61 +39,37 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
         return instance;
     }
 
-    public void isSubscriptionSuccessful(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems) {
-        try (PreparedStatement actualPrice = connection.prepareStatement("SELECT price_per_item FROM periodical where id=(?);");
-             PreparedStatement actualSubscriberBalance = connection.prepareStatement("SELECT balance FROM users where id=(?);")) {
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    public void isSubscriptionSuccessful(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems, String subscriberAddress) {
+        logger.trace("start isSubscriptionSuccessful");
+        BigDecimal actualPeriodicPricePerItem = null;
+        BigDecimal actualSubscriberBalance = null;
+        int quantityOfItems = selectedPeriodicItems.length;
 
-    public BigDecimal getPeriodicPricePerItem(Connection serviceConnection, Integer subscribedPeriodicId) {
-        try (PreparedStatement ps = serviceConnection.prepareStatement("SELECT price_per_item FROM periodical where id=(?);")) {
-            ps.setInt(1, subscribedPeriodicId);
-            final ResultSet rs = ps.executeQuery();
+        try {
+            connection.setAutoCommit(false);
 
-            if (rs.next()) {
-                logger.trace("We are inside rs.next 'getPeriodicPricePerItem'");
-                return rs.getBigDecimal("price_per_item");
+            actualPeriodicPricePerItem = getActualPeriodicPricePerItem(subscribedPeriodicId, actualPeriodicPricePerItem);
+            actualSubscriberBalance = getActualSubscriberBalance(subscriberId, actualSubscriberBalance);
+
+            if (isSubscriberHasEnoughMoney(actualPeriodicPricePerItem, actualSubscriberBalance, quantityOfItems)) {
+                BigDecimal newSubscriberBalance = actualSubscriberBalance.subtract(actualPeriodicPricePerItem.multiply(new BigDecimal(quantityOfItems)));
+                updateSubscribersBalance(subscriberId, newSubscriberBalance);
+                insertToDatabaseRowsAsSubscriptions(subscriberId, subscribedPeriodicId, subscriptionYear, selectedPeriodicItems, subscriberAddress, actualPeriodicPricePerItem);
+                connection.commit();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return new BigDecimal(0.0);     // Put here Exception (the price per item have to be!)
-    }
-
-    public BigDecimal getSubscriberBalance(Connection serviceConnection, Long subscriberId) {
-        logger.trace("getSubscriberBalance");
-
-        try (PreparedStatement ps = serviceConnection.prepareStatement("SELECT balance FROM users where id=(?);")) {
-            ps.setLong(1, subscriberId);
-            final ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                logger.trace("We are inside rs.next 'getSubscriberBalance'");
-                return rs.getBigDecimal("balance");
+        } catch (Exception e) {
+            try {
+                connection.rollback();
+            } catch (SQLException exception) {
+                exception.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return new BigDecimal(0.0);     // Put here Exception
-    }
-
-    public void setSubscriberBalanceToNew(Connection serviceConnection, Long subscriberId, BigDecimal newSubscriberBalance) {
-        logger.trace("setSubscriberBalanceToNew");
-
-        try (PreparedStatement ps = serviceConnection.prepareStatement("UPDATE users SET balance=(?) WHERE id=(?);")) {
-            ps.setBigDecimal(1, newSubscriberBalance);
-            ps.setLong(2, subscriberId);
-            ps.execute();
-        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void addSubscriptionRecord(Connection serviceConnection, Long subscriberId, Integer subscribedPeriodicId, String item, String subscriptionYear, BigDecimal actualPeriodicPricePerItem, String subscriberAddress) {
-        logger.trace("addSubscriptionRecord");
-
-        try (PreparedStatement ps = serviceConnection.prepareStatement("INSERT INTO subscriptions (subscriber_id, periodic_id, periodic_item, periodic_year, item_price, subscriber_address, subscription_date, subscription_time) VALUES ((?), (?), (?), (?), (?), (?), now(), now());")) {
+    private void insertToDatabaseRowsAsSubscriptions(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems, String subscriberAddress, BigDecimal actualPeriodicPricePerItem) throws SQLException {
+        for (String item : selectedPeriodicItems) {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO subscriptions (subscriber_id, periodic_id, periodic_item, periodic_year, item_price, subscriber_address, subscription_date, subscription_time) VALUES ((?), (?), (?), (?), (?), (?), now(), now());");
             ps.setLong(1, subscriberId);
             ps.setLong(2, subscribedPeriodicId);
             ps.setString(3, item);
@@ -104,12 +77,42 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
             ps.setBigDecimal(5, actualPeriodicPricePerItem);
             ps.setString(6, subscriberAddress);
             ps.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public SubscriptionService.PaginationResult searchSubscriptionsWithPagination(int lowerBound, int upperBound, String searchKey) {
+    private void updateSubscribersBalance(Long subscriberId, BigDecimal newSubscriberBalance) throws SQLException {
+        PreparedStatement changeSubscriberBalanceStmt = connection.prepareStatement("UPDATE users SET balance=(?) WHERE id=(?);");
+        changeSubscriberBalanceStmt.setBigDecimal(1, newSubscriberBalance);
+        changeSubscriberBalanceStmt.setLong(2, subscriberId);
+        changeSubscriberBalanceStmt.execute();
+    }
+
+    private boolean isSubscriberHasEnoughMoney(BigDecimal actualPeriodicPricePerItem, BigDecimal actualSubscriberBalance, int quantityOfItems) {
+        return actualSubscriberBalance.compareTo(actualPeriodicPricePerItem.multiply(new BigDecimal(quantityOfItems))) >= 0 ? true : false;
+    }
+
+    private BigDecimal getActualSubscriberBalance(Long subscriberId, BigDecimal actualSubscriberBalance) throws SQLException {
+        PreparedStatement actualSubscriberBalanceStatement = connection.prepareStatement("SELECT balance FROM users where id=(?);");
+        actualSubscriberBalanceStatement.setLong(1, subscriberId);
+        final ResultSet actualSubscriberBalanceRs = actualSubscriberBalanceStatement.executeQuery();
+        if (actualSubscriberBalanceRs.next()) {
+            actualSubscriberBalance = actualSubscriberBalanceRs.getBigDecimal("balance");
+        }
+        return actualSubscriberBalance;
+    }
+
+    private BigDecimal getActualPeriodicPricePerItem(Integer subscribedPeriodicId, BigDecimal actualPeriodicPricePerItem) throws SQLException {
+        PreparedStatement actualPriceStmt = connection.prepareStatement("SELECT price_per_item FROM periodical where id=(?);");
+        actualPriceStmt.setInt(1, subscribedPeriodicId);
+        final ResultSet actualPriceResultSet = actualPriceStmt.executeQuery();
+        if (actualPriceResultSet.next()) {
+            actualPeriodicPricePerItem = actualPriceResultSet.getBigDecimal("price_per_item");
+        }
+        return actualPeriodicPricePerItem;
+    }
+
+    public SubscriptionService.PaginationResult searchSubscriptionsWithPagination(int lowerBound,
+                                                                                  int upperBound, String searchKey) {
         logger.info("Search subscription by pagination with lowerBound = {}, upperBound = {} and searchKey = {}", lowerBound, upperBound, searchKey);
 
         SubscriptionService.PaginationResult paginationResult = new SubscriptionService.PaginationResult();

@@ -4,10 +4,9 @@ import hire.me.model.entity.periodical.Periodical;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public interface PrivateAccountDao {
-    void increaseBalance(Connection serviceConnection, Long subscriber_id, BigDecimal additionToBalance);
-
-    BigDecimal getSubscriberBalance(Connection serviceConnection, Long subscriberId);
+    void increaseBalance(Long subscriberId, BigDecimal additionToBalance);
     BigDecimal getSubscriberBalance(Long subscriberId);
 }

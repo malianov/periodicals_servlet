@@ -29,8 +29,8 @@ public class PrivateAccountCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+        final BigDecimal additionToBalance = request.getParameter("addition_to_balance").isBlank() ? BigDecimal.ZERO : new BigDecimal(request.getParameter("addition_to_balance"));
         Map<String, String> collectedErrors = new HashMap<>();
-        final BigDecimal additionToBalance = new BigDecimal(request.getParameter("addition_to_balance"));
 
         if (additionToBalance.signum() < 0) {
             collectedErrors.put("errorLoginNotValid", "The entered value is below 0, this is incorrect value.");
@@ -42,13 +42,16 @@ public class PrivateAccountCommand implements Command {
         final Long subscriberId = (Long) session.getAttribute("user_id");
         String pager = request.getParameter("pager");
         String path = request.getServletContext().getContextPath();
-        logger.trace("current_page current_page current_page current_page ppage = {}", "ppage");
 
         Map<String, String> previous_page = Map.of(
                 "home", "/app/to_home_page",
                 "catalog", "/app/to_catalog_page",
                 "my_subscriptions", "/app/to_my_subscriptions_page",
                 "support", "/app/to_support_page");
+
+        if (additionToBalance.compareTo(BigDecimal.ZERO) == 0) {
+            return "redirect@" + path + previous_page.get(pager);
+        }
 
         privateAccountService.increaseBalance(subscriberId, additionToBalance);
         request.getSession().setAttribute("subscriberBalance", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));

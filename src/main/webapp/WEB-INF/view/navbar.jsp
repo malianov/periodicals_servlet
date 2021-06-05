@@ -190,7 +190,7 @@
             </div>
             <div class="modal-body">
                 <p><fmt:message key="please-enter-your-login-information"/></p>
-                <form method="GET" action="${pageContext.request.contextPath}/app/app/login">
+                <form method="POST" action="${pageContext.request.contextPath}/app/app/login">
 
 
 

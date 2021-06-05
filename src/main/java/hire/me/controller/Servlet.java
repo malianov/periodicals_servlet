@@ -43,7 +43,11 @@ public class Servlet extends HttpServlet {
         path = path.replaceAll(".*/app/", "");
 
         Command command = CommandFactory.getCommand(path);
+        logger.trace("command = {}", command);
+
         String page = command.execute(request, response);
+        logger.trace("page = {}", page);
+
 
         if (page.contains("redirect@")) {
             response.sendRedirect(page.replace("redirect@", ""));

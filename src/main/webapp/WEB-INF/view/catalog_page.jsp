@@ -133,9 +133,8 @@
                                     </button>
                                     <c:choose>
                                         <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
-                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic">
-                                                <input name="periodic_id" type="hidden"
-                                                       value="${all_periodics_list.getId()}">
+                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic" style="margin-bottom: 0px;">
+                                                <input name="periodic_id" type="hidden" value="${all_periodics_list.getId()}">
                                                 <input name="periodic_status" type="hidden" value="make_orderable">
                                                 <button class="btn btn-sm btn-outline-success me-3 btn-sm flex-fill"
                                                         type="submit"><fmt:message key="catalog.make-orderable"/>
@@ -143,7 +142,7 @@
                                             </form>
                                         </c:when>
                                         <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'ORDERABLE'}">
-                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic">
+                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic" style="margin-bottom: 0px;">
                                                 <input name="periodic_id" type="hidden"
                                                        value="${all_periodics_list.getId()}">
                                                 <input name="periodic_status" type="hidden" value="make_nonorderable">
@@ -202,7 +201,7 @@
                                 </div>
                             </c:when>
                             <c:when test="${sessionScope.role eq 'SUBSCRIBER'}">
-                                <form method="post" action="/app/app/to_order_periodic">
+                                <form method="post" action="/app/app/to_order_periodic" style="margin-bottom: 0px;">
                                     <input name="periodic_id" type="hidden" value="${all_periodics_list.getId()}">
                                     <c:choose>
                                         <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
@@ -230,7 +229,7 @@
                                                                         aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <form method="post" action="/app/app/to_order_periodic">
+                                                                <form method="get" action="/app/to_order_periodic">
                                                                     <div class="mb-3">
                                                                         <article class="blog-post">
                                                                             <h2 class="blog-post-title"><fmt:message key="catalog.purchase-order"/></h2>

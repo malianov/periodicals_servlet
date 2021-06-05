@@ -55,7 +55,10 @@ public class LoginCommand implements Command {
 
         if(userService.isPasswordCorrectForLogin(login, password, role)) {
             if (CommandUtility.checkUserIsLogged(request, login)) {
+                CommandUtility.logoutUser(request, login);
                 collectedErrors.put("errorPasswordNotValid", "This login is already in system");
+                request.setAttribute("errorMessages", collectedErrors);
+                return "/WEB-INF/view/error_message.jsp";
             }
             CommandUtility.loginUser(request, userId, login, password, role, privateAccount);
         } else {
@@ -86,7 +89,7 @@ public class LoginCommand implements Command {
 
     private void isLoginExists(String login, Map<String, String> collectedErrors) {
         if(!userService.isLoginExist(login)) {
-            collectedErrors.put("errorPasswordNotValid", "The entered login does not exists");
+            collectedErrors.put("errorLoginNotValid", "The entered login does not exists");
         }
     }
 }

@@ -53,6 +53,6 @@ private static final Logger logger = LogManager.getLogger(BlockUnblockCommand.cl
         }
 
         String path = request.getServletContext().getContextPath();
-        return "redirect@" + path + "/app/to_subscribers_page";
+        return "redirect@" + path + "/to_subscribers_page";
     }
 }

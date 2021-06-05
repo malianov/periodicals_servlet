@@ -23,7 +23,7 @@ public class SubscribersPage implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.trace("to subscribers page");
 
-        final int ROWS_PER_PAGE = 14;
+        final int ROWS_PER_PAGE = 11;
         int currentPage = 1;
         String searchInput = "%";
 
