@@ -13,6 +13,7 @@ public abstract class DaoFactory {
     public abstract PeriodicalDao createPeriodicalDao();
     public abstract SubscriptionDao createSubscriptionDao();
     public abstract PrivateAccountDao createPrivateAccountDao();
+    public abstract ThemeDao createThemeDao();
 
     public static DaoFactory getInstance() {
         logger.trace("isDatafactoryExist = {}", daoFactory);

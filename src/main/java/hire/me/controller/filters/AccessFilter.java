@@ -43,7 +43,7 @@ public class AccessFilter implements Filter {
 						"subscriberAccount",
 						"to_catalog_page",
 						"",
-						"app/app/to_support_page",
+						"to_support_page",
 						"to_order_periodic",
 						"to_my_subscriptions_page",
 						"to_increase_balance")

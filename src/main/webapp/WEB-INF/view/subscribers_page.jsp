@@ -54,7 +54,7 @@
             <td class="align-middle"><c:out value="${all_subscribers_list.getPerson().getName()}"/></td>
             <td class="align-middle"><c:out value="${all_subscribers_list.getPerson().getSurname()}"/></td>
             <td class="align-middle"><c:out value="${all_subscribers_list.getPerson().getEmail()}"/></td>
-            <td class="align-middle text-center"><c:out value="${all_subscribers_list.getId()}"/></td>
+            <td class="align-middle text-center"><c:out value="${all_subscribers_list.getSubscriberBalance()}"/></td>
             <td class="align-middle text-center">22.06.2019</td>
             <td class="text-center">
                 <c:choose>

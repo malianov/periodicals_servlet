@@ -8,11 +8,11 @@ import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
 import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.service.PeriodicalService;
+import hire.me.model.service.UserService;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static hire.me.connection.ConnectionPool.getConnection;
 import static org.apache.logging.log4j.LogManager.getLogger;
@@ -38,7 +38,19 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
         return instance;
     }
 
-    @Override
+
+
+
+
+
+
+
+
+
+
+
+
+    /*@Override
     public void create(Periodical periodical) {
         logger.trace("Trying to create ps");
         try (PreparedStatement ps = connection.prepareStatement("INSERT INTO periodical " +
@@ -48,7 +60,7 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
             ps.setString(1, periodical.getTitle());
             ps.setString(2, periodical.getDescription());
             ps.setBigDecimal(3, periodical.getPricePerItem());
-            ps.setString(4, periodical.getTheme());
+            ps.setString(4, periodical.getTheme().getTheme());
             ps.setString(5, periodical.getPeriodicalStatus().name());
             ps.setString(6, periodical.getPeriodicalType().name());
 
@@ -57,7 +69,8 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
             logger.trace("Catched SQLException {}", e);
             e.printStackTrace();
         }
-    }
+    }*/
+
 
     public PeriodicalService.PaginationResult searchPeriodicalsWithPagination(int lowerBound, int upperBound, String searchKey) {
         logger.info("Search periodical by pagination with lowerBound = {}, upperBound = {} and searchKey = {}", lowerBound, upperBound, searchKey);
@@ -67,12 +80,50 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
         List<Periodical> periodicals = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement periodicalsPS = connection.prepareStatement("SELECT p.id, p.title, p.description, t.name, ps.status, \n" +
-                     "tp.type, p.price_per_item FROM myPeriodics.periodical p \n" +
-                     "INNER JOIN periodic_status ps ON p.id_status = ps.id \n" +
-                     "INNER JOIN themes t ON p.id_theme = t.id \n" +
-                     "INNER JOIN types tp ON p.id_type = tp.id\n" +
-                     "WHERE p.id LIKE ? ORDER BY p.id LIMIT ?, ?;");
+/*             PreparedStatement periodicalsPS = connection.prepareStatement("" +
+                     "SELECT p.id, p.id_periodic, p.title, p.description, p.price_per_item, th.theme, l.language, tp.type, st.status, th.theme_id, tp.type_id " +
+                     "FROM myPeriodics.periodical p " +
+
+                     "LEFT JOIN themes th " +
+                     "ON p.id_theme = th.theme_id " +
+                     "AND p.id_language = th.language_id " +
+
+                     "JOIN language l " +
+                     "ON p.id_language = l.id " +
+
+                     "JOIN types tp " +
+                     "ON p.id_type = tp.type_id " +
+                     "AND p.id_language = tp.language_id " +
+
+                     "JOIN periodic_status st " +
+                     "ON p.id_status = st.id\n" +
+                     "WHERE p.id LIKE ? ORDER BY p.id LIMIT ?, ?;");*/
+
+             PreparedStatement periodicalsPS = connection.prepareStatement(
+                     "(SELECT p.id, p.id_periodic, p.title, p.description, p.price_per_item, th.theme, l.language, tp.type, st.status, th.theme_id, tp.type_id " +
+                     "FROM myPeriodics.periodical p " +
+                     "LEFT JOIN themes th ON p.id_theme=th.theme_id AND p.id_language=th.language_id " +
+                     "JOIN language l ON p.id_language=l.id " +
+                     "JOIN types tp ON p.id_type=tp.type_id AND p.id_language=tp.language_id " +
+                     "JOIN periodic_status st ON p.id_status=st.id " +
+                     "WHERE l.language = 'russian' AND p.title LIKE ? ORDER BY p.id LIMIT ?, ?) " +
+                     "UNION " +
+                     "(SELECT p.id, p.id_periodic, p.title, p.description, p.price_per_item, th.theme, l.language, tp.type, st.status, th.theme_id, tp.type_id " +
+                     "FROM myPeriodics.periodical p LEFT JOIN themes th ON p.id_theme = th.theme_id AND p.id_language = th.language_id " +
+                     "JOIN language l ON p.id_language = l.id " +
+                     "JOIN types tp ON p.id_type = tp.type_id AND p.id_language = tp.language_id " +
+                     "JOIN periodic_status st ON p.id_status = st.id " +
+                     "WHERE l.language = 'english' AND p.title LIKE ? ORDER BY p.id LIMIT ?, ?) " +
+                     "UNION " +
+                     "(SELECT p.id, p.id_periodic, p.title, p.description, p.price_per_item, th.theme, l.language, tp.type, st.status, th.theme_id, tp.type_id " +
+                     "FROM myPeriodics.periodical p " +
+                     "LEFT JOIN themes th ON p.id_theme = th.theme_id AND p.id_language = th.language_id " +
+                     "JOIN language l ON p.id_language = l.id " +
+                     "JOIN types tp ON p.id_type = tp.type_id AND p.id_language = tp.language_id " +
+                     "JOIN periodic_status st ON p.id_status = st.id " +
+                     "WHERE l.language = 'ukrainian' AND p.title LIKE ? ORDER BY p.id LIMIT ?, ?); ");
+
+
              PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) FROM periodical WHERE title LIKE ?;")) {
 
             logger.trace("try to get queryList");
@@ -80,6 +131,13 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
             periodicalsPS.setString(1, "%" + searchKey + "%");
             periodicalsPS.setInt(2, lowerBound);
             periodicalsPS.setInt(3, upperBound);
+
+            periodicalsPS.setString(4, "%" + searchKey + "%");
+            periodicalsPS.setInt(5, lowerBound);
+            periodicalsPS.setInt(6, upperBound);
+            periodicalsPS.setString(7, "%" + searchKey + "%");
+            periodicalsPS.setInt(8, lowerBound);
+            periodicalsPS.setInt(9, upperBound);
 
             ResultSet rs = periodicalsPS.executeQuery();
 
@@ -93,9 +151,11 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
             countRowsPS.setString(1, "%" + searchKey + "%");
             rs = countRowsPS.executeQuery();
 
+            int Q_TY_OF_LANGUAGES = 3;
+
             if (rs.next()) {
                 logger.info("We have smth inside rs_2");
-                paginationResult.setNuOfRows(rs.getInt(1));
+                paginationResult.setNuOfRows(rs.getInt(1)/Q_TY_OF_LANGUAGES);
             }
             rs.close();
 
@@ -122,15 +182,21 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
     }
 
     @Override
+    public void create(Periodical entity) {
+
+    }
+
+    @Override
     public Periodical findById(long id) {
         PeriodicalMapper periodicalMapper = new PeriodicalMapper();
         Periodical periodical;
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT p.id, p.title, p.description, t.name, ps.status, \n" +
-                "tp.type, p.price_per_item FROM myPeriodics.periodical p \n" +
+        try (PreparedStatement ps = connection.prepareStatement("SELECT p.id, p.id_periodic, p.title, p.description, t.theme, ps.status, \n" +
+                "tp.type, tp.type_id, p.price_per_item, l.language, t.theme_id FROM myPeriodics.periodical p \n" +
                 "INNER JOIN periodic_status ps ON p.id_status = ps.id \n" +
                 "INNER JOIN themes t ON p.id_theme = t.id \n" +
                 "INNER JOIN types tp ON p.id_type = tp.id\n" +
+                "JOIN language l ON p.id_language = l.id " +
                 "WHERE p.id LIKE ?;")) {
 
 
@@ -157,6 +223,30 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
     public List<Periodical> findAll() {
         return null;
     }
+
+
+    /*@Override
+    public Set<String> getListOfThemes() {
+        logger.trace("inside getListOfThemes()");
+        Set<String> themes = new LinkedHashSet<>();
+
+        try {
+            logger.trace("inside try");
+            PreparedStatement themesPS = connection.prepareStatement("SELECT name FROM myPeriodics.themes;");
+
+            ResultSet rs = themesPS.executeQuery();
+            while (rs.next()) {
+                String theme = rs.getString("name");
+                logger.info("We have smth inside rs in getListOfThemes, theme = {}", theme);
+                themes.add(theme);
+            }
+            rs.close();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return themes;
+    }*/
+
 
     @Override
     public void update(Periodical periodical) {

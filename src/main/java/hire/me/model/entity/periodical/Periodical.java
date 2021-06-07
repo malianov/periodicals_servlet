@@ -1,5 +1,6 @@
 package hire.me.model.entity.periodical;
 
+import hire.me.model.entity.language.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,12 +11,14 @@ public class Periodical {
     private static final Logger logger = LogManager.getLogger(Periodical.class);
 
     private int id;
+    private int periodicalId;
     private String title;
     private String description;
     private BigDecimal pricePerItem;
-    private String theme;
+    private Theme theme;
     private PeriodicalStatus periodicalStatus;
     private PeriodicalType periodicalType;
+    private Language language;
 
     public static Logger getLogger() {
         return logger;
@@ -23,6 +26,10 @@ public class Periodical {
 
     public int getId() {
         return id;
+    }
+
+    public int getPeriodicalId() {
+        return periodicalId;
     }
 
     public String getTitle() {
@@ -37,7 +44,7 @@ public class Periodical {
         return pricePerItem;
     }
 
-    public String getTheme() {
+    public Theme getTheme() {
         return theme;
     }
 
@@ -49,6 +56,10 @@ public class Periodical {
         return periodicalType;
     }
 
+    public Language getLanguage() {
+        return language;
+    }
+
     public static class Builder {
         private Periodical newPeriodical;
 
@@ -58,6 +69,11 @@ public class Periodical {
 
         public Builder id(int id) {
             newPeriodical.id = id;
+            return this;
+        }
+
+        public Builder periodicalId(int periodicalId) {
+            newPeriodical.periodicalId = periodicalId;
             return this;
         }
 
@@ -76,11 +92,10 @@ public class Periodical {
             return this;
         }
 
-        public Builder theme(String theme) {
+        public Builder theme(Theme theme) {
             newPeriodical.theme = theme;
             return this;
         }
-
         public Builder periodicalStatus(PeriodicalStatus periodicalStatus) {
             newPeriodical.periodicalStatus = periodicalStatus;
             return this;
@@ -91,21 +106,14 @@ public class Periodical {
             return this;
         }
 
+        public Builder language(Language language) {
+            newPeriodical.language = language;
+            return this;
+        }
+
         public Periodical build() {
+            logger.trace("BUILDER PERIODICAL");
             return newPeriodical;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Periodical that = (Periodical) o;
-        return id == that.id && title.equals(that.title) && description.equals(that.description) && pricePerItem.equals(that.pricePerItem) && theme.equals(that.theme) && periodicalStatus == that.periodicalStatus && periodicalType == that.periodicalType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, description, pricePerItem, theme, periodicalStatus, periodicalType);
     }
 }

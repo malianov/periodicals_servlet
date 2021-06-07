@@ -66,7 +66,7 @@ public class EditPeriodicCommand implements Command {
                 .id(Integer.parseInt(editionData.get("id")))
                 .title(editionData.get("new_title"))
                 .description(editionData.get("new_description"))
-                .pricePerItem(new BigDecimal(editionData.get("new_price")))
+//                .pricePerItem(new BigDecimal(editionData.get("new_price")))
                 .build();
 
         return periodical;

@@ -259,6 +259,8 @@ public class JdbcUserDaoImpl implements UserDao {
     @Override
     public void changeUserStatus(String login, String status) {
         try (PreparedStatement ps = connection.prepareStatement("UPDATE users SET account_status = (?) WHERE `login` = (?);")) {
+            logger.trace("inside changeUserStatus, login = {}, status = {}", login, status);
+
             ps.setString(2, login);
             ps.setString(1, status.equals("ACTIVE") ? "ACTIVE" : "BLOCKED");
 

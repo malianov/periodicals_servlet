@@ -36,6 +36,24 @@
         </tr>
         </thead>
         <tbody>
+
+
+
+
+<%--        <c:choose>
+            <c:when test="${sessionScope.language eq 'ua'}">
+                <c:set var="list_periodics" value="${periodicals.get('ua')}"/>
+            </c:when>
+            <c:when test="${sessionScope.language eq 'ru'}">
+                <c:set var="list_periodics" value="${periodicals.get('ru')}"/>
+            </c:when>
+            <c:otherwise>
+                <c:set var="list_periodics" value="${periodicals.get('en')}"/>
+            </c:otherwise>
+        </c:choose>--%>
+
+
+
         <c:forEach items="${subscriptions}" var="all_subscriptions_list">
             <tr>
                 <td class="align-middle"><c:out value="${all_subscriptions_list.getId()}"/></td>

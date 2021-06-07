@@ -30,4 +30,10 @@ public class JdbcDaoFactory extends DaoFactory {
         logger.trace("Private Account DAO created");
         return JdbcPrivateAccountDaoImpl.getInstance();
     }
+
+    @Override
+    public ThemeDao createThemeDao() {
+        logger.trace("Theme DAO created");
+        return JdbcThemeDaoImpl.getInstance();
+    }
 }

@@ -40,4 +40,8 @@ public class ServiceFactory {
     public SubscriptionService getSubscriptionService() {
         return SubscriptionService.getInstance();
     }
+
+    public ThemeService getThemeService() {
+        return ThemeService.getInstance();
+    }
 }

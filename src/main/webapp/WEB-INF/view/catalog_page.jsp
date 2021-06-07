@@ -16,6 +16,16 @@
             <input type="search" class="form-control" placeholder="<fmt:message key="catalog.search-by-periodic-name"/>"
                    aria-label="Search" name="search_input">
         </form>
+
+        <c:if test="${sessionScope.role eq 'ADMIN'}">
+            <div>
+                <button type="button" class="btn btn-warning me-3" data-bs-toggle="modal"
+                        data-bs-target="#modalAddPeriodic">
+                    <fmt:message key="catalog.add-periodic"/>
+                </button>
+            </div>
+        </c:if>
+
     </div>
     <table class="table table-hover table-bordered border-primary border border-2 text-muted">
         <thead class="border-primary border border-2 table-primary">
@@ -107,7 +117,51 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${periodicals}" var="all_periodics_list">
+
+
+        <%--<c:if test="${sessionScope.language eq 'ua'}">
+            <c:forEach items="${periodicals.get('ua')}" var="all_periodics_list">
+        </c:if>
+        <c:if test="${sessionScope.language eq 'ru'}">
+            <c:forEach items="${periodicals.get('ru')}" var="all_periodics_list">
+        </c:if>
+        <c:if test="${sessionScope.language eq 'en'}">
+            <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">
+        </c:if>--%>
+
+                <c:choose>
+                    <c:when test="${sessionScope.language eq 'ua'}">
+                        <c:set var="list_periodics" value="${periodicals.get('ua')}"/>
+                    </c:when>
+                    <c:when test="${sessionScope.language eq 'ru'}">
+                        <c:set var="list_periodics" value="${periodicals.get('ru')}"/>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="list_periodics" value="${periodicals.get('en')}"/>
+                    </c:otherwise>
+                </c:choose>
+
+<%--        <c:set var="list_periodics" value="${sessionScope.language eq 'en' ? periodicals.get('en') : periodicals.get('ru')}"/>--%>
+
+        <c:forEach items="${list_periodics}" var="all_periodics_list">
+
+<%--        <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">--%>
+<%--        <c:choose>--%>
+<%--            <c:when test="${sessionScope.language eq 'ua'}">--%>
+<%--                <c:forEach items="${periodicals.get('ua')}" var="all_periodics_list">--%>
+<%--            </c:when>--%>
+<%--            <c:when test="${sessionScope.language eq 'ru'}">--%>
+<%--                <c:forEach items="${periodicals.get('ru')}" var="all_periodics_list">--%>
+<%--            </c:when>--%>
+<%--            <c:otherwise>--%>
+<%--                <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">--%>
+<%--            </c:otherwise>--%>
+<%--        </c:choose>--%>
+
+
+<%--        <c:forEach items="${periodicals}" var="all_periodics_list">--%>
+
+
             <c:choose>
                 <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
                     <tr class="table-active">
@@ -118,8 +172,8 @@
             </c:choose>
             <td><c:out value="${all_periodics_list.getId()}"/></td>
             <td><c:out value="${all_periodics_list.getTitle()}"/></td>
-            <td><c:out value="${all_periodics_list.getTheme()}"/></td>
-            <td><c:out value="${all_periodics_list.getPeriodicalType()}"/></td>
+            <td><c:out value="${all_periodics_list.getTheme().getTheme()}"/></td>
+            <td><c:out value="${all_periodics_list.getPeriodicalType().getType()}"/></td>
             <td><c:out value="${all_periodics_list.getPricePerItem()}"/></td>
             <c:choose>
                 <c:when test="${sessionScope.role ne 'GUEST'}">
@@ -129,12 +183,15 @@
                                 <div class="d-flex">
                                     <button type="button" class="btn btn-outline-primary me-3 btn-sm flex-fill"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#modalInformation_${all_periodics_list.getId()}"><fmt:message key="catalog.edit"/>
+                                            data-bs-target="#modalInformation_${all_periodics_list.getId()}">
+                                        <fmt:message key="catalog.edit"/>
                                     </button>
                                     <c:choose>
                                         <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
-                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic" style="margin-bottom: 0px;">
-                                                <input name="periodic_id" type="hidden" value="${all_periodics_list.getId()}">
+                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic"
+                                                  style="margin-bottom: 0px;">
+                                                <input name="periodic_id" type="hidden"
+                                                       value="${all_periodics_list.getId()}">
                                                 <input name="periodic_status" type="hidden" value="make_orderable">
                                                 <button class="btn btn-sm btn-outline-success me-3 btn-sm flex-fill"
                                                         type="submit"><fmt:message key="catalog.make-orderable"/>
@@ -142,16 +199,98 @@
                                             </form>
                                         </c:when>
                                         <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'ORDERABLE'}">
-                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic" style="margin-bottom: 0px;">
+                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic"
+                                                  style="margin-bottom: 0px;">
                                                 <input name="periodic_id" type="hidden"
                                                        value="${all_periodics_list.getId()}">
                                                 <input name="periodic_status" type="hidden" value="make_nonorderable">
-                                                <button class="btn btn-sm btn-outline-danger me-3" type="submit"><fmt:message key="catalog.make-non-orderable"/>
+                                                <button class="btn btn-sm btn-outline-danger me-3" type="submit">
+                                                    <fmt:message key="catalog.make-non-orderable"/>
                                                 </button>
                                             </form>
                                         </c:when>
                                     </c:choose>
                                 </div>
+
+
+                                <div class="modal fade" id="modalAddPeriodic"
+                                     tabindex="-1" role="dialog"
+                                     aria-hidden="true" data-bs-backdrop="static">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content border border-primary border-3">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title fs-5 fw-bold text-center">
+                                                    <fmt:message key="catalog.periodic-information"/></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="GET"
+                                                      action="${pageContext.request.contextPath}/app/to_create_periodic">
+                                                    <div class="mb-3">
+                                                        <label class="form-label"><fmt:message
+                                                                key="catalog.title-per"/></label>
+                                                        <input type="text" class="form-control btn-outline-primary"
+                                                               name="title">
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label"><fmt:message
+                                                                key="catalog.theme"/></label>
+                                                        <select class="form-select form-select-sm btn-outline-primary"
+                                                                aria-label=".form-select-sm example">
+                                                            <option selected><fmt:message
+                                                                    key="catalog.choose-the-theme"/></option>
+                                                            <c:choose>
+
+
+
+<%--                                                                ${list_of_themes.get(sessionScope.language)}--%>
+
+
+
+                                                                <c:when test="${sessionScope.language eq 'ua'}">
+                                                                    <c:forEach items="${list_of_themes.get('ua')}" var="theme">
+                                                                        <option value="theme_id_${theme.getId()}">${theme.getTheme()}</option>
+                                                                    </c:forEach>
+                                                                </c:when>
+                                                                <c:when test="${sessionScope.language eq 'ru'}">
+                                                                    <c:forEach items="${list_of_themes.get('ru')}" var="theme">
+                                                                        <option value="theme_id_${theme.getId()}">${theme.getTheme()}</option>
+                                                                    </c:forEach>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <c:forEach items="${list_of_themes.get('en')}" var="theme">
+                                                                        <option value="theme_id_${theme.getId()}">${theme.getTheme()}</option>
+                                                                    </c:forEach>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="message-text"
+                                                               class="col-form-label"><fmt:message
+                                                                key="catalog.form-descriprion"/></label>
+                                                        <textarea class="form-control btn-outline-primary"
+                                                                  id="message-text" name="description"></textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label"><fmt:message
+                                                                key="catalog.price-per-item"/></label>
+                                                        <input type="text" class="form-control btn-outline-primary"
+                                                               name="new_price">
+                                                    </div>
+                                                    <div class="d-grid gap-2">
+                                                        <button class="btn btn-primary" type="submit"><fmt:message
+                                                                key="confirm"/></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="modal fade" id="modalInformation_${all_periodics_list.getId()}"
                                      tabindex="-1" role="dialog"
                                      aria-hidden="true" data-bs-backdrop="static">
@@ -167,7 +306,8 @@
                                                 <form method="GET"
                                                       action="${pageContext.request.contextPath}/app/to_edit_periodic">
                                                     <div class="mb-3">
-                                                        <label class="form-label"><fmt:message key="catalog.title-per"/></label>
+                                                        <label class="form-label"><fmt:message
+                                                                key="catalog.title-per"/></label>
                                                         <input type="text" class="form-control btn-outline-primary"
                                                                name="new_title">
                                                         <input name="id" type="hidden"
@@ -177,14 +317,16 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="message-text"
-                                                               class="col-form-label"><fmt:message key="catalog.form-descriprion"/></label>
+                                                               class="col-form-label"><fmt:message
+                                                                key="catalog.form-descriprion"/></label>
                                                         <textarea class="form-control btn-outline-primary"
                                                                   id="message-text" name="new_description"></textarea>
                                                         <div class="form-text">"<c:out
                                                                 value="${all_periodics_list.getDescription()}"></c:out></div>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label"><fmt:message key="catalog.price-per-item"/></label>
+                                                        <label class="form-label"><fmt:message
+                                                                key="catalog.price-per-item"/></label>
                                                         <input type="text" class="form-control btn-outline-primary"
                                                                name="new_price">
                                                         <div class="form-text">
@@ -192,7 +334,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="d-grid gap-2">
-                                                        <button class="btn btn-primary" type="submit"><fmt:message key="confirm"/></button>
+                                                        <button class="btn btn-primary" type="submit"><fmt:message
+                                                                key="confirm"/></button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -206,13 +349,15 @@
                                     <c:choose>
                                         <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
                                             <button type="button" class="btn btn-outline-danger btn-sm me-3"
-                                                    data-bs-toggle="modal" data-bs-target="#modalNonOrder"><fmt:message key="catalog.nonorderable"/>
+                                                    data-bs-toggle="modal" data-bs-target="#modalNonOrder"><fmt:message
+                                                    key="catalog.nonorderable"/>
                                             </button>
                                         </c:when>
                                         <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'ORDERABLE'}">
                                             <button type="button" class="btn btn-outline-primary btn-sm me-3"
                                                     data-bs-toggle="modal"
-                                                    data-bs-target="#modalOrder_${all_periodics_list.getId()}"><fmt:message key="catalog.order"/>
+                                                    data-bs-target="#modalOrder_${all_periodics_list.getId()}">
+                                                <fmt:message key="catalog.order"/>
                                             </button>
                                             <div class="container">
                                                 <div class="modal fade" id="modalOrder_${all_periodics_list.getId()}"
@@ -222,8 +367,10 @@
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content border border-primary border-3">
                                                             <div class="modal-header text-center">
-                                                                <p class="modal-title fs-6 fw-bold fst-italic"><fmt:message key="catalog.who-reads-a-lot-that-knows-a-lot"/>
-                                                                    </p>
+                                                                <p class="modal-title fs-6 fw-bold fst-italic">
+                                                                    <fmt:message
+                                                                            key="catalog.who-reads-a-lot-that-knows-a-lot"/>
+                                                                </p>
                                                                 <button type="button" class="btn-close"
                                                                         data-bs-dismiss="modal"
                                                                         aria-label="Close"></button>
@@ -232,26 +379,34 @@
                                                                 <form method="get" action="/app/to_order_periodic">
                                                                     <div class="mb-3">
                                                                         <article class="blog-post">
-                                                                            <h2 class="blog-post-title"><fmt:message key="catalog.purchase-order"/></h2>
+                                                                            <h2 class="blog-post-title"><fmt:message
+                                                                                    key="catalog.purchase-order"/></h2>
                                                                             <p class="blog-post-meta">
                                                                                     <%--Date: <span id="date"></span>
                                                                                     Time: <span id="time"></span>--%>
-                                                                                        <fmt:message key="catalog.created-by"/> ${sessionScope.login}
+                                                                                <fmt:message
+                                                                                        key="catalog.created-by"/> ${sessionScope.login}
                                                                             </p>
                                                                             <hr>
                                                                             <h5 class="fst-italic">
-                                                                                <strong><fmt:message key="catalog.title-per"/></strong></h5>
+                                                                                <strong><fmt:message
+                                                                                        key="catalog.title-per"/></strong>
+                                                                            </h5>
                                                                             <p>${all_periodics_list.getTitle()}</p>
                                                                             <hr>
                                                                             <h5 class="fst-italic">
-                                                                                <strong><fmt:message key="catalog.description"/></strong></h5>
+                                                                                <strong><fmt:message
+                                                                                        key="catalog.description"/></strong>
+                                                                            </h5>
                                                                             <p>${all_periodics_list.getDescription()}</p>
                                                                             <hr>
-                                                                            <h5 class="fst-italic"><strong><fmt:message key="catalog.price-per-item"/></strong>
+                                                                            <h5 class="fst-italic"><strong><fmt:message
+                                                                                    key="catalog.price-per-item"/></strong>
                                                                             </h5>
                                                                             <p>${all_periodics_list.getPricePerItem()}</p>
                                                                             <hr>
-                                                                            <h5 class="fst-italic"><strong><fmt:message key="catalog.months-of-subscription"/></strong>
+                                                                            <h5 class="fst-italic"><strong><fmt:message
+                                                                                    key="catalog.months-of-subscription"/></strong>
                                                                             </h5>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input"
@@ -259,7 +414,8 @@
                                                                                        id="inlineCheckbox1"
                                                                                        value="item_1" disabled>
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox1"><fmt:message key="catalog.jan"/></label>
+                                                                                       for="inlineCheckbox1"><fmt:message
+                                                                                        key="catalog.jan"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input"
@@ -267,7 +423,8 @@
                                                                                        id="inlineCheckbox2"
                                                                                        value="item_2" disabled>
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox2"><fmt:message key="catalog.feb"/></label>
+                                                                                       for="inlineCheckbox2"><fmt:message
+                                                                                        key="catalog.feb"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input"
@@ -275,7 +432,8 @@
                                                                                        id="inlineCheckbox3"
                                                                                        value="item_3" disabled>
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox3"><fmt:message key="catalog.mar"/></label>
+                                                                                       for="inlineCheckbox3"><fmt:message
+                                                                                        key="catalog.mar"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input"
@@ -283,7 +441,8 @@
                                                                                        id="inlineCheckbox1"
                                                                                        value="item_4" disabled>
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox1"><fmt:message key="catalog.apr"/></label>
+                                                                                       for="inlineCheckbox1"><fmt:message
+                                                                                        key="catalog.apr"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input"
@@ -291,7 +450,8 @@
                                                                                        id="inlineCheckbox2"
                                                                                        value="item_5" disabled>
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox2"><fmt:message key="catalog.may"/></label>
+                                                                                       for="inlineCheckbox2"><fmt:message
+                                                                                        key="catalog.may"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input"
@@ -299,7 +459,8 @@
                                                                                        id="inlineCheckbox3"
                                                                                        value="item_6" disabled>
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox3"><fmt:message key="catalog.jun"/></label>
+                                                                                       for="inlineCheckbox3"><fmt:message
+                                                                                        key="catalog.jun"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input btn-outline-primary"
@@ -307,7 +468,8 @@
                                                                                        id="inlineCheckbox1"
                                                                                        value="item_7">
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox1"><fmt:message key="catalog.jul"/></label>
+                                                                                       for="inlineCheckbox1"><fmt:message
+                                                                                        key="catalog.jul"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input btn-outline-primary"
@@ -315,7 +477,8 @@
                                                                                        id="inlineCheckbox2"
                                                                                        value="item_8">
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox2"><fmt:message key="catalog.aug"/></label>
+                                                                                       for="inlineCheckbox2"><fmt:message
+                                                                                        key="catalog.aug"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input btn-outline-primary"
@@ -323,7 +486,8 @@
                                                                                        id="inlineCheckbox3"
                                                                                        value="item_9">
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox3"><fmt:message key="catalog.sep"/></label>
+                                                                                       for="inlineCheckbox3"><fmt:message
+                                                                                        key="catalog.sep"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input btn-outline-primary"
@@ -331,7 +495,8 @@
                                                                                        id="inlineCheckbox1"
                                                                                        value="item_10">
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox1"><fmt:message key="catalog.oct"/></label>
+                                                                                       for="inlineCheckbox1"><fmt:message
+                                                                                        key="catalog.oct"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input btn-outline-primary"
@@ -339,7 +504,8 @@
                                                                                        id="inlineCheckbox2"
                                                                                        value="item_11">
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox2"><fmt:message key="catalog.nov"/></label>
+                                                                                       for="inlineCheckbox2"><fmt:message
+                                                                                        key="catalog.nov"/></label>
                                                                             </div>
                                                                             <div class="form-check form-check-inline">
                                                                                 <input class="form-check-input btn-outline-primary"
@@ -347,11 +513,14 @@
                                                                                        id="inlineCheckbox3"
                                                                                        value="item_12">
                                                                                 <label class="form-check-label"
-                                                                                       for="inlineCheckbox3"><fmt:message key="catalog.dec"/></label>
+                                                                                       for="inlineCheckbox3"><fmt:message
+                                                                                        key="catalog.dec"/></label>
                                                                             </div>
                                                                             <hr>
                                                                             <h5 class="fst-italic">
-                                                                                <strong><fmt:message key="catalog.address"/></strong></h5>
+                                                                                <strong><fmt:message
+                                                                                        key="catalog.address"/></strong>
+                                                                            </h5>
                                                                             <p><textarea
                                                                                     class="form-control btn-outline-primary"
                                                                                     id="message-text"
@@ -363,7 +532,8 @@
                                                                         <hr>
                                                                         <div class="d-grid gap-2">
                                                                             <button class="btn btn-primary"
-                                                                                    type="submit"><fmt:message key="catalog.confirm-order"/>
+                                                                                    type="submit"><fmt:message
+                                                                                    key="catalog.confirm-order"/>
                                                                             </button>
                                                                         </div>
                                                                     </div>

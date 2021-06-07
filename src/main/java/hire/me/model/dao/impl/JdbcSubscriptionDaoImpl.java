@@ -120,10 +120,13 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
         List<Subscription> subscriptions = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement subscriptionsPS = connection.prepareStatement("" +
-                     "SELECT subscriptions.id, subscriptions.subscriber_id, subscriptions.periodic_id, subscriptions.periodic_item, subscriptions.subscription_date, subscriptions.subscriber_address, subscriptions.item_price, subscriptions.periodic_year FROM subscriptions " +
-                     "WHERE subscriptions.subscriber_id LIKE ? ORDER BY subscriptions.id LIMIT ?, ?");
-             PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) FROM subscriptions WHERE subscriptions.subscriber_id LIKE ?;")) {
+             PreparedStatement subscriptionsPS = connection.prepareStatement(
+                     "SELECT s.id, s.subscriber_id, s.periodic_id, p.id_periodic, s.periodic_item, s.subscription_date, s.subscriber_address, s.item_price, s.periodic_year FROM subscriptions s " +
+                     "JOIN periodical p ON " +
+                     "s.periodic_id = p.id_periodic " +
+                     "WHERE s.subscriber_id LIKE ? ORDER BY s.id LIMIT ?, ?;");
+
+            PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) FROM subscriptions WHERE subscriptions.subscriber_id LIKE ?;")) {
 
             countRowsPS.setString(1, "%" + searchKey + "%");
             subscriptionsPS.setString(1, "%" + searchKey + "%");
