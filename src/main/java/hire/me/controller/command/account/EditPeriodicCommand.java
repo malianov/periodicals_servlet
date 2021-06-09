@@ -38,7 +38,7 @@ public class EditPeriodicCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 //        CommandUtility.disallowBackToCached(request, response);
 
-        Periodical originalPeriodical = periodicalService.getPeriodicById(Long.valueOf(request.getParameter("id")));
+        Periodical originalPeriodical = periodicalService.getPeriodicById(Long.valueOf(request.getParameter("id"))).get();
 
         Map<String, String> editionData = Map.of(
                 "id", request.getParameter("id"),
@@ -66,7 +66,7 @@ public class EditPeriodicCommand implements Command {
                 .id(Integer.parseInt(editionData.get("id")))
                 .title(editionData.get("new_title"))
                 .description(editionData.get("new_description"))
-//                .pricePerItem(new BigDecimal(editionData.get("new_price")))
+                .pricePerItem(new BigDecimal(editionData.get("new_price")))
                 .build();
 
         return periodical;

@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class UserService {
     private static final Logger logger = LogManager.getLogger(UserService.class);
@@ -71,7 +72,7 @@ public class UserService {
         return dao.isUserExist(login, password);
     }
 
-    public User getUserById(long id) {
+    public Optional<User> getUserById(long id) {
         UserDao dao = daoFactory.createUserDao();
         return dao.findById(id);
     }

@@ -11,19 +11,11 @@ import java.sql.SQLException;
 public class ThemeMapper implements ObjectMapper<Theme> {
     private static final Logger logger = LogManager.getLogger(ThemeMapper.class);
 
-//    private static final String ID = "id";
-    private static final String THEME = "theme";
-    private static final String THEME_ID = "theme_id";
-    private static final String LANGUAGE = "language";
+    private static final String ID = "id";
+    private static final String THEME = "theme_en";
 
     @Override
     public Theme extractFromResultSet(ResultSet rs) throws SQLException {
-        logger.trace("Inside Them mapper");
-
-        logger.trace(" {} = ", rs.getInt(THEME_ID));
-        logger.trace(" {} = ", rs.getString(THEME));
-        logger.trace(" {} = ", Language.valueOf(rs.getString(LANGUAGE).toUpperCase()));
-
-        return new Theme(rs.getInt(THEME_ID), rs.getString(THEME), Language.valueOf(rs.getString(LANGUAGE).toUpperCase()));
+        return new Theme(rs.getLong(ID), rs.getString(THEME));
     }
 }

@@ -10,10 +10,7 @@ import hire.me.model.entity.periodical.Theme;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class PeriodicalService {
     private static final Logger logger = LogManager.getLogger(PeriodicalService.class);
@@ -41,7 +38,7 @@ public class PeriodicalService {
         periodicalDao.update(periodical);
     }
 
-    public Periodical getPeriodicById(Long id) {
+    public Optional<Periodical> getPeriodicById(Long id) {
         logger.trace("getPeriodicById = {}", id);
 
         PeriodicalDao dao = daoFactory.createPeriodicalDao();
@@ -82,33 +79,6 @@ public class PeriodicalService {
         public List<Periodical> getPeriodicalList() {
             return periodicalList;
         }
-
-        public Map<String, List<Periodical>> getPeriodicalMap() {
-            logger.trace("getPeriodicalMap(), periodicalList = {}", periodicalList.size());
-            List<Periodical> periodicals_en = periodicalList.stream()
-                    .filter(t -> t.getLanguage().equals(Language.ENGLISH))
-                    .toList();
-
-            List<Periodical> periodicals_ru = periodicalList.stream()
-                    .filter(t -> t.getLanguage().equals(Language.RUSSIAN))
-                    .toList();
-
-            List<Periodical> periodicals_ua = periodicalList.stream()
-                    .filter(t -> t.getLanguage().equals(Language.UKRAINIAN))
-                    .toList();
-
-            logger.trace("periodicals_ua  =====  {}", periodicals_ua.size());
-            logger.trace("periodicals_ru  =====  {}", periodicals_ru.size());
-            logger.trace("periodicals_en  =====  {}", periodicals_en.size());
-
-            Map<String, List<Periodical>> allPeriodicalsByLanguage = new HashMap<>();
-            allPeriodicalsByLanguage.put("en", periodicals_en);
-            allPeriodicalsByLanguage.put("ua", periodicals_ua);
-            allPeriodicalsByLanguage.put("ru", periodicals_ru);
-
-            return allPeriodicalsByLanguage;
-        }
-
 
         public void setPeriodicalList(List<Periodical> resultList) {
             this.periodicalList = resultList;

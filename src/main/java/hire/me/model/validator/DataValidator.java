@@ -13,6 +13,10 @@ public class DataValidator {
     }
 
     public static boolean validatePassword(String password) {
+        logger.trace(password != null);
+        logger.trace(Pattern.matches("^([a-zA-Z0-9_.]{1,30})$", password));
+        logger.trace((password != null) && (Pattern.matches("^([a-zA-Z0-9_.]{1,30})$", password)));
+
         return password != null && Pattern.matches("^([a-zA-Z0-9_.]{1,30})$", password);
     }
 

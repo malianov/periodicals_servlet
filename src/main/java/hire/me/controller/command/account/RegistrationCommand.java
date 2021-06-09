@@ -46,7 +46,11 @@ public class RegistrationCommand implements Command, Password {
         final String password = request.getParameter("password");
         final String confirmedPassword = request.getParameter("confirmedPassword");
 
+        logger.trace("password = {}, confirmedPassword = {}", password, confirmedPassword);
+
         createHashedPassword(password);
+
+        logger.trace(collectedErrors.size());
 
         Map<String, String> registrationData = Map.of(
                 "login", request.getParameter("login"),
@@ -57,12 +61,21 @@ public class RegistrationCommand implements Command, Password {
                 "role", request.getParameter("role"),
                 "personal_account", "0.0");
 
+        logger.trace(collectedErrors.size());
+
         arePasswordsEqual(password, confirmedPassword, collectedErrors);
+        logger.trace(collectedErrors.size());
         isLoginValid(registrationData, collectedErrors);
+        logger.trace(collectedErrors.size());
         isNameValid(registrationData, collectedErrors);
+        logger.trace(collectedErrors.size());
         isSurnameValid(registrationData, collectedErrors);
+        logger.trace(collectedErrors.size());
         isEmailValid(registrationData, collectedErrors);
-        isPasswordValid(registrationData, collectedErrors);
+        logger.trace(collectedErrors.size());
+        isPasswordValid(confirmedPassword, collectedErrors);
+
+        logger.trace(collectedErrors.size());
 
         if(!collectedErrors.isEmpty()) {
             request.setAttribute("errorMessages", collectedErrors);
@@ -125,9 +138,9 @@ public class RegistrationCommand implements Command, Password {
         }
     }
 
-    private void isPasswordValid(Map<String, String> registrationData, Map<String, String> collectedErrors) {
-        if (!DataValidator.validatePassword(registrationData.get("password"))) {
-            collectedErrors.put("errorPasswordNotValid", "The entered password is incorrect");
+    private void isPasswordValid(String password, Map<String, String> collectedErrors) {
+        if (!DataValidator.validatePassword(password)) {
+            collectedErrors.put("errorPasswordNotValid", "The entered password is invalid");
         }
     }
 

@@ -34,6 +34,7 @@ public class SubscriptionsPage implements Command {
 
         if(request.getParameter("current_page") != null) {
             currentPage = Integer.parseInt(request.getParameter("current_page"));
+            logger.trace("currentPage = {}", currentPage);
         }
 
         if(request.getParameter("search_input") != null) {
@@ -46,6 +47,7 @@ public class SubscriptionsPage implements Command {
                 subscriptionService.getSearchSubscriptionWithPagination(lowerBound, ROWS_PER_PAGE, searchInput);
 
         List<Subscription> subscriptions = paginationResult.getSubscriptionsList();
+
 
         int nuOfRows = paginationResult.getNuOfRows();
         int nuOfPages = (int) Math.ceil(nuOfRows * 1.0 / ROWS_PER_PAGE);

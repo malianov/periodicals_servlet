@@ -5,6 +5,7 @@ import hire.me.model.dao.daoFactory.UserDao;
 import hire.me.model.dao.mapper.UserMapper;
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
+import hire.me.model.entity.periodical.Theme;
 import hire.me.model.service.UserService;
 import hire.me.utility.Password;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static hire.me.connection.ConnectionPool.getConnection;
 
@@ -293,7 +295,7 @@ public class JdbcUserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findById(long id) {
+    public Optional<User> findById(long id) {
 
         UserMapper userMapper = new UserMapper();
         User user;
@@ -304,7 +306,7 @@ public class JdbcUserDaoImpl implements UserDao {
 
             while (rs.next()) {
                 user = userMapper.extractFromResultSet(rs);
-                return user;
+                return Optional.of(user);
             }
             rs.close();
 

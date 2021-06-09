@@ -3,6 +3,7 @@ package hire.me.model.dao.impl;
 import hire.me.connection.ConnectionPool;
 import hire.me.model.dao.daoFactory.SubscriptionDao;
 import hire.me.model.dao.mapper.SubscriptionMapper;
+import hire.me.model.entity.periodical.Theme;
 import hire.me.model.entity.subscription.Subscription;
 import hire.me.model.service.SubscriptionService;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static hire.me.connection.ConnectionPool.getConnection;
 
@@ -51,14 +53,23 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
             actualPeriodicPricePerItem = getActualPeriodicPricePerItem(subscribedPeriodicId, actualPeriodicPricePerItem);
             actualSubscriberBalance = getActualSubscriberBalance(subscriberId, actualSubscriberBalance);
 
+            logger.trace("actualPeriodicPricePerItem = {}, actualSubscriberBalance = {}", actualPeriodicPricePerItem, actualSubscriberBalance);
+
             if (isSubscriberHasEnoughMoney(actualPeriodicPricePerItem, actualSubscriberBalance, quantityOfItems)) {
+                logger.trace("SubscriberHasEnoughMoney");
                 BigDecimal newSubscriberBalance = actualSubscriberBalance.subtract(actualPeriodicPricePerItem.multiply(new BigDecimal(quantityOfItems)));
+                logger.trace("SubscriberHasEnoughMoney, newSubscriberBalance = {}", newSubscriberBalance);
                 updateSubscribersBalance(subscriberId, newSubscriberBalance);
                 insertToDatabaseRowsAsSubscriptions(subscriberId, subscribedPeriodicId, subscriptionYear, selectedPeriodicItems, subscriberAddress, actualPeriodicPricePerItem);
-                connection.commit();
+                logger.trace("before commit");
             }
+            connection.commit();
+
+
+
         } catch (Exception e) {
             try {
+                logger.trace("exception, rollback");
                 connection.rollback();
             } catch (SQLException exception) {
                 exception.printStackTrace();
@@ -121,9 +132,9 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
 
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement subscriptionsPS = connection.prepareStatement(
-                     "SELECT s.id, s.subscriber_id, s.periodic_id, p.id_periodic, s.periodic_item, s.subscription_date, s.subscriber_address, s.item_price, s.periodic_year FROM subscriptions s " +
+                     "SELECT s.id, s.subscriber_id, s.periodic_id, p.id, s.periodic_item, s.subscription_date, s.subscriber_address, s.item_price, s.periodic_year FROM subscriptions s " +
                      "JOIN periodical p ON " +
-                     "s.periodic_id = p.id_periodic " +
+                     "s.periodic_id = p.id " +
                      "WHERE s.subscriber_id LIKE ? ORDER BY s.id LIMIT ?, ?;");
 
             PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) FROM subscriptions WHERE subscriptions.subscriber_id LIKE ?;")) {
@@ -163,7 +174,7 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
     }
 
     @Override
-    public Subscription findById(long id) {
+    public Optional<Subscription> findById(long id) {
         return null;
     }
 

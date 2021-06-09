@@ -36,4 +36,14 @@ public class JdbcDaoFactory extends DaoFactory {
         logger.trace("Theme DAO created");
         return JdbcThemeDaoImpl.getInstance();
     }
+
+    @Override
+    public PeriodicalTypeDao createPeriodicalTypeDao() {
+        return JdbcPeriodicalTypeDaoImpl.getInstance();
+    }
+
+    @Override
+    public PeriodicalStatusDao createPeriodicalStatusDao() {
+        return JdbcPeriodicalStatusDaoImpl.getInstance();
+    }
 }

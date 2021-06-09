@@ -23,12 +23,11 @@
             <div class="col-lg-6">
                 <h1 class="display-6 fw-bold lh-1 mb-3"><fmt:message key="home.we-work-for-you-and-your-parents"/></h1>
                 <p class="lead"><fmt:message key="home.bla-bla-bla"/><br><br><fmt:message key="home.what-is-this"/><br><br>
-                    <fmt:message key="home.this-is-newspapers-bla-bla"/>
-                    <br><br>
-                    <br><br>
-                    <br><br>
-                    <br><br>
-                    <br>
+                    <fmt:message key="home.this-is-newspapers-bla-bla"/><br><br>
+                    <fmt:message key="home.a-lot-of-periodics"/><br><br>
+                    <fmt:message key="home.you-can-choose"/><br><br>
+                    <fmt:message key="home.our-resource"/><br><br>
+                    <fmt:message key="home.welcome"/>
                 </p>
             </div>
         </div>

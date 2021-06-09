@@ -7,6 +7,7 @@
 <fmt:setBundle basename="messages"/>
 
 <jsp:include page="header.jsp"/>
+
 <body>
 <div class="container">
     <jsp:include page="navbar.jsp"/>
@@ -129,41 +130,41 @@
             <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">
         </c:if>--%>
 
-                <c:choose>
-                    <c:when test="${sessionScope.language eq 'ua'}">
-                        <c:set var="list_periodics" value="${periodicals.get('ua')}"/>
-                    </c:when>
-                    <c:when test="${sessionScope.language eq 'ru'}">
-                        <c:set var="list_periodics" value="${periodicals.get('ru')}"/>
-                    </c:when>
-                    <c:otherwise>
-                        <c:set var="list_periodics" value="${periodicals.get('en')}"/>
-                    </c:otherwise>
-                </c:choose>
+        <c:choose>
+            <c:when test="${sessionScope.language eq 'ua'}">
+                <c:set var="list_periodics" value="${periodicals}"/>
+            </c:when>
+            <c:when test="${sessionScope.language eq 'ru'}">
+                <c:set var="list_periodics" value="${periodicals}"/>
+            </c:when>
+            <c:otherwise>
+                <c:set var="list_periodics" value="${periodicals}"/>
+            </c:otherwise>
+        </c:choose>
 
-<%--        <c:set var="list_periodics" value="${sessionScope.language eq 'en' ? periodicals.get('en') : periodicals.get('ru')}"/>--%>
+        <%--        <c:set var="list_periodics" value="${sessionScope.language eq 'en' ? periodicals.get('en') : periodicals.get('ru')}"/>--%>
 
         <c:forEach items="${list_periodics}" var="all_periodics_list">
 
-<%--        <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">--%>
-<%--        <c:choose>--%>
-<%--            <c:when test="${sessionScope.language eq 'ua'}">--%>
-<%--                <c:forEach items="${periodicals.get('ua')}" var="all_periodics_list">--%>
-<%--            </c:when>--%>
-<%--            <c:when test="${sessionScope.language eq 'ru'}">--%>
-<%--                <c:forEach items="${periodicals.get('ru')}" var="all_periodics_list">--%>
-<%--            </c:when>--%>
-<%--            <c:otherwise>--%>
-<%--                <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">--%>
-<%--            </c:otherwise>--%>
-<%--        </c:choose>--%>
+            <%--        <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">--%>
+            <%--        <c:choose>--%>
+            <%--            <c:when test="${sessionScope.language eq 'ua'}">--%>
+            <%--                <c:forEach items="${periodicals.get('ua')}" var="all_periodics_list">--%>
+            <%--            </c:when>--%>
+            <%--            <c:when test="${sessionScope.language eq 'ru'}">--%>
+            <%--                <c:forEach items="${periodicals.get('ru')}" var="all_periodics_list">--%>
+            <%--            </c:when>--%>
+            <%--            <c:otherwise>--%>
+            <%--                <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">--%>
+            <%--            </c:otherwise>--%>
+            <%--        </c:choose>--%>
 
 
-<%--        <c:forEach items="${periodicals}" var="all_periodics_list">--%>
+            <%--        <c:forEach items="${periodicals}" var="all_periodics_list">--%>
 
 
             <c:choose>
-                <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
+                <c:when test="${all_periodics_list.getPeriodicalStatus().getStatus() eq 'nonorderable'}">
                     <tr class="table-active">
                 </c:when>
                 <c:otherwise>
@@ -175,185 +176,225 @@
             <td><c:out value="${all_periodics_list.getTheme().getTheme()}"/></td>
             <td><c:out value="${all_periodics_list.getPeriodicalType().getType()}"/></td>
             <td><c:out value="${all_periodics_list.getPricePerItem()}"/></td>
+
             <c:choose>
                 <c:when test="${sessionScope.role ne 'GUEST'}">
                     <td>
                         <c:choose>
-                            <c:when test="${sessionScope.role eq 'ADMIN'}">
-                                <div class="d-flex">
-                                    <button type="button" class="btn btn-outline-primary me-3 btn-sm flex-fill"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalInformation_${all_periodics_list.getId()}">
-                                        <fmt:message key="catalog.edit"/>
-                                    </button>
-                                    <c:choose>
-                                        <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
-                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic"
-                                                  style="margin-bottom: 0px;">
-                                                <input name="periodic_id" type="hidden"
-                                                       value="${all_periodics_list.getId()}">
-                                                <input name="periodic_status" type="hidden" value="make_orderable">
-                                                <button class="btn btn-sm btn-outline-success me-3 btn-sm flex-fill"
-                                                        type="submit"><fmt:message key="catalog.make-orderable"/>
-                                                </button>
-                                            </form>
-                                        </c:when>
-                                        <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'ORDERABLE'}">
-                                            <form method="get" action="/app/app/to_make_order_nonorder_periodic"
-                                                  style="margin-bottom: 0px;">
-                                                <input name="periodic_id" type="hidden"
-                                                       value="${all_periodics_list.getId()}">
-                                                <input name="periodic_status" type="hidden" value="make_nonorderable">
-                                                <button class="btn btn-sm btn-outline-danger me-3" type="submit">
-                                                    <fmt:message key="catalog.make-non-orderable"/>
-                                                </button>
-                                            </form>
-                                        </c:when>
-                                    </c:choose>
-                                </div>
-
-
-                                <div class="modal fade" id="modalAddPeriodic"
-                                     tabindex="-1" role="dialog"
-                                     aria-hidden="true" data-bs-backdrop="static">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content border border-primary border-3">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title fs-5 fw-bold text-center">
-                                                    <fmt:message key="catalog.periodic-information"/></h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form method="GET"
-                                                      action="${pageContext.request.contextPath}/app/to_create_periodic">
-                                                    <div class="mb-3">
-                                                        <label class="form-label"><fmt:message
-                                                                key="catalog.title-per"/></label>
-                                                        <input type="text" class="form-control btn-outline-primary"
-                                                               name="title">
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <label class="form-label"><fmt:message
-                                                                key="catalog.theme"/></label>
-                                                        <select class="form-select form-select-sm btn-outline-primary"
-                                                                aria-label=".form-select-sm example">
-                                                            <option selected><fmt:message
-                                                                    key="catalog.choose-the-theme"/></option>
-                                                            <c:choose>
 
 
 
-<%--                                                                ${list_of_themes.get(sessionScope.language)}--%>
 
 
 
-                                                                <c:when test="${sessionScope.language eq 'ua'}">
-                                                                    <c:forEach items="${list_of_themes.get('ua')}" var="theme">
-                                                                        <option value="theme_id_${theme.getId()}">${theme.getTheme()}</option>
-                                                                    </c:forEach>
-                                                                </c:when>
-                                                                <c:when test="${sessionScope.language eq 'ru'}">
-                                                                    <c:forEach items="${list_of_themes.get('ru')}" var="theme">
-                                                                        <option value="theme_id_${theme.getId()}">${theme.getTheme()}</option>
-                                                                    </c:forEach>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <c:forEach items="${list_of_themes.get('en')}" var="theme">
-                                                                        <option value="theme_id_${theme.getId()}">${theme.getTheme()}</option>
-                                                                    </c:forEach>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="message-text"
-                                                               class="col-form-label"><fmt:message
-                                                                key="catalog.form-descriprion"/></label>
-                                                        <textarea class="form-control btn-outline-primary"
-                                                                  id="message-text" name="description"></textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label"><fmt:message
-                                                                key="catalog.price-per-item"/></label>
-                                                        <input type="text" class="form-control btn-outline-primary"
-                                                               name="new_price">
-                                                    </div>
-                                                    <div class="d-grid gap-2">
-                                                        <button class="btn btn-primary" type="submit"><fmt:message
-                                                                key="confirm"/></button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
 
-                                <div class="modal fade" id="modalInformation_${all_periodics_list.getId()}"
-                                     tabindex="-1" role="dialog"
-                                     aria-hidden="true" data-bs-backdrop="static">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content border border-primary border-3">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title fs-5 fw-bold text-center">
-                                                    <fmt:message key="catalog.periodic-information"/></h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form method="GET"
-                                                      action="${pageContext.request.contextPath}/app/to_edit_periodic">
-                                                    <div class="mb-3">
-                                                        <label class="form-label"><fmt:message
-                                                                key="catalog.title-per"/></label>
-                                                        <input type="text" class="form-control btn-outline-primary"
-                                                               name="new_title">
-                                                        <input name="id" type="hidden"
-                                                               value="${all_periodics_list.getId()}">
-                                                        <div class="form-text"><c:out
-                                                                value="${all_periodics_list.getTitle()}"/></div>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="message-text"
-                                                               class="col-form-label"><fmt:message
-                                                                key="catalog.form-descriprion"/></label>
-                                                        <textarea class="form-control btn-outline-primary"
-                                                                  id="message-text" name="new_description"></textarea>
-                                                        <div class="form-text">"<c:out
-                                                                value="${all_periodics_list.getDescription()}"></c:out></div>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label"><fmt:message
-                                                                key="catalog.price-per-item"/></label>
-                                                        <input type="text" class="form-control btn-outline-primary"
-                                                               name="new_price">
-                                                        <div class="form-text">
-                                                            <c:out value="${all_periodics_list.getPricePerItem()}"></c:out>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-grid gap-2">
-                                                        <button class="btn btn-primary" type="submit"><fmt:message
-                                                                key="confirm"/></button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:when>
+
+
+                             <c:when test="${sessionScope.role eq 'ADMIN'}">
+                                 <div class="d-flex">
+                                     <button type="button" class="btn btn-outline-primary me-3 btn-sm flex-fill"
+                                             data-bs-toggle="modal"
+                                             data-bs-target="#modalInformation_${all_periodics_list.getId()}">
+                                         <fmt:message key="catalog.edit"/>
+                                     </button>
+                                     <c:choose>
+                                         <c:when test="${all_periodics_list.getPeriodicalStatus().getStatus() eq 'nonorderable'}">
+                                             <form method="get" action="/app/app/to_make_order_nonorder_periodic"
+                                                   style="margin-bottom: 0px;">
+                                                 <input name="periodic_id" type="hidden"
+                                                        value="${all_periodics_list.getId()}">
+                                                 <input name="periodic_status" type="hidden" value="make_orderable">
+                                                 <button class="btn btn-sm btn-outline-success me-3 btn-sm flex-fill"
+                                                         type="submit"><fmt:message key="catalog.make-orderable"/>
+                                                 </button>
+                                             </form>
+                                         </c:when>
+                                         <c:when test="${all_periodics_list.getPeriodicalStatus().getStatus() eq 'orderable'}">
+                                             <form method="get" action="/app/app/to_make_order_nonorder_periodic"
+                                                   style="margin-bottom: 0px;">
+                                                 <input name="periodic_id" type="hidden"
+                                                        value="${all_periodics_list.getId()}">
+                                                 <input name="periodic_status" type="hidden" value="make_nonorderable">
+                                                 <button class="btn btn-sm btn-outline-danger me-3" type="submit">
+                                                     <fmt:message key="catalog.make-non-orderable"/>
+                                                 </button>
+                                             </form>
+                                         </c:when>
+                                     </c:choose>
+                                 </div>
+
+
+                                 <div class="modal fade" id="modalAddPeriodic"
+                                      tabindex="-1" role="dialog"
+                                      aria-hidden="true" data-bs-backdrop="static">
+                                     <div class="modal-dialog" role="document">
+                                         <div class="modal-content border border-primary border-3">
+                                             <div class="modal-header">
+                                                 <h5 class="modal-title fs-5 fw-bold text-center">
+                                                     <fmt:message key="catalog.periodic-information"/></h5>
+                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                         aria-label="Close"></button>
+                                             </div>
+                                             <div class="modal-body">
+                                                 <form method="GET"
+                                                       action="${pageContext.request.contextPath}/app/to_create_periodic">
+                                                     <div class="mb-3">
+                                                         <label class="form-label"><fmt:message
+                                                                 key="catalog.title-per"/></label>
+                                                         <input type="text" class="form-control btn-outline-primary"
+                                                                name="title">
+                                                     </div>
+
+                                                     <div class="mb-3">
+                                                         <label class="form-label"><fmt:message
+                                                                 key="catalog.theme"/></label>
+                                                         <select class="form-select form-select-sm btn-outline-primary"
+                                                                 aria-label=".form-select-sm example">
+                                                             <option selected><fmt:message
+                                                                     key="catalog.choose-the-theme"/></option>
+                                                             <c:choose>
+
+
+
+ <%--                                                                ${list_of_themes.get(sessionScope.language)}--%>
+
+
+
+                                                                 <c:when test="${sessionScope.language eq 'ua'}">
+                                                                     <c:forEach items="${list_of_themes.get('ua')}" var="theme">
+                                                                         <option value="theme_id_${theme.getId()}">${theme.getTheme()}</option>
+                                                                     </c:forEach>
+                                                                 </c:when>
+                                                                 <c:when test="${sessionScope.language eq 'ru'}">
+                                                                     <c:forEach items="${list_of_themes.get('ru')}" var="theme">
+                                                                         <option value="theme_id_${theme.getId()}">${theme.getTheme()}</option>
+                                                                     </c:forEach>
+                                                                 </c:when>
+                                                                 <c:otherwise>
+                                                                     <c:forEach items="${list_of_themes.get('en')}" var="theme">
+                                                                         <option value="theme_id_${theme.getId()}">${theme.getTheme()}</option>
+                                                                     </c:forEach>
+                                                                 </c:otherwise>
+                                                             </c:choose>
+                                                         </select>
+                                                     </div>
+                                                     <div class="mb-3">
+                                                         <label for="message-text"
+                                                                class="col-form-label"><fmt:message
+                                                                 key="catalog.form-descriprion"/></label>
+                                                         <textarea class="form-control btn-outline-primary"
+                                                                   id="message-text" name="description"></textarea>
+                                                     </div>
+                                                     <div class="mb-3">
+                                                         <label class="form-label"><fmt:message
+                                                                 key="catalog.price-per-item"/></label>
+                                                         <input type="text" class="form-control btn-outline-primary"
+                                                                name="new_price">
+                                                     </div>
+                                                     <div class="d-grid gap-2">
+                                                         <button class="btn btn-primary" type="submit"><fmt:message
+                                                                 key="confirm"/></button>
+                                                     </div>
+                                                 </form>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+
+
+                                 <div class="modal fade" id="modalInformation_${all_periodics_list.getId()}"
+                                      tabindex="-1" role="dialog"
+                                      aria-hidden="true" data-bs-backdrop="static">
+                                     <div class="modal-dialog" role="document">
+                                         <div class="modal-content border border-primary border-3">
+                                             <div class="modal-header">
+                                                 <h5 class="modal-title fs-5 fw-bold text-center">
+                                                     <fmt:message key="catalog.periodic-information"/></h5>
+                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                         aria-label="Close"></button>
+                                             </div>
+                                             <div class="modal-body">
+                                                 <form method="GET"
+                                                       action="${pageContext.request.contextPath}/app/to_edit_periodic">
+                                                     <div class="mb-3">
+                                                         <label class="form-label"><fmt:message
+                                                                 key="catalog.title-per"/></label>
+                                                         <input type="text" class="form-control btn-outline-primary"
+                                                                name="new_title">
+                                                         <input name="id" type="hidden"
+                                                                value="${all_periodics_list.getId()}">
+                                                         <div class="form-text"><c:out
+                                                                 value="${all_periodics_list.getTitle()}"/></div>
+                                                     </div>
+                                                     <div class="mb-3">
+                                                         <label for="message-text"
+                                                                class="col-form-label"><fmt:message
+                                                                 key="catalog.form-descriprion"/></label>
+                                                         <textarea class="form-control btn-outline-primary"
+                                                                   id="message-text" name="new_description"></textarea>
+                                                         <div class="form-text">"<c:out
+                                                                 value="${all_periodics_list.getDescription()}"></c:out></div>
+                                                     </div>
+                                                     <div class="mb-3">
+                                                         <label class="form-label"><fmt:message
+                                                                 key="catalog.price-per-item"/></label>
+                                                         <input type="text" class="form-control btn-outline-primary"
+                                                                name="new_price">
+                                                         <div class="form-text">
+                                                             <c:out value="${all_periodics_list.getPricePerItem()}"></c:out>
+                                                         </div>
+                                                     </div>
+                                                     <div class="d-grid gap-2">
+                                                         <button class="btn btn-primary" type="submit"><fmt:message
+                                                                 key="confirm"/></button>
+                                                     </div>
+                                                 </form>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </c:when>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                             <c:when test="${sessionScope.role eq 'SUBSCRIBER'}">
                                 <form method="post" action="/app/app/to_order_periodic" style="margin-bottom: 0px;">
                                     <input name="periodic_id" type="hidden" value="${all_periodics_list.getId()}">
                                     <c:choose>
-                                        <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'NONORDERABLE'}">
+                                        <c:when test="${all_periodics_list.getPeriodicalStatus().getStatus() eq 'nonorderable'}">
                                             <button type="button" class="btn btn-outline-danger btn-sm me-3"
                                                     data-bs-toggle="modal" data-bs-target="#modalNonOrder"><fmt:message
                                                     key="catalog.nonorderable"/>
                                             </button>
                                         </c:when>
-                                        <c:when test="${all_periodics_list.getPeriodicalStatus() eq 'ORDERABLE'}">
+                                        <c:when test="${all_periodics_list.getPeriodicalStatus().getStatus() eq 'orderable'}">
                                             <button type="button" class="btn btn-outline-primary btn-sm me-3"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalOrder_${all_periodics_list.getId()}">

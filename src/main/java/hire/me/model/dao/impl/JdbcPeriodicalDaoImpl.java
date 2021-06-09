@@ -3,12 +3,8 @@ package hire.me.model.dao.impl;
 import hire.me.connection.ConnectionPool;
 import hire.me.model.dao.daoFactory.PeriodicalDao;
 import hire.me.model.dao.mapper.PeriodicalMapper;
-import hire.me.model.dao.mapper.UserMapper;
-import hire.me.model.entity.account.User;
-import hire.me.model.entity.account.UserRole;
 import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.service.PeriodicalService;
-import hire.me.model.service.UserService;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
@@ -100,28 +96,23 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
                      "WHERE p.id LIKE ? ORDER BY p.id LIMIT ?, ?;");*/
 
              PreparedStatement periodicalsPS = connection.prepareStatement(
-                     "(SELECT p.id, p.id_periodic, p.title, p.description, p.price_per_item, th.theme, l.language, tp.type, st.status, th.theme_id, tp.type_id " +
+                     "(SELECT p.id, p.title, p.description, p.price_per_item, p.id_type, p.id_status, p.id_theme " +
+                             "FROM periodical p " +
+                             "WHERE p.title LIKE ? ORDER BY p.id LIMIT ?, ?);");
+/*                     "(SELECT p.id, p.title, p.description, price_per_item, th.theme_en, th.theme_ua, th.theme_ru, tp.type_en, tp.type_ua, tp.type_ru, ps.id " +
+                             "FROM periodical p " +
+                             "JOIN themes th ON p.id_type = th.id " +
+                             "JOIN types tp ON p.id_status = tp.id " +
+                             "JOIN periodic_status ps ON p.id_status = ps.id " +
+                             "WHERE p.title LIKE ? ORDER BY p.id LIMIT ?, ?);");*/
+
+
+/*                     "(SELECT p.id, p.title, p.description, p.price_per_item, th.theme_id, th.theme, tp.type_id, tp.type, st.id, st.status  " +
                      "FROM myPeriodics.periodical p " +
-                     "LEFT JOIN themes th ON p.id_theme=th.theme_id AND p.id_language=th.language_id " +
-                     "JOIN language l ON p.id_language=l.id " +
-                     "JOIN types tp ON p.id_type=tp.type_id AND p.id_language=tp.language_id " +
+                     "LEFT JOIN themes th ON p.id_theme=th.theme_id " +
+                     "JOIN types tp ON p.id_type=tp.type_id " +
                      "JOIN periodic_status st ON p.id_status=st.id " +
-                     "WHERE l.language = 'russian' AND p.title LIKE ? ORDER BY p.id LIMIT ?, ?) " +
-                     "UNION " +
-                     "(SELECT p.id, p.id_periodic, p.title, p.description, p.price_per_item, th.theme, l.language, tp.type, st.status, th.theme_id, tp.type_id " +
-                     "FROM myPeriodics.periodical p LEFT JOIN themes th ON p.id_theme = th.theme_id AND p.id_language = th.language_id " +
-                     "JOIN language l ON p.id_language = l.id " +
-                     "JOIN types tp ON p.id_type = tp.type_id AND p.id_language = tp.language_id " +
-                     "JOIN periodic_status st ON p.id_status = st.id " +
-                     "WHERE l.language = 'english' AND p.title LIKE ? ORDER BY p.id LIMIT ?, ?) " +
-                     "UNION " +
-                     "(SELECT p.id, p.id_periodic, p.title, p.description, p.price_per_item, th.theme, l.language, tp.type, st.status, th.theme_id, tp.type_id " +
-                     "FROM myPeriodics.periodical p " +
-                     "LEFT JOIN themes th ON p.id_theme = th.theme_id AND p.id_language = th.language_id " +
-                     "JOIN language l ON p.id_language = l.id " +
-                     "JOIN types tp ON p.id_type = tp.type_id AND p.id_language = tp.language_id " +
-                     "JOIN periodic_status st ON p.id_status = st.id " +
-                     "WHERE l.language = 'ukrainian' AND p.title LIKE ? ORDER BY p.id LIMIT ?, ?); ");
+                     "WHERE p.title LIKE ? ORDER BY p.id LIMIT ?, ?);");*/
 
 
              PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) FROM periodical WHERE title LIKE ?;")) {
@@ -131,13 +122,6 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
             periodicalsPS.setString(1, "%" + searchKey + "%");
             periodicalsPS.setInt(2, lowerBound);
             periodicalsPS.setInt(3, upperBound);
-
-            periodicalsPS.setString(4, "%" + searchKey + "%");
-            periodicalsPS.setInt(5, lowerBound);
-            periodicalsPS.setInt(6, upperBound);
-            periodicalsPS.setString(7, "%" + searchKey + "%");
-            periodicalsPS.setInt(8, lowerBound);
-            periodicalsPS.setInt(9, upperBound);
 
             ResultSet rs = periodicalsPS.executeQuery();
 
@@ -151,11 +135,9 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
             countRowsPS.setString(1, "%" + searchKey + "%");
             rs = countRowsPS.executeQuery();
 
-            int Q_TY_OF_LANGUAGES = 3;
-
             if (rs.next()) {
                 logger.info("We have smth inside rs_2");
-                paginationResult.setNuOfRows(rs.getInt(1)/Q_TY_OF_LANGUAGES);
+                paginationResult.setNuOfRows(rs.getInt(1));
             }
             rs.close();
 
@@ -187,16 +169,12 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
     }
 
     @Override
-    public Periodical findById(long id) {
+    public Optional<Periodical> findById(long id) {
         PeriodicalMapper periodicalMapper = new PeriodicalMapper();
         Periodical periodical;
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT p.id, p.id_periodic, p.title, p.description, t.theme, ps.status, \n" +
-                "tp.type, tp.type_id, p.price_per_item, l.language, t.theme_id FROM myPeriodics.periodical p \n" +
-                "INNER JOIN periodic_status ps ON p.id_status = ps.id \n" +
-                "INNER JOIN themes t ON p.id_theme = t.id \n" +
-                "INNER JOIN types tp ON p.id_type = tp.id\n" +
-                "JOIN language l ON p.id_language = l.id " +
+        try (PreparedStatement ps = connection.prepareStatement("SELECT p.id, p.title, p.description, p.id_theme, p.id_status, p.id_type, p.price_per_item " +
+                "FROM myPeriodics.periodical p " +
                 "WHERE p.id LIKE ?;")) {
 
 
@@ -211,7 +189,7 @@ public class JdbcPeriodicalDaoImpl implements PeriodicalDao {
             periodical = periodicalMapper.extractFromResultSet(rs);
 
             rs.close();
-            return periodical;
+            return Optional.of(periodical);
 
         } catch (SQLException e) {
             e.printStackTrace();

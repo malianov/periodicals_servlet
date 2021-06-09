@@ -45,25 +45,24 @@ public class CatalogPage implements Command {
         PeriodicalService.PaginationResult paginationResult =
                 periodicalService.getSearchPeriodicalWithPagination(lowerBound, ROWS_PER_PAGE, searchInput);
 
-        Map<String, List<Theme>> themes = themeService.getAllThemes();
+//        Map<String, List<Theme>> themes = themeService.getAllThemes();
+        List<Periodical> allPeriodicals = paginationResult.getPeriodicalList();
 
-        logger.trace(".....................................................................");
-        logger.trace("themes = {}", themes.size());
-        logger.trace(".....................................................................");
+        logger.trace("inside allPeriodicals = {}", allPeriodicals.size());
 
-        List<Periodical> periodicals = paginationResult.getPeriodicalList();
-        Map<String, List<Periodical>> allPeriodicalsByLanguage = paginationResult.getPeriodicalMap();
+        for(Periodical periodical : allPeriodicals) {
+            logger.trace("Inside list - {}", periodical.toString());
+        }
 
         int nuOfRows = paginationResult.getNuOfRows();
         int nuOfPages = (int) Math.ceil(nuOfRows * 1.0 / ROWS_PER_PAGE);
 
-//        request.getSession().setAttribute("periodicals", periodicals);
-        request.getSession().setAttribute("periodicals", allPeriodicalsByLanguage);
+        request.getSession().setAttribute("periodicals", allPeriodicals);
         request.getSession().setAttribute("nu_of_pages", nuOfPages);
         request.getSession().setAttribute("current_page", currentPage);
         request.getSession().setAttribute("search_input", searchInput);
         request.getSession().setAttribute("page", "catalog");
-        request.getSession().setAttribute("list_of_themes", themes);
+//        request.getSession().setAttribute("list_of_themes", themes);
 
         return "/WEB-INF/view/catalog_page.jsp";
     }

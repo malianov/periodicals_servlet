@@ -24,9 +24,11 @@
                     <fmt:message key="support.would-you-like-to-unsubscribe-and-return-money"/>
                     <br><br><fmt:message key="support.nothing-is-suitable-for-you"/><br><br>
                     <fmt:message key="support.write-us-and-we-help-you"/><br><br>
-                    <br><br>
-                    <br><br>
-                    <br><br>
+                    <fmt:message key="support.we-need-a-job"/><br><br>
+                    <fmt:message key="support.we-dont-like-relax"/><br><br>
+                    <fmt:message key="support.we-want-to-work"/><br><br>
+                    <fmt:message key="support.call-us"/><br>
+                    <fmt:message key="support.write-us"/><br><br>
                     <br>
                 </p>
             </div>

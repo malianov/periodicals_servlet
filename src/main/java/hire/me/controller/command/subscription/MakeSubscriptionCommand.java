@@ -37,6 +37,8 @@ public class MakeSubscriptionCommand implements Command {
         final HttpSession session = request.getSession();
         final Long subscriberId = (Long) session.getAttribute("user_id");
 
+
+
         subscriptionService.isSubscriptionSuccessful(subscriberId, subscribedPeriodicId, subscriptionYear, selectedPeriodicItems, subscriberAddress);
 
         request.getSession().setAttribute("subscriberBalance", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));

@@ -1,41 +1,42 @@
 package hire.me.model.service;
 
 import hire.me.model.dao.daoFactory.DaoFactory;
-import hire.me.model.dao.daoFactory.PrivateAccountDao;
+import hire.me.model.dao.daoFactory.PeriodicalTypeDao;
 import hire.me.model.dao.daoFactory.ThemeDao;
 import hire.me.model.entity.language.Language;
+import hire.me.model.entity.periodical.PeriodicalType;
 import hire.me.model.entity.periodical.Theme;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ThemeService {
-    private static final Logger logger = LogManager.getLogger(ThemeService.class);
+public class PeriodicalTypeService {
+    private static final Logger logger = LogManager.getLogger(PeriodicalTypeService.class);
 
     private DaoFactory daoFactory;
-    private static ThemeService instance;
+    private static PeriodicalTypeService instance;
 
-    private ThemeService() {
+    private PeriodicalTypeService() {
         daoFactory = DaoFactory.getInstance();
     }
 
-    public static ThemeService getInstance() {
+    public static PeriodicalTypeService getInstance() {
         if (instance == null) {
-            synchronized (ThemeService.class) {
+            synchronized (PeriodicalTypeService.class) {
                 if (instance == null) {
-                    instance = new ThemeService();
+                    instance = new PeriodicalTypeService();
                 }
             }
         }
         return instance;
     }
 
-    public Theme getThemeById(long id) {
-        ThemeDao dao = daoFactory.createThemeDao();
+
+    public PeriodicalType getPeriodicalTypeById(long id) {
+        PeriodicalTypeDao dao = daoFactory.createPeriodicalTypeDao();
         return dao.findById(id).get();
     }
 }

@@ -54,7 +54,6 @@ public class AccessFilter implements Filter {
 						"home",
 						"to_home_page",
 						"logout",
-						"administratorAccount",
 						"",
 						"to_subscribers_page",
 						"to_catalog_page",

@@ -1,7 +1,6 @@
 package hire.me.model.dao.impl;
 
 import hire.me.model.dao.daoFactory.ThemeDao;
-import hire.me.model.dao.mapper.PeriodicalMapper;
 import hire.me.model.dao.mapper.ThemeMapper;
 import hire.me.model.entity.periodical.Theme;
 import org.apache.logging.log4j.LogManager;
@@ -11,10 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static hire.me.connection.ConnectionPool.getConnection;
 
@@ -40,17 +36,30 @@ public class JdbcThemeDaoImpl implements ThemeDao {
     }
 
 
-
-
-
     @Override
     public void create(Theme entity) {
 
     }
 
     @Override
-    public Theme findById(long id) {
-        return null;
+    public Optional<Theme> findById(long id) {
+        ThemeMapper themeMapper = new ThemeMapper();
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT id, theme_en FROM themes where id=(?)");
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                return Optional.of(themeMapper.extractFromResultSet(rs));
+            }
+            rs.close();
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 
     @Override

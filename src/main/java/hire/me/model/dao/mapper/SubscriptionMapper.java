@@ -42,8 +42,8 @@ public class SubscriptionMapper implements ObjectMapper<Subscription> {
 
         Subscription subscription = new Subscription.Builder()
                 .id(rs.getLong(ID))
-                .user(userService.getUserById(rs.getLong(SUBSCRIBER_ID)))
-                .periodical(periodicalService.getPeriodicById(rs.getLong(PERIODIC_ID)))
+                .user(userService.getUserById(rs.getLong(SUBSCRIBER_ID)).get())
+                .periodical(periodicalService.getPeriodicById(rs.getLong(PERIODIC_ID)).get())
                 .periodicItem(rs.getString(PERIODIC_ITEM))
                 .date(rs.getDate(DATE).toLocalDate())
                 .address(rs.getString(ADDRESS))

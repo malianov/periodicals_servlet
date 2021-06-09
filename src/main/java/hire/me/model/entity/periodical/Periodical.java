@@ -11,14 +11,12 @@ public class Periodical {
     private static final Logger logger = LogManager.getLogger(Periodical.class);
 
     private int id;
-    private int periodicalId;
     private String title;
     private String description;
     private BigDecimal pricePerItem;
     private Theme theme;
     private PeriodicalStatus periodicalStatus;
     private PeriodicalType periodicalType;
-    private Language language;
 
     public static Logger getLogger() {
         return logger;
@@ -26,10 +24,6 @@ public class Periodical {
 
     public int getId() {
         return id;
-    }
-
-    public int getPeriodicalId() {
-        return periodicalId;
     }
 
     public String getTitle() {
@@ -56,8 +50,17 @@ public class Periodical {
         return periodicalType;
     }
 
-    public Language getLanguage() {
-        return language;
+    @Override
+    public String toString() {
+        return "Periodical{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", pricePerItem=" + pricePerItem +
+                ", theme=" + theme.getTheme() +
+                ", periodicalStatus=" + periodicalStatus.getStatus() +
+                ", periodicalType=" + periodicalType.getType() +
+                '}';
     }
 
     public static class Builder {
@@ -69,11 +72,6 @@ public class Periodical {
 
         public Builder id(int id) {
             newPeriodical.id = id;
-            return this;
-        }
-
-        public Builder periodicalId(int periodicalId) {
-            newPeriodical.periodicalId = periodicalId;
             return this;
         }
 
@@ -103,11 +101,6 @@ public class Periodical {
 
         public Builder periodicalType(PeriodicalType periodicalType) {
             newPeriodical.periodicalType = periodicalType;
-            return this;
-        }
-
-        public Builder language(Language language) {
-            newPeriodical.language = language;
             return this;
         }
 
