@@ -5,7 +5,7 @@ import hire.me.model.dao.daoFactory.UserDao;
 import hire.me.model.dao.mapper.UserMapper;
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
-import hire.me.model.entity.periodical.Theme;
+import hire.me.model.entity.account.UserStatus;
 import hire.me.model.service.UserService;
 import hire.me.utility.Password;
 import org.apache.logging.log4j.LogManager;
@@ -172,13 +172,14 @@ public class JdbcUserDaoImpl implements UserDao {
     public UserRole getRoleByLogin(String login) {
         UserRole role = UserRole.GUEST;
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users where login=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement("SELECT user_role FROM users WHERE login=(?);")) {
             ps.setString(1, login);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                role = UserRole.valueOf(rs.getString("user_role"));
+                logger.trace("insideeeeeeeeeeeeeeeeeeeeeeeeeeee");
+                role = UserRole.valueOf(rs.getString("user_role").toUpperCase());
                 logger.trace("Inside getRoleByLogin, role exists and equal to {}", role);
                 return role;
             }
@@ -292,6 +293,29 @@ public class JdbcUserDaoImpl implements UserDao {
             e.printStackTrace();
         }
         return subscriberBalance;
+    }
+
+    @Override
+    public UserStatus checkSubscriberStatusByLogin(String login) {
+
+        UserStatus userStatus = UserStatus.UNKNOWN;
+
+        try (PreparedStatement ps = connection.prepareStatement("SELECT account_status FROM users WHERE login=(?);")) {
+            ps.setString(1, login);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                logger.trace("insideeeeeeeeeeeeeeeeeeeeeeeeeeee");
+                userStatus = UserStatus.valueOf(rs.getString("account_status").toUpperCase());
+                logger.trace("userStatus to {}", userStatus);
+                return userStatus;
+            }
+        } catch (SQLException e) {
+            logger.trace("Inside getRoleByLogin: Exception {}", e);
+            e.printStackTrace();
+        }
+        return userStatus;
     }
 
     @Override

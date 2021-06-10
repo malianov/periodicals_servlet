@@ -40,6 +40,7 @@ public class JdbcPrivateAccountDaoImpl implements PrivateAccountDao {
             BigDecimal actualSubscriberBalance = getSubscriberBalance(subscriberId);
             BigDecimal newActualSubscriberBalance = actualSubscriberBalance.add(additionToBalance);
             updateBalance(subscriberId, newActualSubscriberBalance);
+            logger.trace("balance updated");
             connection.commit();
         } catch (Exception e) {
             try {
@@ -52,6 +53,7 @@ public class JdbcPrivateAccountDaoImpl implements PrivateAccountDao {
     }
 
     private void updateBalance(Long subscriberId, BigDecimal newActualSubscriberBalance) throws SQLException {
+        logger.trace("Try to update balance in DAO");
         PreparedStatement ps = connection.prepareStatement("UPDATE users SET balance=(?) WHERE (id=(?))");
         ps.setBigDecimal(1, newActualSubscriberBalance);
         ps.setLong(2, subscriberId);
@@ -60,12 +62,13 @@ public class JdbcPrivateAccountDaoImpl implements PrivateAccountDao {
 
     @Override
     public BigDecimal getSubscriberBalance(Long subscriberId) {
-        try (PreparedStatement ps = connection.prepareStatement("SELECT balance FROM users where id=(?);")) {
-            ps.setLong(1, subscriberId);
-            final ResultSet rs = ps.executeQuery();
+        try (PreparedStatement pss = connection.prepareStatement("SELECT balance FROM users where id=(?);")) {
+            pss.setLong(1, subscriberId);
+            final ResultSet rss = pss.executeQuery();
 
-            if (rs.next()) {
-                BigDecimal bd = rs.getBigDecimal("balance");
+            if (rss.next()) {
+                BigDecimal bd = rss.getBigDecimal("balance");
+                logger.trace("GET SUBSCRIBER BALANCE = {}", bd);
                 return bd;
             }
         } catch (SQLException e) {

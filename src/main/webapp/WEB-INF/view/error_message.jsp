@@ -16,10 +16,10 @@
     <div class="container my-5 text-center">
         <div class="row p-8 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
             <div class="px-4 py-5 my-5 text-center">
-                <h1 class="display-5 fw-bold text-danger">There is a problem with your information:</h1>
+                <h1 class="display-5 fw-bold text-danger"><fmt:message key="error_message.there-is-a-problem-with-your-information"/></h1>
                 <div class="container">
                     <c:forEach var="error" items="${errorMessages}">
-                        <div class="p-3 mb-2 bg-danger text-white"><p>${error.getValue()}</p></div>
+                        <div class="p-3 mb-2 bg-danger text-white"><p><fmt:message key="${error.getValue()}"/></p></div>
                     </c:forEach>
                 </div>
             </div>

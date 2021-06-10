@@ -39,6 +39,7 @@ public class SubscriptionMapper implements ObjectMapper<Subscription> {
 
     @Override
     public Subscription extractFromResultSet(ResultSet rs) throws SQLException {
+logger.trace("inside subscription");
 
         Subscription subscription = new Subscription.Builder()
                 .id(rs.getLong(ID))

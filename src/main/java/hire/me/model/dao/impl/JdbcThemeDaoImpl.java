@@ -6,6 +6,7 @@ import hire.me.model.entity.periodical.Theme;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -70,11 +71,19 @@ public class JdbcThemeDaoImpl implements ThemeDao {
 
         try {
             logger.trace("inside try");
-
             PreparedStatement ps = connection.prepareStatement("" +
-                    "SELECT t.id, t.theme_id, t.theme, l.language FROM themes t " +
-                    "JOIN language l " +
-                    "ON t.language_id = l.id;");
+                    "SELECT t.id, t.theme_en FROM themes t");
+
+            /*if (language.equals("en")) {
+                ps = connection.prepareStatement("" +
+                        "SELECT t.id, t.theme_en AS theme FROM themes t");
+            } else if (language.equals("ru")) {
+                ps = connection.prepareStatement("" +
+                        "SELECT t.id, t.theme_ru AS theme FROM themes t");
+            } else {
+                ps = connection.prepareStatement("" +
+                        "SELECT t.id, t.theme_ua AS theme FROM themes t");
+            }*/
 
             ResultSet rs = ps.executeQuery();
 

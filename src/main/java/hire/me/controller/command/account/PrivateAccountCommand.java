@@ -33,7 +33,7 @@ public class PrivateAccountCommand implements Command {
         Map<String, String> collectedErrors = new HashMap<>();
 
         if (additionToBalance.signum() < 0) {
-            collectedErrors.put("errorLoginNotValid", "The entered value is below 0, this is incorrect value.");
+            collectedErrors.put("errorLoginNotValid", "error_message.entered-value-below-0");
             request.setAttribute("errorMessages", collectedErrors);
             return "/WEB-INF/view/error_message.jsp";
         }
@@ -55,6 +55,11 @@ public class PrivateAccountCommand implements Command {
 
         privateAccountService.increaseBalance(subscriberId, additionToBalance);
         request.getSession().setAttribute("subscriberBalance", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));
+
+
+        logger.trace("Actual balance is : {}", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));
+        logger.trace("Actual balance in session object is : {}", request.getSession().getAttribute("subscriberBalance"));
+
 
         return "redirect@" + path + previous_page.get(pager);
     }

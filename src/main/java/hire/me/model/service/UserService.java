@@ -4,6 +4,7 @@ import hire.me.model.dao.daoFactory.DaoFactory;
 import hire.me.model.dao.daoFactory.UserDao;
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
+import hire.me.model.entity.account.UserStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -113,9 +114,17 @@ public class UserService {
         return daoFactory.createUserDao().searchSubscribersWithPagination(lowerBound, upperBound, searchKey);
     }
 
-    public BigDecimal getPrivateAccountByLogin(String login) {
+    public BigDecimal getSubscriberBalanceByLogin(String login) {
         UserDao dao = daoFactory.createUserDao();
         return dao.getSubscriberBalanceByLogin(login);
+    }
+
+    public boolean isLoginBlocked(String login) {
+        UserDao dao = daoFactory.createUserDao();
+        if(dao.checkSubscriberStatusByLogin(login).equals(UserStatus.BLOCKED)) {
+            return true;
+        }
+        return false;
     }
 
     public static class PaginationResult {

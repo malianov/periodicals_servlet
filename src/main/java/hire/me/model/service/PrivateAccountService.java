@@ -73,9 +73,13 @@ public class PrivateAccountService {
     }*/
 
     public BigDecimal getSubscriberBalance(Long subscriberId) {
-        logger.trace("inside getSubscriberBalance");
-        PrivateAccountDao dao = daoFactory.createPrivateAccountDao();
-        return dao.getSubscriberBalance(subscriberId);
+
+
+        BigDecimal bg = daoFactory.createPrivateAccountDao()
+                .getSubscriberBalance(subscriberId);
+
+        logger.trace("inside getSubscriberBalance ================================== {}", bg);
+        return bg;
     }
 
 //    public BigDecimal getSubscriberBalance(Connection connection, Long subscriberId, PrivateAccountDao dao) {

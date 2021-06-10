@@ -52,6 +52,7 @@ public class PeriodicalService {
 
     public void changePeriodicalStatus(String periodical_id, String newPeriodicStatus) {
         PeriodicalDao dao = daoFactory.createPeriodicalDao();
+        logger.trace(newPeriodicStatus);
         dao.changePeriodicalStatus(periodical_id, newPeriodicStatus);
     }
 

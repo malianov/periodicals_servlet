@@ -42,6 +42,7 @@ public class LoginCommand implements Command {
         isLoginValid(login, collectedErrors);
         isPasswordValid(password, collectedErrors);
         isLoginExists(login, collectedErrors);
+        isLoginBlocked(login, collectedErrors);
 
         if(!collectedErrors.isEmpty()) {
             request.setAttribute("errorMessages", collectedErrors);
@@ -50,19 +51,19 @@ public class LoginCommand implements Command {
         }
 
         final UserRole role = userService.getRoleByLogin(login);
-        final BigDecimal privateAccount = userService.getPrivateAccountByLogin(login);
+        final BigDecimal privateAccount = userService.getSubscriberBalanceByLogin(login);
         final Long userId = userService.getIdByLogin(login);
 
         if(userService.isPasswordCorrectForLogin(login, password, role)) {
             if (CommandUtility.checkUserIsLogged(request, login)) {
                 CommandUtility.logoutUser(request, login);
-                collectedErrors.put("errorPasswordNotValid", "This login is already in system");
+                collectedErrors.put("errorPasswordNotValid", "error_message.login-is-already-in-system");
                 request.setAttribute("errorMessages", collectedErrors);
                 return "/WEB-INF/view/error_message.jsp";
             }
             CommandUtility.loginUser(request, userId, login, password, role, privateAccount);
         } else {
-            collectedErrors.put("errorPasswordNotValid", "The entered password is incorrect");
+            collectedErrors.put("errorPasswordNotValid", "error_message.entered-password-is-incorrect");
         }
 
         if(!collectedErrors.isEmpty()) {
@@ -77,19 +78,26 @@ public class LoginCommand implements Command {
 
     private void isLoginValid(String login, Map<String, String> collectedErrors) {
         if (!DataValidator.validateLogin(login)) {
-            collectedErrors.put("errorLoginNotValid", "The entered login is incorrect. Please, imagine another one.");
+            collectedErrors.put("errorLoginNotValid", "error_message.login-is-incorrect");
         }
     }
 
     private void isPasswordValid(String password, Map<String, String> collectedErrors) {
         if (!DataValidator.validatePassword(password)) {
-            collectedErrors.put("errorPasswordNotValid", "The entered password is incorrect");
+            collectedErrors.put("errorPasswordNotValid", "error_message.entered-password-is-not-valid");
         }
     }
 
     private void isLoginExists(String login, Map<String, String> collectedErrors) {
         if(!userService.isLoginExist(login)) {
-            collectedErrors.put("errorLoginNotValid", "The entered login does not exists");
+            collectedErrors.put("errorLoginNotValid", "error_message.entered-login-does-not-exists");
+        }
+    }
+
+    private void isLoginBlocked(String login, Map<String, String> collectedErrors) {
+        if(userService.isLoginBlocked(login)) {
+            logger.trace("wow = {}", userService.isLoginBlocked(login));
+            collectedErrors.put("errorLoginIsBeingBlocked", "error_message.access-is-blocked");
         }
     }
 }

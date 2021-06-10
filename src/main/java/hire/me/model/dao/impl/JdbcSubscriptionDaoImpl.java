@@ -41,7 +41,7 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
         return instance;
     }
 
-    public void isSubscriptionSuccessful(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems, String subscriberAddress) {
+    public boolean isSubscriptionSuccessful(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems, String subscriberAddress) {
         logger.trace("start isSubscriptionSuccessful");
         BigDecimal actualPeriodicPricePerItem = null;
         BigDecimal actualSubscriberBalance = null;
@@ -59,14 +59,19 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
                 logger.trace("SubscriberHasEnoughMoney");
                 BigDecimal newSubscriberBalance = actualSubscriberBalance.subtract(actualPeriodicPricePerItem.multiply(new BigDecimal(quantityOfItems)));
                 logger.trace("SubscriberHasEnoughMoney, newSubscriberBalance = {}", newSubscriberBalance);
+
+
+
+
+
                 updateSubscribersBalance(subscriberId, newSubscriberBalance);
+                logger.trace("Updated subscriber balance");
                 insertToDatabaseRowsAsSubscriptions(subscriberId, subscribedPeriodicId, subscriptionYear, selectedPeriodicItems, subscriberAddress, actualPeriodicPricePerItem);
                 logger.trace("before commit");
+                connection.commit();
+                logger.trace("new money = {}", getActualSubscriberBalance(subscriberId, actualSubscriberBalance));
+                return true;
             }
-            connection.commit();
-
-
-
         } catch (Exception e) {
             try {
                 logger.trace("exception, rollback");
@@ -76,6 +81,7 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
             }
             e.printStackTrace();
         }
+        return false;
     }
 
     private void insertToDatabaseRowsAsSubscriptions(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems, String subscriberAddress, BigDecimal actualPeriodicPricePerItem) throws SQLException {
@@ -103,13 +109,32 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
     }
 
     private BigDecimal getActualSubscriberBalance(Long subscriberId, BigDecimal actualSubscriberBalance) throws SQLException {
-        PreparedStatement actualSubscriberBalanceStatement = connection.prepareStatement("SELECT balance FROM users where id=(?);");
-        actualSubscriberBalanceStatement.setLong(1, subscriberId);
-        final ResultSet actualSubscriberBalanceRs = actualSubscriberBalanceStatement.executeQuery();
-        if (actualSubscriberBalanceRs.next()) {
-            actualSubscriberBalance = actualSubscriberBalanceRs.getBigDecimal("balance");
+        PreparedStatement ps = connection.prepareStatement("SELECT balance FROM users where id=(?);");
+        ps.setLong(1, subscriberId);
+        final ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            actualSubscriberBalance = rs.getBigDecimal("balance");
+            logger.trace("getActualSubscriberBalance = {}", actualSubscriberBalance);
         }
+        logger.trace("getActualSubscriberBalance = {}", actualSubscriberBalance);
         return actualSubscriberBalance;
+    }
+
+    public BigDecimal getActualSubscriberBalance(Long subscriberId) {
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement("SELECT balance FROM users where id=(?);");
+            ps.setLong(1, subscriberId);
+            final ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getBigDecimal("balance");
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
+        logger.trace("getActualSubscriberBalance = {}");
+        return new BigDecimal(0.0);
     }
 
     private BigDecimal getActualPeriodicPricePerItem(Integer subscribedPeriodicId, BigDecimal actualPeriodicPricePerItem) throws SQLException {
@@ -132,7 +157,8 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
 
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement subscriptionsPS = connection.prepareStatement(
-                     "SELECT s.id, s.subscriber_id, s.periodic_id, p.id, s.periodic_item, s.subscription_date, s.subscriber_address, s.item_price, s.periodic_year FROM subscriptions s " +
+                     "SELECT s.id, s.subscriber_id, s.periodic_id, p.id, s.periodic_item, s.subscription_date, s.subscriber_address, s.item_price, s.periodic_year " +
+                             "FROM subscriptions s " +
                      "JOIN periodical p ON " +
                      "s.periodic_id = p.id " +
                      "WHERE s.subscriber_id LIKE ? ORDER BY s.id LIMIT ?, ?;");
@@ -147,8 +173,10 @@ public class JdbcSubscriptionDaoImpl implements SubscriptionDao {
             ResultSet rs = subscriptionsPS.executeQuery();
 
             while (rs.next()) {
+                logger.trace("inside rs.next");
                 Subscription subscription = subscriptionMapper.extractFromResultSet(rs);
                 subscriptions.add(subscription);
+                logger.trace("inside subscriptions.add");
             }
             rs.close();
 

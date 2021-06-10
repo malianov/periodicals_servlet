@@ -90,7 +90,7 @@ public class RegistrationCommand implements Command, Password {
             userService.registerUser(user);
         } catch (Exception e) {
             e.printStackTrace();
-            collectedErrors.put("errorDuringUserRegistration", "Oops. Smth was wrong. Please, try again.");
+            collectedErrors.put("errorDuringUserRegistration", "error_message.oops-smth-was-wrong");
             request.setAttribute("errorMessages", collectedErrors);
             return "/WEB-INF/view/error_message.jsp";
         }
@@ -110,37 +110,37 @@ public class RegistrationCommand implements Command, Password {
 
     private void arePasswordsEqual(String password, String confirmedPassword, Map<String, String> collectedErrors) {
         if (!password.equals(confirmedPassword)) {
-            collectedErrors.put("errorPasswordEquality", "The entered passwords are different");
+            collectedErrors.put("errorPasswordEquality", "error_message.entered-passwords-are-different");
         }
     }
 
     private void isLoginValid(Map<String, String> registrationData, Map<String, String> collectedErrors) {
         if (!DataValidator.validateLogin(registrationData.get("login"))) {
-            collectedErrors.put("errorLoginNotValid", "The entered login is incorrect. Please, imagine another one.");
+            collectedErrors.put("errorLoginNotValid", "error_message.entered-login-incorrect");
         }
     }
 
     private void isNameValid(Map<String, String> registrationData, Map<String, String> collectedErrors) {
         if (!DataValidator.validateName(registrationData.get("name"))) {
-            collectedErrors.put("errorNameNotValid", "The entered name is incorrect. Please, imagine another one.");
+            collectedErrors.put("errorNameNotValid", "error_message.entered-name-incorrect.");
         }
     }
 
     private void isSurnameValid(Map<String, String> registrationData, Map<String, String> collectedErrors) {
         if (!DataValidator.validateSurname(registrationData.get("surname"))) {
-            collectedErrors.put("errorSurnameNotValid", "The entered surname is incorrect. Please, imagine another one.");
+            collectedErrors.put("errorSurnameNotValid", "error_message.entered-surname-is-incorrect");
         }
     }
 
     private void isEmailValid(Map<String, String> registrationData, Map<String, String> collectedErrors) {
         if (!DataValidator.validateEmail(registrationData.get("email"))) {
-            collectedErrors.put("errorEmailNotValid", "The entered email is incorrect");
+            collectedErrors.put("errorEmailNotValid", "error_message.entered-email-is-incorrect");
         }
     }
 
     private void isPasswordValid(String password, Map<String, String> collectedErrors) {
         if (!DataValidator.validatePassword(password)) {
-            collectedErrors.put("errorPasswordNotValid", "The entered password is invalid");
+            collectedErrors.put("errorPasswordNotValid", "error_message.entered-password-is-invalid");
         }
     }
 

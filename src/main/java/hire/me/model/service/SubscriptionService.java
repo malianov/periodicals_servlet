@@ -5,6 +5,8 @@ import hire.me.model.dao.daoFactory.SubscriptionDao;
 import hire.me.model.entity.subscription.Subscription;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 public class SubscriptionService {
@@ -29,17 +31,23 @@ public class SubscriptionService {
         return instance;
     }
 
-    public void isSubscriptionSuccessful(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems, String subscriberAddress) {
+    public boolean isSubscriptionSuccessful(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems, String subscriberAddress) {
         logger.trace("isSubscriptionSuccessful");
 
-        SubscriptionDao dao = daoFactory.createSubscriptionDao();
-        dao.isSubscriptionSuccessful(subscriberId, subscribedPeriodicId, subscriptionYear, selectedPeriodicItems, subscriberAddress);
+        return daoFactory.createSubscriptionDao()
+                .isSubscriptionSuccessful(subscriberId, subscribedPeriodicId, subscriptionYear, selectedPeriodicItems, subscriberAddress);
+    }
+
+    public BigDecimal getActualSubscriberBalance(Long subscriberId) {
+        return daoFactory.createSubscriptionDao().getActualSubscriberBalance(subscriberId);
+
     }
 
     public SubscriptionService.PaginationResult getSearchSubscriptionWithPagination(int lowerBound, int upperBound, String searchKey) {
-
         logger.trace("Inside getSearchSubscriptionWithPagination, lowerBound = {}, upperBound = {}, searchKey = {}", lowerBound, upperBound, searchKey);
-        return daoFactory.createSubscriptionDao().searchSubscriptionsWithPagination(lowerBound, upperBound, searchKey);
+
+        return daoFactory.createSubscriptionDao()
+                .searchSubscriptionsWithPagination(lowerBound, upperBound, searchKey);
     }
 
     public static class PaginationResult {

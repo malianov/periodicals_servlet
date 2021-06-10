@@ -29,10 +29,6 @@ public class ServiceFactory {
         return PeriodicalService.getInstance();
     }
 
-    public UserService getUsersService() {
-        return UserService.getInstance();
-    }
-
     public PrivateAccountService getPrivateAccountService() {
         return PrivateAccountService.getInstance();
     }

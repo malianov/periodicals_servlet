@@ -45,14 +45,20 @@ public class CatalogPage implements Command {
         PeriodicalService.PaginationResult paginationResult =
                 periodicalService.getSearchPeriodicalWithPagination(lowerBound, ROWS_PER_PAGE, searchInput);
 
-//        Map<String, List<Theme>> themes = themeService.getAllThemes();
+        List<Theme> themes;
+//
+//        if(request.getParameter("language") == "en") {
+            themes = themeService.getThemes();
+//        } else if(request.getParameter("language") == "ru") {
+//            themes = themeService.getThemes("theme_ru");
+//        } else {
+//            themes = themeService.getThemes("theme_ua");
+//        }
+
+
         List<Periodical> allPeriodicals = paginationResult.getPeriodicalList();
 
         logger.trace("inside allPeriodicals = {}", allPeriodicals.size());
-
-        for(Periodical periodical : allPeriodicals) {
-            logger.trace("Inside list - {}", periodical.toString());
-        }
 
         int nuOfRows = paginationResult.getNuOfRows();
         int nuOfPages = (int) Math.ceil(nuOfRows * 1.0 / ROWS_PER_PAGE);
@@ -62,7 +68,7 @@ public class CatalogPage implements Command {
         request.getSession().setAttribute("current_page", currentPage);
         request.getSession().setAttribute("search_input", searchInput);
         request.getSession().setAttribute("page", "catalog");
-//        request.getSession().setAttribute("list_of_themes", themes);
+        request.getSession().setAttribute("list_of_themes", themes);
 
         return "/WEB-INF/view/catalog_page.jsp";
     }

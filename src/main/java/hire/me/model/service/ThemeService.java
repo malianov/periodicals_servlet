@@ -38,4 +38,9 @@ public class ThemeService {
         ThemeDao dao = daoFactory.createThemeDao();
         return dao.findById(id).get();
     }
+
+    public List<Theme> getThemes() {
+        ThemeDao dao = daoFactory.createThemeDao();
+        return dao.findAll();
+    }
 }
