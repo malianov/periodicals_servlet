@@ -1,16 +1,14 @@
 package hire.me.model.entity.periodical;
 
-import hire.me.model.entity.language.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class Periodical {
     private static final Logger logger = LogManager.getLogger(Periodical.class);
 
-    private int id;
+    private long id;
     private String title;
     private String description;
     private BigDecimal pricePerItem;
@@ -22,7 +20,7 @@ public class Periodical {
         return logger;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -94,6 +92,7 @@ public class Periodical {
             newPeriodical.theme = theme;
             return this;
         }
+
         public Builder periodicalStatus(PeriodicalStatus periodicalStatus) {
             newPeriodical.periodicalStatus = periodicalStatus;
             return this;
@@ -105,7 +104,7 @@ public class Periodical {
         }
 
         public Periodical build() {
-            logger.trace("BUILDER PERIODICAL");
+            logger.trace("New Periodic item created");
             return newPeriodical;
         }
     }

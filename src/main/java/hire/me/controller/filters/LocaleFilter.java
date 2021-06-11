@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class LocaleFilter implements Filter {
@@ -13,14 +12,16 @@ public class LocaleFilter implements Filter {
 
     @Override
     public void init(FilterConfig config) throws ServletException {
-        logger.trace("Initialization for Locale filter");
+        logger.trace("Locale filter initialization");
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+        logger.trace("Locale filter: do filter");
+
         HttpServletRequest requestHttp = (HttpServletRequest) request;
 
-        if(request.getParameter("language") != null) {
+        if (request.getParameter("language") != null) {
             requestHttp.getSession().setAttribute("language", request.getParameter("language"));
         }
 
@@ -29,6 +30,5 @@ public class LocaleFilter implements Filter {
 
     @Override
     public void destroy() {
-        logger.trace("Destroying");
     }
 }

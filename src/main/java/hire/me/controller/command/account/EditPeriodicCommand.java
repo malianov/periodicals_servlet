@@ -1,14 +1,7 @@
 package hire.me.controller.command.account;
 
 import hire.me.controller.command.Command;
-import hire.me.controller.command.CommandUtility;
-import hire.me.model.entity.account.Person;
-import hire.me.model.entity.account.User;
-import hire.me.model.entity.account.UserRole;
-import hire.me.model.entity.account.UserStatus;
 import hire.me.model.entity.periodical.Periodical;
-import hire.me.model.entity.periodical.PeriodicalStatus;
-import hire.me.model.entity.periodical.PeriodicalType;
 import hire.me.model.service.PeriodicalService;
 import hire.me.model.service.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
@@ -36,7 +29,7 @@ public class EditPeriodicCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-//        CommandUtility.disallowBackToCached(request, response);
+        logger.trace("EditPeriodicCommand executing");
 
         Periodical originalPeriodical = periodicalService.getPeriodicById(Long.valueOf(request.getParameter("id"))).get();
 
@@ -51,6 +44,7 @@ public class EditPeriodicCommand implements Command {
         try {
             periodicalService.updatePeriodic(periodical);
         } catch (Exception e) {
+            logger.error("User cannot update periodic to {}", periodical);
             e.printStackTrace();
             return "/WEB-INF/view/error_message.jsp";
         }
@@ -60,15 +54,12 @@ public class EditPeriodicCommand implements Command {
     }
 
     private Periodical updatePeriodical(Map<String, String> editionData) {
-        logger.trace("periodic information update");
 
-        final Periodical periodical = new Periodical.Builder()
+        return new Periodical.Builder()
                 .id(Integer.parseInt(editionData.get("id")))
                 .title(editionData.get("new_title"))
                 .description(editionData.get("new_description"))
                 .pricePerItem(new BigDecimal(editionData.get("new_price")))
                 .build();
-
-        return periodical;
     }
 }

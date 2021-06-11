@@ -13,10 +13,6 @@ public class DataValidator {
     }
 
     public static boolean validatePassword(String password) {
-        logger.trace(password != null);
-        logger.trace(Pattern.matches("^([a-zA-Z0-9_.]{1,30})$", password));
-        logger.trace((password != null) && (Pattern.matches("^([a-zA-Z0-9_.]{1,30})$", password)));
-
         return password != null && Pattern.matches("^([a-zA-Z0-9_.]{1,30})$", password);
     }
 
@@ -25,10 +21,10 @@ public class DataValidator {
     }
 
     public static boolean validateName(String name) {
-        return name != null && Pattern.matches("(^[\\w\\.-_]+)$", name);
+        return name != null && Pattern.matches("(^[\\p{L}\\p{M}][\\p{L}\\p{M}\\'\\-]{0,48}[\\p{L}\\p{M}])$", name);
     }
 
     public static boolean validateSurname(String surname) {
-        return surname != null && Pattern.matches("(^[\\w\\.-_]+)$", surname);
+        return surname != null && Pattern.matches("(^[\\p{L}\\p{M}][\\p{L}\\p{M}\\'\\-]{0,48}[\\p{L}\\p{M}])$", surname);
     }
 }

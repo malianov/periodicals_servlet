@@ -15,11 +15,11 @@ public class LogOutCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        logger.trace("LogOutCommand executing");
 
         String login = (String) request.getSession().getAttribute("login");
 
         CommandUtility.logoutUser(request, login);
-        logger.trace("User {} logged out", login);
 
         String path = request.getServletContext().getContextPath();
 

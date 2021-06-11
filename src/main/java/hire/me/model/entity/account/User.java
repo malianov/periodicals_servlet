@@ -9,7 +9,7 @@ import java.util.Objects;
 public class User {
     private static final Logger logger = LogManager.getLogger(User.class);
 
-    private Integer id;
+    private long id;
     private String login;
     private String password;
     private UserStatus status;
@@ -21,7 +21,7 @@ public class User {
         return logger;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
@@ -49,6 +49,14 @@ public class User {
         return subscriberBalance;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(login, user.login) && Objects.equals(password, user.password) && status == user.status && Objects.equals(person, user.person) && userRole == user.userRole && Objects.equals(subscriberBalance, user.subscriberBalance);
+    }
+
     public static class Builder {
         private User newUser;
 
@@ -56,7 +64,7 @@ public class User {
             newUser = new User();
         }
 
-        public Builder id(Integer id) {
+        public Builder id(long id) {
             newUser.id = id;
             return this;
         }
@@ -65,18 +73,22 @@ public class User {
             newUser.login = login;
             return this;
         }
+
         public Builder password(String password) {
             newUser.password = password;
             return this;
         }
+
         public Builder userStatus(UserStatus status) {
             newUser.status = status;
             return this;
         }
+
         public Builder person(Person person) {
             newUser.person = person;
             return this;
         }
+
         public Builder role(UserRole userRole) {
             newUser.userRole = userRole;
             return this;
@@ -88,16 +100,9 @@ public class User {
         }
 
         public User build() {
+            logger.trace("New User created");
             return newUser;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id.equals(user.id) && login.equals(user.login) && password.equals(user.password) && status == user.status && person.equals(user.person) && userRole == user.userRole && subscriberBalance.equals(user.subscriberBalance);
     }
 
     @Override

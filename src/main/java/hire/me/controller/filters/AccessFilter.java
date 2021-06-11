@@ -16,86 +16,80 @@ import static java.util.stream.Collectors.toCollection;
 
 public class AccessFilter implements Filter {
 
-	private static final Logger logger = LogManager.getLogger(AccessFilter.class);
+    private static final Logger logger = LogManager.getLogger(AccessFilter.class);
+    private Map<UserRole, Set<String>> allowedPages = new HashMap<>();
 
-	private Map<UserRole, Set<String>> allowedPages = new HashMap<>();
+    public void init(FilterConfig config) throws ServletException {
+        logger.trace("Access filter initialization");
 
-	public void init(FilterConfig config) throws ServletException {
-		logger.trace("Initialization for Access filter");
+        allowedPages.put(UserRole.GUEST,
+                Stream.of("registration",
+                        "app",
+                        "login",
+                        "home",
+                        "to_home_page",
+                        "to_catalog_page",
+                        "to_registration_page",
+                        "to_support_page")
+                        .collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
-		allowedPages.put(UserRole.GUEST,
-				Stream.of("registration",
-						"app",
-						"login",
-						"home",
-						"to_home_page",
-						"to_catalog_page",
-						"to_registration_page",
-						"to_support_page")
-				.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
+        allowedPages.put(UserRole.SUBSCRIBER,
+                Stream.of("createSubscription",
+                        "subscriptions",
+                        "home",
+                        "to_home_page",
+                        "logout",
+                        "to_catalog_page",
+                        "",
+                        "to_support_page",
+                        "to_order_periodic",
+                        "to_my_subscriptions_page",
+                        "to_increase_balance")
+                        .collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
 
-		allowedPages.put(UserRole.SUBSCRIBER,
-				Stream.of("createSubscription",
-						"subscriptions",
-						"home",
-						"to_home_page",
-						"logout",
-						"subscriberAccount",
-						"to_catalog_page",
-						"",
-						"to_support_page",
-						"to_order_periodic",
-						"to_my_subscriptions_page",
-						"to_increase_balance")
-						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
+        allowedPages.put(UserRole.ADMIN,
+                Stream.of("registration",
+                        "home",
+                        "to_home_page",
+                        "logout",
+                        "",
+                        "to_subscribers_page",
+                        "to_catalog_page",
+                        "to_block_unblock_user",
+                        "to_edit_periodic",
+                        "to_make_order_nonorder_periodic",
+                        "to_subscriptions_page",
+                        "to_support_page")
+                        .collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
+    }
 
-		allowedPages.put(UserRole.ADMIN,
-				Stream.of("registration",
-						"home",
-						"to_home_page",
-						"logout",
-						"",
-						"to_subscribers_page",
-						"to_catalog_page",
-						"to_block_unblock_user",
-						"to_edit_periodic",
-						"to_make_order_nonorder_periodic",
-						"to_subscriptions_page",
-						"to_support_page")
-						.collect(collectingAndThen(toCollection(HashSet::new), Collections::unmodifiableSet)));
-	}
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        logger.trace("Access filte: do filter");
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse resp = (HttpServletResponse) response;
 
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse resp = (HttpServletResponse) response;
+        String path = req.getRequestURI()
+                .replace(req.getContextPath(), "")
+                .replace(req.getServletPath(), "")
+                .replace("/", "");
 
-//		String previousPath = req.getRequestURI();
-//		req.getSession().setAttribute("previous_path", previousPath);
-//
-//		logger.trace("&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ previousPath = {}", previousPath);
+        if (req.getSession().getAttribute("role") == null) {
+            req.getSession().setAttribute("role", UserRole.GUEST);
+        }
+        UserRole currentRole = ((UserRole) req.getSession().getAttribute("role"));
 
-		String path = req.getRequestURI()
-				.replace(req.getContextPath(), "")
-				.replace(req.getServletPath(), "")
-				.replace("/", "");
+        if (allowedPages.get(currentRole).contains(path)) {
+            chain.doFilter(req, resp);
+        } else {
+            if (currentRole.equals(UserRole.GUEST)) {
+                req.getRequestDispatcher("/WEB-INF/view/home_page.jsp").forward(req, resp);
+            } else {
+                req.getRequestDispatcher("/WEB-INF/view/error_403.jsp").forward(req, resp);
+            }
+        }
+    }
 
-		if (req.getSession().getAttribute("role") == null) {
-			req.getSession().setAttribute("role", UserRole.GUEST);
-		}
-		UserRole currentRole = ((UserRole) req.getSession().getAttribute("role"));
-
-		if(allowedPages.get(currentRole).contains(path)) {
-			chain.doFilter(req, resp);
-		} else {
-			if(currentRole.equals(UserRole.GUEST)) {
-				req.getRequestDispatcher("/WEB-INF/view/home_page.jsp").forward(req, resp);
-			} else {
-				req.getRequestDispatcher("/WEB-INF/view/error_403.jsp").forward(req, resp);
-			}
-		}
-	}
-
-	public void destroy() {
-	}
+    public void destroy() {
+    }
 }

@@ -1,12 +1,12 @@
 package hire.me.model.dao.impl;
 
 import hire.me.model.dao.daoFactory.ThemeDao;
+import hire.me.model.dao.impl.queries.ThemeSQL;
 import hire.me.model.dao.mapper.ThemeMapper;
 import hire.me.model.entity.periodical.Theme;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,10 +36,8 @@ public class JdbcThemeDaoImpl implements ThemeDao {
         return instance;
     }
 
-
     @Override
     public void create(Theme entity) {
-
     }
 
     @Override
@@ -47,7 +45,7 @@ public class JdbcThemeDaoImpl implements ThemeDao {
         ThemeMapper themeMapper = new ThemeMapper();
 
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT id, theme_en FROM themes where id=(?)");
+            PreparedStatement ps = connection.prepareStatement(ThemeSQL.READ_THEME_BY_ID.getQUERY());
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -57,6 +55,7 @@ public class JdbcThemeDaoImpl implements ThemeDao {
             rs.close();
 
         } catch (SQLException exception) {
+            logger.error("Error with DAO: {}", exception);
             exception.printStackTrace();
         }
 
@@ -66,24 +65,11 @@ public class JdbcThemeDaoImpl implements ThemeDao {
     @Override
     public List<Theme> findAll() {
         ThemeMapper themeMapper = new ThemeMapper();
-        logger.trace("inside getListOfThemes()");
         List<Theme> themes = new LinkedList<>();
 
         try {
-            logger.trace("inside try");
             PreparedStatement ps = connection.prepareStatement("" +
-                    "SELECT t.id, t.theme_en FROM themes t");
-
-            /*if (language.equals("en")) {
-                ps = connection.prepareStatement("" +
-                        "SELECT t.id, t.theme_en AS theme FROM themes t");
-            } else if (language.equals("ru")) {
-                ps = connection.prepareStatement("" +
-                        "SELECT t.id, t.theme_ru AS theme FROM themes t");
-            } else {
-                ps = connection.prepareStatement("" +
-                        "SELECT t.id, t.theme_ua AS theme FROM themes t");
-            }*/
+                    "SELECT t.id, t.theme_ua FROM themes t");
 
             ResultSet rs = ps.executeQuery();
 
@@ -93,6 +79,7 @@ public class JdbcThemeDaoImpl implements ThemeDao {
             }
             rs.close();
         } catch (SQLException exception) {
+            logger.error("Error with DAO: {}", exception);
             exception.printStackTrace();
         }
         return themes;
@@ -100,16 +87,13 @@ public class JdbcThemeDaoImpl implements ThemeDao {
 
     @Override
     public void update(Theme theme) {
-
     }
 
     @Override
     public void delete(long id) {
-
     }
 
     @Override
     public void close() {
-
     }
 }

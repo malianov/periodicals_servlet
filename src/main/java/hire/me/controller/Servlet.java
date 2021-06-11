@@ -17,37 +17,33 @@ public class Servlet extends HttpServlet {
     private static final Logger logger = getLogger(Servlet.class);
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        logger.trace("Servlet method doGet requested");
+
         try {
-            logger.trace("Inside doGet");
             processRequest(request, response);
         } catch (NotFoundCommandException e) {
-            logger.trace("Inside doGet: Exception {}", e);
             e.printStackTrace();
         }
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        logger.trace("Servlet method doGet requested");
         try {
-            logger.trace("Inside doPost");
             processRequest(request, response);
         } catch (NotFoundCommandException e) {
-            logger.trace("Inside doPost: Exception {}", e);
             e.printStackTrace();
         }
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, NotFoundCommandException, ServletException {
-        logger.trace("Inside processRequest: path = {}", () -> request.getRequestURI());
+        logger.trace("Servlet process request");
 
         String path = request.getRequestURI();
         path = path.replaceAll(".*/app/", "");
 
         Command command = CommandFactory.getCommand(path);
-        logger.trace("command = {}", command);
 
         String page = command.execute(request, response);
-        logger.trace("page = {}", page);
-
 
         if (page.contains("redirect@")) {
             response.sendRedirect(page.replace("redirect@", ""));

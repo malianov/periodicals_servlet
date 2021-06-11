@@ -43,7 +43,7 @@
             <c:forEach items="${subscribers}" var="all_subscribers_list">
             <c:choose>
             <c:when test="${all_subscribers_list.getUserStatus() eq 'BLOCKED'}">
-        <tr class="<%--text-decoration-line-through--%>table-active text-danger">
+        <tr class="table-active text-danger">
             </c:when>
             <c:otherwise>
         <tr>

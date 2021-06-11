@@ -7,7 +7,6 @@
 <fmt:setLocale value="${language}"/>
 <fmt:setBundle basename="messages"/>
 
-<%--<!DOCTYPE html>--%>
 <html lang="${language}">
 
 <head>

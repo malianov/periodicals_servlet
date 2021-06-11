@@ -40,17 +40,14 @@ public class RegistrationCommand implements Command, Password {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        logger.trace("RegistrationCommand executing");
 
         Map<String, String> collectedErrors = new HashMap<>();
 
         final String password = request.getParameter("password");
         final String confirmedPassword = request.getParameter("confirmedPassword");
 
-        logger.trace("password = {}, confirmedPassword = {}", password, confirmedPassword);
-
         createHashedPassword(password);
-
-        logger.trace(collectedErrors.size());
 
         Map<String, String> registrationData = Map.of(
                 "login", request.getParameter("login"),
@@ -61,25 +58,15 @@ public class RegistrationCommand implements Command, Password {
                 "role", request.getParameter("role"),
                 "personal_account", "0.0");
 
-        logger.trace(collectedErrors.size());
-
         arePasswordsEqual(password, confirmedPassword, collectedErrors);
-        logger.trace(collectedErrors.size());
         isLoginValid(registrationData, collectedErrors);
-        logger.trace(collectedErrors.size());
         isNameValid(registrationData, collectedErrors);
-        logger.trace(collectedErrors.size());
         isSurnameValid(registrationData, collectedErrors);
-        logger.trace(collectedErrors.size());
         isEmailValid(registrationData, collectedErrors);
-        logger.trace(collectedErrors.size());
         isPasswordValid(confirmedPassword, collectedErrors);
 
-        logger.trace(collectedErrors.size());
-
-        if(!collectedErrors.isEmpty()) {
+        if (!collectedErrors.isEmpty()) {
             request.setAttribute("errorMessages", collectedErrors);
-            logger.trace("inside collectedErrors are {} errors", collectedErrors.size());
             return "/WEB-INF/view/error_message.jsp";
         }
 
@@ -89,6 +76,7 @@ public class RegistrationCommand implements Command, Password {
         try {
             userService.registerUser(user);
         } catch (Exception e) {
+            logger.error("User cannot be registered to {}", user.toString());
             e.printStackTrace();
             collectedErrors.put("errorDuringUserRegistration", "error_message.oops-smth-was-wrong");
             request.setAttribute("errorMessages", collectedErrors);
@@ -104,6 +92,7 @@ public class RegistrationCommand implements Command, Password {
             String hashedPassword = Password.generateStrongPasswordHash(password);
             setHashedPassword(hashedPassword);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            logger.error("The hashed password cannot be created");
             e.printStackTrace();
         }
     }
@@ -145,7 +134,6 @@ public class RegistrationCommand implements Command, Password {
     }
 
     private User newUserRegistration(Map<String, String> registrationData) {
-        logger.trace("new user registration");
 
         final Person person = new Person();
         person.setName(registrationData.get("name"));
@@ -154,7 +142,7 @@ public class RegistrationCommand implements Command, Password {
 
         UserRole role = UserRole.valueOf(registrationData.get("role").toUpperCase());
 
-        final User user = new User.Builder()
+        return new User.Builder()
                 .login(registrationData.get("login"))
                 .password(registrationData.get("password"))
                 .userStatus(UserStatus.ACTIVE)
@@ -162,8 +150,6 @@ public class RegistrationCommand implements Command, Password {
                 .role(role)
                 .balance(new BigDecimal(registrationData.get("personal_account")))
                 .build();
-
-        return user;
     }
 }
 

@@ -18,6 +18,7 @@ public class ConnectionPool {
             synchronized (ConnectionPool.class) {
                 if (dataSource == null) {
                     HikariConfig config = new HikariConfig("/db.properties");
+                    logger.trace("Hikari pool created successfully");
                     dataSource = new HikariDataSource(config);
                 }
             }
@@ -27,8 +28,10 @@ public class ConnectionPool {
 
     public static Connection getConnection() {
         try {
+            logger.trace("Connection providing");
             return getDataSource().getConnection();
         } catch (SQLException e) {
+            logger.error("Hasn't found connection with database");
             throw new RuntimeException("Hasn't found connection with database");
         }
     }

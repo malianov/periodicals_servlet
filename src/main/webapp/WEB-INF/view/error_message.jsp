@@ -13,21 +13,17 @@
 
     <jsp:include page="navbar.jsp"/>
 
-    <div class="container my-5 text-center">
+    <div class="container my-5 text-center border border-danger bg-light">
         <div class="row p-8 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
             <div class="px-4 py-5 my-5 text-center">
-                <h1 class="display-5 fw-bold text-danger"><fmt:message key="error_message.there-is-a-problem-with-your-information"/></h1>
-                <div class="container">
+                <h1 class="display-5 fs-3 text-danger"><fmt:message key="error_message.there-is-a-problem-with-your-information"/></h1>
+                <div class="container"><br><br>
                     <c:forEach var="error" items="${errorMessages}">
-                        <div class="p-3 mb-2 bg-danger text-white"><p><fmt:message key="${error.getValue()}"/></p></div>
+                        <div class="fs-4 text-danger"><p>✔  <fmt:message key="${error.getValue()}"/></p></div>
                     </c:forEach>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/app/to_home_page"><fmt:message
-                key="home"/></a>
     </div>
 </div>
 <div class="container my-0 fixed-bottom">

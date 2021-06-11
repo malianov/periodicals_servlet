@@ -8,19 +8,20 @@ import java.io.IOException;
 
 public class EncodingFilter implements Filter {
 
-	private static final Logger logger = LogManager.getLogger(EncodingFilter.class);
+    private static final Logger logger = LogManager.getLogger(EncodingFilter.class);
 
-	public void init(FilterConfig config) throws ServletException {
-		logger.trace("Initialization for Encoding filter");
-	}
+    public void init(FilterConfig config) throws ServletException {
+        logger.trace("Encoding filter initialization");
+    }
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;charset=UTF-8");
-		chain.doFilter(request, response);
-	}
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        logger.trace("Encoding filter: do filter");
 
-	public void destroy() {
-		logger.trace("Destroy Encoding filter");
-	}
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        chain.doFilter(request, response);
+    }
+
+    public void destroy() {
+    }
 }

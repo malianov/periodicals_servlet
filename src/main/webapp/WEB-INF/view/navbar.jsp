@@ -10,8 +10,6 @@
     <nav class="navbar navbar-light border border-primary border-2 rounded-pill">
         <div class="container-fluid">
             <a class="navbar-brand fs-3 fw-bold" href="${pageContext.request.contextPath}/app/to_home_page">
-                <%--<img src="${pageContext.request.contextPath}/app/resources/images/logo.svg" alt="" width="50"
-                     height="40" class="d-inline-block align-text">--%>
                 <c:choose>
                     <c:when test="${not empty sessionScope.login}">
                         <fmt:message key="good-day-user"/>${sessionScope.login}
@@ -82,14 +80,6 @@
                 </c:choose>
             </c:otherwise>
         </c:choose>
-<%--        <c:choose>
-            <c:when test="${page eq 'support'}">
-                <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-primary"><fmt:message key="support"/></a></li>
-            </c:when>
-            <c:otherwise>
-                <li><a href="${pageContext.request.contextPath}/app/to_support_page" class="nav-link px-2 link-dark"><fmt:message key="support"/></a></li>
-            </c:otherwise>
-        </c:choose>--%>
     </ul>
     <div class="col-md-4 text-end">
         <button class="btn btn-primary me-3" type="button" id="dropdownMenuBtn1" data-bs-toggle="dropdown">
@@ -123,11 +113,6 @@
                 </button>
             </c:otherwise>
         </c:choose>
-<%--        <c:if test="${empty sessionScope.login}">--%>
-<%--            <button type="button" class="btn btn-primary" data-bs-toggle="modal"--%>
-<%--                    data-bs-target="#modalSignUp"><fmt:message key="sign-up"/>--%>
-<%--            </button>--%>
-<%--        </c:if>--%>
         <c:choose>
             <c:when test="${empty sessionScope.login}">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -191,17 +176,7 @@
             <div class="modal-body">
                 <p><fmt:message key="please-enter-your-login-information"/></p>
                 <form method="POST" action="${pageContext.request.contextPath}/app/app/login">
-
-
-
-<%--                    <c:if test="${param.dataInvalid == true}">--%>
-<%--                        <p style="color: orange"><fmt:message key="invalid.input"/></p>--%>
-<%--                    </c:if>--%>
-
-
-
-
-                    <div class="row mb-3">
+                <div class="row mb-3">
                         <label for="horizontalLogin" class="col-md-2 col-form-label"><fmt:message key="login"/></label>
                         <div class="col-md-10">
                             <input name="login" type="text" autofocus class="form-control">

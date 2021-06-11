@@ -17,17 +17,17 @@ public class CommandFactory {
     private static final Map<String, Command> commands = new HashMap<>();
 
     static {
-        commands.put(LOGIN.getPath(),new LoginCommand());
-        commands.put(REGISTRATION.getPath(),new RegistrationCommand());
+        commands.put(LOGIN.getPath(), new LoginCommand());
+        commands.put(REGISTRATION.getPath(), new RegistrationCommand());
         commands.put(TO_HOME_PAGE.getPath(), new HomePage());
         commands.put(TO_CATALOG.getPath(), new CatalogPage());
         commands.put(TO_SUPPORT_PAGE.getPath(), new SupportPage());
         commands.put(TO_SUBSCRIBERS_PAGE.getPath(), new SubscribersPage());
-        commands.put(LOGOUT.getPath(),new LogOutCommand());
+        commands.put(LOGOUT.getPath(), new LogOutCommand());
         commands.put(BLOCK_UNBLOCK.getPath(), new BlockUnblockCommand());
         commands.put(MAKE_ORDER_NONORDER_PERIODIC.getPath(), new OrderableNonorderableCommand());
         commands.put(MAKE_SUBSCRIPTION.getPath(), new MakeSubscriptionCommand());
-        commands.put(ADDITION_TO_BALANCE.getPath(),new PrivateAccountCommand());
+        commands.put(ADDITION_TO_BALANCE.getPath(), new PrivateAccountCommand());
         commands.put(SHOW_ALL_SUBSCRIPTIONS.getPath(), new SubscriptionsPage());
         commands.put(SHOW_ALL_SINGLE_USER.getPath(), new SingleUserSubscriptionsPage());
         commands.put(EDIT_PERIODIC.getPath(), new EditPeriodicCommand());
@@ -37,9 +37,10 @@ public class CommandFactory {
         Command command = commands.get(url);
 
         if (command == null) {
+            logger.error("The command is null");
             throw new NotFoundCommandException();
         }
-
+        logger.trace("Requested Command is {}", command);
         return command;
     }
 }

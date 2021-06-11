@@ -13,12 +13,14 @@ public class Person {
     private String email;
 
     public Person(String name, String surname, String email) {
+        logger.trace("Object Person with name {} is created", name);
         this.name = name;
         this.surname = surname;
         this.email = email;
     }
 
     public Person() {
+        logger.trace("Empty object Person created");
     }
 
     public String getName() {

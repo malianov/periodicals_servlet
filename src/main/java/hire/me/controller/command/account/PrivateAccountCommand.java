@@ -3,7 +3,6 @@ package hire.me.controller.command.account;
 import hire.me.controller.command.Command;
 import hire.me.model.service.PrivateAccountService;
 import hire.me.model.service.ServiceFactory;
-import hire.me.model.validator.DataValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,9 +27,19 @@ public class PrivateAccountCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        logger.trace("PrivateAccountCommand executing");
 
-        final BigDecimal additionToBalance = request.getParameter("addition_to_balance").isBlank() ? BigDecimal.ZERO : new BigDecimal(request.getParameter("addition_to_balance"));
         Map<String, String> collectedErrors = new HashMap<>();
+        final BigDecimal additionToBalance;
+
+        try {
+            additionToBalance = request.getParameter("addition_to_balance").isBlank() ? BigDecimal.ZERO : new BigDecimal(request.getParameter("addition_to_balance"));
+        } catch (NumberFormatException nfe) {
+            logger.error("User entered incorect value for balance");
+            collectedErrors.put("errorValueNotNumber", "error_message.entered-value-is-not-number");
+            request.setAttribute("errorMessages", collectedErrors);
+            return "/WEB-INF/view/error_message.jsp";
+        }
 
         if (additionToBalance.signum() < 0) {
             collectedErrors.put("errorLoginNotValid", "error_message.entered-value-below-0");
@@ -55,11 +64,6 @@ public class PrivateAccountCommand implements Command {
 
         privateAccountService.increaseBalance(subscriberId, additionToBalance);
         request.getSession().setAttribute("subscriberBalance", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));
-
-
-        logger.trace("Actual balance is : {}", serviceFactory.getPrivateAccountService().getSubscriberBalance(subscriberId));
-        logger.trace("Actual balance in session object is : {}", request.getSession().getAttribute("subscriberBalance"));
-
 
         return "redirect@" + path + previous_page.get(pager);
     }

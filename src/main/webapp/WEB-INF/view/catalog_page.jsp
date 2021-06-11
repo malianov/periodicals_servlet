@@ -114,42 +114,8 @@
         </tr>
         </thead>
         <tbody>
-        <%--<c:if test="${sessionScope.language eq 'ua'}">
-            <c:forEach items="${periodicals.get('ua')}" var="all_periodics_list">
-        </c:if>
-        <c:if test="${sessionScope.language eq 'ru'}">
-            <c:forEach items="${periodicals.get('ru')}" var="all_periodics_list">
-        </c:if>
-        <c:if test="${sessionScope.language eq 'en'}">
-            <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">
-        </c:if>--%>
-        <%--        <c:choose>
-                    <c:when test="${sessionScope.language eq 'ua'}">
-                        <c:set var="list_periodics" value="${periodicals}"/>
-                    </c:when>
-                    <c:when test="${sessionScope.language eq 'ru'}">
-                        <c:set var="list_periodics" value="${periodicals}"/>
-                    </c:when>
-                    <c:otherwise>
-                        <c:set var="list_periodics" value="${periodicals}"/>
-                    </c:otherwise>
-                </c:choose>--%>
         <c:set var="list_periodics" value="${periodicals}"/>
-        <%--        <c:set var="list_periodics" value="${sessionScope.language eq 'en' ? periodicals.get('en') : periodicals.get('ru')}"/>--%>
         <c:forEach items="${list_periodics}" var="all_periodics_list">
-            <%--        <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">--%>
-            <%--        <c:choose>--%>
-            <%--            <c:when test="${sessionScope.language eq 'ua'}">--%>
-            <%--                <c:forEach items="${periodicals.get('ua')}" var="all_periodics_list">--%>
-            <%--            </c:when>--%>
-            <%--            <c:when test="${sessionScope.language eq 'ru'}">--%>
-            <%--                <c:forEach items="${periodicals.get('ru')}" var="all_periodics_list">--%>
-            <%--            </c:when>--%>
-            <%--            <c:otherwise>--%>
-            <%--                <c:forEach items="${periodicals.get('en')}" var="all_periodics_list">--%>
-            <%--            </c:otherwise>--%>
-            <%--        </c:choose>--%>
-            <%--        <c:forEach items="${periodicals}" var="all_periodics_list">--%>
             <c:choose>
                 <c:when test="${all_periodics_list.getPeriodicalStatus().getStatus() eq 'nonorderable'}">
                     <tr class="table-active">
@@ -294,7 +260,7 @@
                                     </div>
                                 </div>
                             </c:when>
-                            <%--<c:when test="${sessionScope.role eq 'SUBSCRIBER'}">
+                            <c:when test="${sessionScope.role eq 'SUBSCRIBER'}">
                                 <form method="post" action="/app/app/to_order_periodic" style="margin-bottom: 0px;">
                                     <input name="periodic_id" type="hidden" value="${all_periodics_list.getId()}">
                                     <c:choose>
@@ -333,8 +299,8 @@
                                                                             <h2 class="blog-post-title"><fmt:message
                                                                                     key="catalog.purchase-order"/></h2>
                                                                             <p class="blog-post-meta">
-                                                                                    &lt;%&ndash;Date: <span id="date"></span>
-                                                                                    Time: <span id="time"></span>&ndash;%&gt;
+                                                                                    <%--Date: <span id="date"></span>
+                                                                                    Time: <span id="time"></span>--%>
                                                                                 <fmt:message
                                                                                         key="catalog.created-by"/> ${sessionScope.login}
                                                                             </p>
@@ -497,7 +463,7 @@
                                         </c:when>
                                     </c:choose>
                                 </form>
-                            </c:when>--%>
+                            </c:when>
                         </c:choose>
                     </td>
                 </c:when>

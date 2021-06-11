@@ -22,7 +22,7 @@ public class SingleUserSubscriptionsPage implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.trace("SERVICE to subscriptions page");
+        logger.trace("SingleUserSubscriptionsPageCommand executing");
 
         final int ROWS_PER_PAGE = 14;
         int currentPage = 1;
@@ -30,17 +30,11 @@ public class SingleUserSubscriptionsPage implements Command {
         final HttpSession session = request.getSession();
         final String subscriberId = String.valueOf(session.getAttribute("user_id"));
 
-        logger.trace("subscriberId ========================= {}", subscriberId);
-
-        if(request.getParameter("current_page") != null) {
+        if (request.getParameter("current_page") != null) {
             currentPage = Integer.parseInt(request.getParameter("current_page"));
         }
 
         int lowerBound = (currentPage - 1) * ROWS_PER_PAGE;
-
-        logger.trace("lowerBound = {}, ROWS_PER_PaGE = {}, searchInput = {}", lowerBound, ROWS_PER_PAGE, subscriberId);
-
-
 
         SubscriptionService.PaginationResult paginationResult =
                 subscriptionService.getSearchSubscriptionWithPagination(lowerBound, ROWS_PER_PAGE, subscriberId);

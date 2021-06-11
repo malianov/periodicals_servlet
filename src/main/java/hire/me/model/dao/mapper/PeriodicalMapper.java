@@ -1,11 +1,6 @@
 package hire.me.model.dao.mapper;
 
-import hire.me.model.entity.language.Language;
 import hire.me.model.entity.periodical.Periodical;
-import hire.me.model.entity.periodical.PeriodicalStatus;
-import hire.me.model.entity.periodical.PeriodicalType;
-import hire.me.model.entity.periodical.Theme;
-import hire.me.model.service.PeriodicalService;
 import hire.me.model.service.PeriodicalStatusService;
 import hire.me.model.service.PeriodicalTypeService;
 import hire.me.model.service.ThemeService;
@@ -28,7 +23,6 @@ public class PeriodicalMapper implements ObjectMapper<Periodical> {
 
     @Override
     public Periodical extractFromResultSet(ResultSet rs) throws SQLException {
-
         ThemeService themeService = ThemeService.getInstance();
         PeriodicalTypeService periodicalTypeService = PeriodicalTypeService.getInstance();
         PeriodicalStatusService periodicalStatusService = PeriodicalStatusService.getInstance();

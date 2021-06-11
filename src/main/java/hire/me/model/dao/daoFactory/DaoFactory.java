@@ -10,15 +10,20 @@ public abstract class DaoFactory {
     private static DaoFactory daoFactory;
 
     public abstract UserDao createUserDao();
+
     public abstract PeriodicalDao createPeriodicalDao();
+
     public abstract SubscriptionDao createSubscriptionDao();
+
     public abstract PrivateAccountDao createPrivateAccountDao();
+
     public abstract ThemeDao createThemeDao();
+
     public abstract PeriodicalTypeDao createPeriodicalTypeDao();
+
     public abstract PeriodicalStatusDao createPeriodicalStatusDao();
 
     public static DaoFactory getInstance() {
-        logger.trace("isDatafactoryExist = {}", daoFactory);
         if (daoFactory == null) {
             synchronized (DaoFactory.class) {
                 if (daoFactory == null) {
@@ -28,6 +33,4 @@ public abstract class DaoFactory {
         }
         return daoFactory;
     }
-
-
 }

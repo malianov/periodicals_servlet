@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class CatalogPage implements Command {
     private static final Logger logger = LogManager.getLogger(CatalogPage.class);
@@ -26,17 +24,17 @@ public class CatalogPage implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.trace("to catalog page");
+        logger.trace("CatalogPageCommand executing");
 
         final int ROWS_PER_PAGE = 11;
         int currentPage = 1;
         String searchInput = "%";
 
-        if(request.getParameter("current_page") != null) {
+        if (request.getParameter("current_page") != null) {
             currentPage = Integer.parseInt(request.getParameter("current_page"));
         }
 
-        if(request.getParameter("search_input") != null) {
+        if (request.getParameter("search_input") != null) {
             searchInput = String.valueOf(request.getParameter("search_input"));
         }
 
@@ -45,20 +43,8 @@ public class CatalogPage implements Command {
         PeriodicalService.PaginationResult paginationResult =
                 periodicalService.getSearchPeriodicalWithPagination(lowerBound, ROWS_PER_PAGE, searchInput);
 
-        List<Theme> themes;
-//
-//        if(request.getParameter("language") == "en") {
-            themes = themeService.getThemes();
-//        } else if(request.getParameter("language") == "ru") {
-//            themes = themeService.getThemes("theme_ru");
-//        } else {
-//            themes = themeService.getThemes("theme_ua");
-//        }
-
-
+        List<Theme> themes = themeService.getThemes();
         List<Periodical> allPeriodicals = paginationResult.getPeriodicalList();
-
-        logger.trace("inside allPeriodicals = {}", allPeriodicals.size());
 
         int nuOfRows = paginationResult.getNuOfRows();
         int nuOfPages = (int) Math.ceil(nuOfRows * 1.0 / ROWS_PER_PAGE);

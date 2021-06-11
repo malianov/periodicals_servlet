@@ -2,10 +2,7 @@ package hire.me.model.service;
 
 import hire.me.model.dao.daoFactory.DaoFactory;
 import hire.me.model.dao.daoFactory.PeriodicalStatusDao;
-import hire.me.model.dao.daoFactory.PeriodicalTypeDao;
 import hire.me.model.entity.periodical.PeriodicalStatus;
-import hire.me.model.entity.periodical.PeriodicalType;
-import hire.me.model.entity.periodical.Theme;
 
 public class PeriodicalStatusService {
 
@@ -26,7 +23,6 @@ public class PeriodicalStatusService {
         }
         return instance;
     }
-
 
     public PeriodicalStatus getPeriodicalStatusServiceById(long id) {
         PeriodicalStatusDao dao = daoFactory.createPeriodicalStatusDao();

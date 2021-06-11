@@ -1,10 +1,10 @@
 package hire.me.model.dao.impl;
 
 import hire.me.model.dao.daoFactory.PeriodicalTypeDao;
+import hire.me.model.dao.impl.queries.PeriodicalTypeSQL;
 import hire.me.model.dao.mapper.PeriodicalTypeMapper;
-import hire.me.model.dao.mapper.ThemeMapper;
 import hire.me.model.entity.periodical.PeriodicalType;
-import hire.me.model.entity.periodical.Theme;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,8 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static hire.me.connection.ConnectionPool.getConnection;
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 public class JdbcPeriodicalTypeDaoImpl implements PeriodicalTypeDao {
+    private static final Logger logger = getLogger(JdbcPeriodicalTypeDaoImpl.class);
 
     final private Connection connection = getConnection();
     private static JdbcPeriodicalTypeDaoImpl instance;
@@ -44,7 +46,7 @@ public class JdbcPeriodicalTypeDaoImpl implements PeriodicalTypeDao {
         PeriodicalTypeMapper periodicalTypeMapper = new PeriodicalTypeMapper();
 
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT id, type_en FROM types where id=(?)");
+            PreparedStatement ps = connection.prepareStatement(PeriodicalTypeSQL.READ_BY_ID.getQUERY());
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -54,6 +56,7 @@ public class JdbcPeriodicalTypeDaoImpl implements PeriodicalTypeDao {
             rs.close();
 
         } catch (SQLException exception) {
+            logger.error("Error with DAO: {}", exception);
             exception.printStackTrace();
         }
 
@@ -67,16 +70,13 @@ public class JdbcPeriodicalTypeDaoImpl implements PeriodicalTypeDao {
 
     @Override
     public void update(PeriodicalType periodicalType) {
-
     }
 
     @Override
     public void delete(long id) {
-
     }
 
     @Override
     public void close() {
-
     }
 }

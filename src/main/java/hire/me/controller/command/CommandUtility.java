@@ -24,20 +24,18 @@ public class CommandUtility {
     }
 
     public static boolean checkUserIsLogged(HttpServletRequest request, String login) {
-        logger.trace("Check is user with login = {} is logged", login);
+        logger.trace("Checking, is user is logged to system");
 
         HashSet<String> loggedUsers = (HashSet<String>) request.getSession()
                 .getServletContext()
                 .getAttribute("loggedUsers");
 
-        if(loggedUsers.stream().anyMatch(login::equals)) {
-            logger.trace("User with login = {} is logged", login);
-
+        if (loggedUsers.stream().anyMatch(login::equals)) {
+            logger.trace("The user is already logged");
             return true;
         }
 
         loggedUsers.add(login);
-        logger.trace("User with login = {} is added to the logged users list", login);
 
         request.getSession()
                 .getServletContext()
@@ -45,9 +43,8 @@ public class CommandUtility {
         return false;
     }
 
-    public static void loginUser(HttpServletRequest request, long user_id, String login, String password, UserRole userRole, BigDecimal subscriberBalance){
-        logger.trace("Set attributes with login = {}, password = {}, userRole = {} and balance = {}", login, password, userRole, subscriberBalance);
-
+    public static void loginUser(HttpServletRequest request, long user_id, String login, String password, UserRole userRole, BigDecimal subscriberBalance) {
+        logger.trace("Placing the User data to session");
         request.getSession().setAttribute("password", password);
         request.getSession().setAttribute("user_id", user_id);
         request.getSession().setAttribute("login", login);
@@ -56,13 +53,11 @@ public class CommandUtility {
     }
 
     public static void logoutUser(HttpServletRequest request, String login) {
-        logger.trace("Inside logoutUser for login = {}", login);
-
+        logger.trace("Request for remove user from session");
         HashSet<String> loggedUsers = (HashSet<String>)
                 request.getSession().getServletContext().getAttribute("loggedUsers");
 
         loggedUsers.remove(login);
-        logger.trace("User with login = {} is being removed from list of logged users", login);
         request.getSession().getServletContext().setAttribute("loggedUsers", loggedUsers);
 
         final HttpSession session = request.getSession();
@@ -70,12 +65,9 @@ public class CommandUtility {
         session.removeAttribute("password");
         session.removeAttribute("role");
         session.removeAttribute("subscriberBalance");
-
     }
 
-    public static User getCurrentSessionUser(HttpServletRequest request){
-        logger.trace("Inside getCurrentSessionUser");
-
+    public static User getCurrentSessionUser(HttpServletRequest request) {
         final HttpSession session = request.getSession();
         String login = session.getAttribute("login").toString();
 
@@ -84,16 +76,15 @@ public class CommandUtility {
     }
 
     public static void disallowBackToCached(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
 
         final HttpSession session = request.getSession();
         final String path = request.getServletContext().getContextPath();
 
-        //to prevent user coming back to cached pages after logout
-        response.setHeader("Cache-Control","no-cache, no-store, must-revalidate");
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-        response.setHeader("Pragma","no-cache");
-        response.setDateHeader ("Expires", 0);
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
 
         if (session.getAttribute("login") == null || session.getAttribute("password") == null) {
             response.sendRedirect(path + "/WEB-INF/common/error/invalidSession.jsp");

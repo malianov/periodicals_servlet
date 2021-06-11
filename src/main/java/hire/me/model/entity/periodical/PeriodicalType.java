@@ -1,6 +1,6 @@
 package hire.me.model.entity.periodical;
 
-import hire.me.model.entity.language.Language;
+import java.util.Objects;
 
 public class PeriodicalType {
     private long id;
@@ -30,5 +30,24 @@ public class PeriodicalType {
         this.type = type;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PeriodicalType that = (PeriodicalType) o;
+        return id == that.id && Objects.equals(type, that.type);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type);
+    }
+
+    @Override
+    public String toString() {
+        return "PeriodicalType{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

@@ -1,7 +1,6 @@
 package hire.me.model.service;
 
 import hire.me.model.dao.daoFactory.DaoFactory;
-import hire.me.model.dao.daoFactory.SubscriptionDao;
 import hire.me.model.entity.subscription.Subscription;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +15,6 @@ public class SubscriptionService {
     private static SubscriptionService instance;
 
     private SubscriptionService() {
-        logger.trace("constructor");
         daoFactory = DaoFactory.getInstance();
     }
 
@@ -32,8 +30,6 @@ public class SubscriptionService {
     }
 
     public boolean isSubscriptionSuccessful(Long subscriberId, Integer subscribedPeriodicId, String subscriptionYear, String[] selectedPeriodicItems, String subscriberAddress) {
-        logger.trace("isSubscriptionSuccessful");
-
         return daoFactory.createSubscriptionDao()
                 .isSubscriptionSuccessful(subscriberId, subscribedPeriodicId, subscriptionYear, selectedPeriodicItems, subscriberAddress);
     }
@@ -44,8 +40,6 @@ public class SubscriptionService {
     }
 
     public SubscriptionService.PaginationResult getSearchSubscriptionWithPagination(int lowerBound, int upperBound, String searchKey) {
-        logger.trace("Inside getSearchSubscriptionWithPagination, lowerBound = {}, upperBound = {}, searchKey = {}", lowerBound, upperBound, searchKey);
-
         return daoFactory.createSubscriptionDao()
                 .searchSubscriptionsWithPagination(lowerBound, upperBound, searchKey);
     }
@@ -59,17 +53,14 @@ public class SubscriptionService {
         }
 
         public void setNuOfRows(int nuOfRows) {
-            logger.trace("setNuOfRows request, nuOfRows = {}", nuOfRows);
             this.nuOfRows = nuOfRows;
         }
 
         public List<Subscription> getSubscriptionsList() {
-            logger.trace("getSubscriptionsList");
             return subscriptionsList;
         }
 
         public void setSubscriptionsList(List<Subscription> resultList) {
-            logger.trace("setSubscriptionsList");
             this.subscriptionsList = resultList;
         }
     }

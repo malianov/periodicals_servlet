@@ -2,11 +2,7 @@ package hire.me.model.service;
 
 import hire.me.model.dao.daoFactory.DaoFactory;
 import hire.me.model.dao.daoFactory.PeriodicalDao;
-import hire.me.model.dao.daoFactory.UserDao;
-import hire.me.model.entity.account.User;
-import hire.me.model.entity.language.Language;
 import hire.me.model.entity.periodical.Periodical;
-import hire.me.model.entity.periodical.Theme;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,8 +35,6 @@ public class PeriodicalService {
     }
 
     public Optional<Periodical> getPeriodicById(Long id) {
-        logger.trace("getPeriodicById = {}", id);
-
         PeriodicalDao dao = daoFactory.createPeriodicalDao();
         return dao.findById(id);
     }
@@ -52,17 +46,12 @@ public class PeriodicalService {
 
     public void changePeriodicalStatus(String periodical_id, String newPeriodicStatus) {
         PeriodicalDao dao = daoFactory.createPeriodicalDao();
-        logger.trace(newPeriodicStatus);
         dao.changePeriodicalStatus(periodical_id, newPeriodicStatus);
     }
 
     public PaginationResult getSearchPeriodicalWithPagination(int lowerBound, int upperBound, String searchKey) {
         return daoFactory.createPeriodicalDao().searchPeriodicalsWithPagination(lowerBound, upperBound, searchKey);
     }
-
-//    public List<Themes> getListOfThemes() {
-//        return daoFactory.createThemeDao().findAll();
-//    }
 
     public static class PaginationResult {
         private int nuOfRows;
@@ -73,7 +62,6 @@ public class PeriodicalService {
         }
 
         public void setNuOfRows(int nuOfRows) {
-            logger.trace("setNuOfRows request, nuOfRows = {}", nuOfRows);
             this.nuOfRows = nuOfRows;
         }
 

@@ -20,17 +20,14 @@ public class UserMapper implements ObjectMapper<User> {
     private static final String STATUS = "account_status";
     private static final String PERSONAL_BALANCE = "balance";
 
-
     @Override
     public User extractFromResultSet(ResultSet rs) throws SQLException {
-        User subscriber = new User.Builder()
-                .id(rs.getInt(ID))
+        return new User.Builder()
+                .id(rs.getLong(ID))
                 .login(rs.getString(LOGIN))
                 .person(new Person(rs.getString(FIRST_NAME), rs.getString(SURNAME), rs.getString(EMAIL)))
                 .userStatus(UserStatus.valueOf(rs.getString(STATUS).toUpperCase()))
                 .balance(rs.getBigDecimal(PERSONAL_BALANCE))
                 .build();
-
-        return subscriber;
     }
 }

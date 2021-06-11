@@ -21,17 +21,17 @@ public class SubscribersPage implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.trace("to subscribers page");
+        logger.trace("SubscribersPageCommand executing");
 
         final int ROWS_PER_PAGE = 11;
         int currentPage = 1;
         String searchInput = "%";
 
-        if(request.getParameter("current_page") != null) {
+        if (request.getParameter("current_page") != null) {
             currentPage = Integer.parseInt(request.getParameter("current_page"));
         }
 
-        if(request.getParameter("search_input") != null) {
+        if (request.getParameter("search_input") != null) {
             searchInput = String.valueOf(request.getParameter("search_input"));
         }
 

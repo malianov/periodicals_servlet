@@ -9,31 +9,26 @@ public class JdbcDaoFactory extends DaoFactory {
 
     @Override
     public UserDao createUserDao() {
-        logger.trace("User DAO created");
         return JdbcUserDaoImpl.getInstance();
     }
 
     @Override
     public PeriodicalDao createPeriodicalDao() {
-        logger.trace("Periodical DAO created");
         return JdbcPeriodicalDaoImpl.getInstance();
     }
 
     @Override
     public SubscriptionDao createSubscriptionDao() {
-        logger.trace("Subscription DAO created");
         return JdbcSubscriptionDaoImpl.getInstance();
     }
 
     @Override
     public PrivateAccountDao createPrivateAccountDao() {
-        logger.trace("Private Account DAO created");
         return JdbcPrivateAccountDaoImpl.getInstance();
     }
 
     @Override
     public ThemeDao createThemeDao() {
-        logger.trace("Theme DAO created");
         return JdbcThemeDaoImpl.getInstance();
     }
 

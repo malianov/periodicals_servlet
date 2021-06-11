@@ -1,6 +1,7 @@
 package hire.me.model.dao.impl;
 
 import hire.me.model.dao.daoFactory.PrivateAccountDao;
+import hire.me.model.dao.impl.queries.PrivateAccountSQL;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,27 +35,24 @@ public class JdbcPrivateAccountDaoImpl implements PrivateAccountDao {
 
     @Override
     public void increaseBalance(Long subscriberId, BigDecimal additionToBalance) {
-        logger.trace("additionToBalance = {} ", additionToBalance);
         try {
             connection.setAutoCommit(false);
             BigDecimal actualSubscriberBalance = getSubscriberBalance(subscriberId);
             BigDecimal newActualSubscriberBalance = actualSubscriberBalance.add(additionToBalance);
             updateBalance(subscriberId, newActualSubscriberBalance);
-            logger.trace("balance updated");
             connection.commit();
         } catch (Exception e) {
             try {
-                logger.trace("rollback, {}", e);
                 connection.rollback();
             } catch (SQLException exception) {
+                logger.error("Error with DAO: {}", exception);
                 exception.printStackTrace();
             }
         }
     }
 
     private void updateBalance(Long subscriberId, BigDecimal newActualSubscriberBalance) throws SQLException {
-        logger.trace("Try to update balance in DAO");
-        PreparedStatement ps = connection.prepareStatement("UPDATE users SET balance=(?) WHERE (id=(?))");
+        PreparedStatement ps = connection.prepareStatement(PrivateAccountSQL.SET_BALANCE.getQUERY());
         ps.setBigDecimal(1, newActualSubscriberBalance);
         ps.setLong(2, subscriberId);
         ps.execute();
@@ -62,16 +60,15 @@ public class JdbcPrivateAccountDaoImpl implements PrivateAccountDao {
 
     @Override
     public BigDecimal getSubscriberBalance(Long subscriberId) {
-        try (PreparedStatement pss = connection.prepareStatement("SELECT balance FROM users where id=(?);")) {
-            pss.setLong(1, subscriberId);
-            final ResultSet rss = pss.executeQuery();
+        try (PreparedStatement ps = connection.prepareStatement(PrivateAccountSQL.READ_BALANCE.getQUERY())) {
+            ps.setLong(1, subscriberId);
+            final ResultSet rs = ps.executeQuery();
 
-            if (rss.next()) {
-                BigDecimal bd = rss.getBigDecimal("balance");
-                logger.trace("GET SUBSCRIBER BALANCE = {}", bd);
-                return bd;
+            if (rs.next()) {
+                return rs.getBigDecimal("balance");
             }
         } catch (SQLException e) {
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
         return new BigDecimal(0.0);

@@ -34,7 +34,6 @@ public class UserService {
     }
 
     public void registerUser(User user) throws Exception {
-        logger.trace("register user");
         UserDao userDao = daoFactory.createUserDao();
 
         if (userDao.emailIsAlreadyUsed(user.getPerson().getEmail())) {
@@ -69,45 +68,35 @@ public class UserService {
     }
 
     public boolean isExistingUser(String login, String password) {
-        UserDao dao = daoFactory.createUserDao();
-        return dao.isUserExist(login, password);
+        return daoFactory.createUserDao().isUserExist(login, password);
     }
 
     public Optional<User> getUserById(long id) {
-        UserDao dao = daoFactory.createUserDao();
-        return dao.findById(id);
+        return daoFactory.createUserDao().findById(id);
     }
 
     public List<User> getAllUsers() {
-        UserDao dao = daoFactory.createUserDao();
-        return dao.findAll();
+        return daoFactory.createUserDao().findAll();
     }
 
     public boolean isLoginExist(String login) {
-        UserDao dao = daoFactory.createUserDao();
-        return dao.isLoginExist(login);
+        return daoFactory.createUserDao().isLoginExist(login);
     }
 
     public boolean isPasswordCorrectForLogin(String login, String password, UserRole role) {
-        UserDao dao = daoFactory.createUserDao();
-        return dao.isPasswordCorrectForLogin(login, password);
+        return daoFactory.createUserDao().isPasswordCorrectForLogin(login, password);
     }
 
     public UserRole getRoleByLogin(String login) {
-        logger.info("Check the role by login");
-        UserDao dao = daoFactory.createUserDao();
-        return dao.getRoleByLogin(login);
+        return daoFactory.createUserDao().getRoleByLogin(login);
     }
 
     public Long getIdByLogin(String login) {
-        logger.info("Find ID by login");
-        UserDao dao = daoFactory.createUserDao();
-        return dao.getIdByLogin(login);
+        return daoFactory.createUserDao().getIdByLogin(login);
     }
 
     public void changeUserStatus(String login, String status) {
-        UserDao dao = daoFactory.createUserDao();
-        dao.changeUserStatus(login, status);
+        daoFactory.createUserDao().changeUserStatus(login, status);
     }
 
     public UserService.PaginationResult getSearchSubscribersWithPagination(int lowerBound, int upperBound, String searchKey) {
@@ -115,13 +104,11 @@ public class UserService {
     }
 
     public BigDecimal getSubscriberBalanceByLogin(String login) {
-        UserDao dao = daoFactory.createUserDao();
-        return dao.getSubscriberBalanceByLogin(login);
+        return daoFactory.createUserDao().getSubscriberBalanceByLogin(login);
     }
 
     public boolean isLoginBlocked(String login) {
-        UserDao dao = daoFactory.createUserDao();
-        if(dao.checkSubscriberStatusByLogin(login).equals(UserStatus.BLOCKED)) {
+        if (daoFactory.createUserDao().checkSubscriberStatusByLogin(login).equals(UserStatus.BLOCKED)) {
             return true;
         }
         return false;

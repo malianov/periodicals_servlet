@@ -1,79 +1,74 @@
 package hire.me.controller.command.account;
 
-import hire.me.controller.Servlet;
+import hire.me.controller.command.Command;
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
 import hire.me.model.service.UserService;
-import hire.me.model.validator.DataValidator;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Optional;
+import java.io.IOException;
+import java.sql.Connection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static hire.me.connection.ConnectionPool.getConnection;
+import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class LoginTest extends Mockito {
     private HttpServletRequest request;
     private HttpServletResponse response;
     private HttpSession session;
-    private DataValidator dataValidator;
-    private UserService userService;
     private LoginCommand loginCommand;
+    private UserService userService;
+    private User user;
+    private String login;
+    private String password;
+    private long userId;
+    private UserRole role;
+    private Command LoginCommand;
 
 
-    @Test
-    public void testServlet() throws Exception {
+    @BeforeAll
+    public void setUp() throws Exception {
+
+        Connection connection = getConnection();
+
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
-        when(request.getParameter("username")).thenReturn("me");
-        when(request.getParameter("password")).thenReturn("secret");
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Servlet().doPost(request, response);
-
-//        verify(request, atLeast((1)), getParameter("username"));
-        writer.flush();
-        assertTrue(stringWriter.toString().contains("My expected string"));
-    }
-
-
-    @BeforeEach
-    public void init() {
-        request = mock(HttpServletRequest.class);
-        response = mock(HttpServletResponse.class);
-        session = mock(HttpSession.class);
-        dataValidator = mock(DataValidator.class);
         userService = mock(UserService.class);
-
-//        loginCommand = new LoginCommand(userService, dataValidator);
+        LoginCommand = new LoginCommand();
+        user = mock(User.class);
+        session = mock(HttpSession.class);
+        login = "GreatReader";
+        password = "123";
+        userId = 14;
+        role = UserRole.SUBSCRIBER;
     }
 
     @Test
-    public void tesLoginSuccessful() {
-        User user = new User();
-        when(request.getParameter("login")).thenReturn("Igor");
-        when(request.getParameter("password")).thenReturn("1234");
+    public void tesLoginSuccessful() throws ServletException, IOException {
+        when(user.getId()).thenReturn(userId);
+        when(user.getLogin()).thenReturn(login);
+        when(user.getPassword()).thenReturn(password);
+        when(user.getUserRole()).thenReturn(role);
+        when(session.getAttribute("user_id")).thenReturn(userId);
+        when(session.getAttribute("login")).thenReturn(login);
+        when(session.getAttribute("role")).thenReturn(role);
+        when(session.getAttribute("password")).thenReturn(password);
         when(request.getSession()).thenReturn(session);
-        when(DataValidator.validateLogin("Igor")).thenReturn(true);
-        when(DataValidator.validatePassword("1234")).thenReturn(true);
-//        when(userService.isPasswordCorrectForLogin("login", "password", UserRole.SUBSCRIBER)).thenReturn();
-        String expected = "/WEB-INF/view/home.jsp";
-//        String actual = login.execute(request, response);
-//        assertEquals(expected, actual);
+
+        when(UserService.getInstance().getUserByLogin(anyString())).thenReturn(user);
+        String page = loginCommand.execute(request, response);
+        assertNotNull(page);
+        assertEquals(page, "/app/to_home_page");
+
     }
 }

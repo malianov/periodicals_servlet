@@ -29,6 +29,7 @@ public class LoginCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        logger.trace("LoginCommand executing");
 
         Map<String, String> collectedErrors = new HashMap<>();
 
@@ -44,9 +45,8 @@ public class LoginCommand implements Command {
         isLoginExists(login, collectedErrors);
         isLoginBlocked(login, collectedErrors);
 
-        if(!collectedErrors.isEmpty()) {
+        if (!collectedErrors.isEmpty()) {
             request.setAttribute("errorMessages", collectedErrors);
-            logger.trace("inside collectedErrors are {} errors", collectedErrors.size());
             return "/WEB-INF/view/error_message.jsp";
         }
 
@@ -54,7 +54,7 @@ public class LoginCommand implements Command {
         final BigDecimal privateAccount = userService.getSubscriberBalanceByLogin(login);
         final Long userId = userService.getIdByLogin(login);
 
-        if(userService.isPasswordCorrectForLogin(login, password, role)) {
+        if (userService.isPasswordCorrectForLogin(login, password, role)) {
             if (CommandUtility.checkUserIsLogged(request, login)) {
                 CommandUtility.logoutUser(request, login);
                 collectedErrors.put("errorPasswordNotValid", "error_message.login-is-already-in-system");
@@ -66,9 +66,8 @@ public class LoginCommand implements Command {
             collectedErrors.put("errorPasswordNotValid", "error_message.entered-password-is-incorrect");
         }
 
-        if(!collectedErrors.isEmpty()) {
+        if (!collectedErrors.isEmpty()) {
             request.setAttribute("errorMessages", collectedErrors);
-            logger.trace("inside collectedErrors are {} errors", collectedErrors.size());
             return "/WEB-INF/view/error_message.jsp";
         }
 
@@ -89,14 +88,13 @@ public class LoginCommand implements Command {
     }
 
     private void isLoginExists(String login, Map<String, String> collectedErrors) {
-        if(!userService.isLoginExist(login)) {
+        if (!userService.isLoginExist(login)) {
             collectedErrors.put("errorLoginNotValid", "error_message.entered-login-does-not-exists");
         }
     }
 
     private void isLoginBlocked(String login, Map<String, String> collectedErrors) {
-        if(userService.isLoginBlocked(login)) {
-            logger.trace("wow = {}", userService.isLoginBlocked(login));
+        if (userService.isLoginBlocked(login)) {
             collectedErrors.put("errorLoginIsBeingBlocked", "error_message.access-is-blocked");
         }
     }

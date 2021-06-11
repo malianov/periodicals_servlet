@@ -1,9 +1,7 @@
 package hire.me.controller.command.directions_to;
 
 import hire.me.controller.command.Command;
-import hire.me.model.entity.periodical.Periodical;
 import hire.me.model.entity.subscription.Subscription;
-import hire.me.model.service.PeriodicalService;
 import hire.me.model.service.ServiceFactory;
 import hire.me.model.service.SubscriptionService;
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public class SubscriptionsPage implements Command {
     private static final Logger logger = LogManager.getLogger(SubscriptionsPage.class);
@@ -24,20 +21,17 @@ public class SubscriptionsPage implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.trace("SERVICE to subscriptions page");
+        logger.trace("SubscriptionsPageCommand executing");
 
         final int ROWS_PER_PAGE = 15;
         int currentPage = 1;
         String searchInput = "%";
 
-
-
-        if(request.getParameter("current_page") != null) {
+        if (request.getParameter("current_page") != null) {
             currentPage = Integer.parseInt(request.getParameter("current_page"));
-            logger.trace("currentPage = {}", currentPage);
         }
 
-        if(request.getParameter("search_input") != null) {
+        if (request.getParameter("search_input") != null) {
             searchInput = String.valueOf(request.getParameter("search_input"));
         }
 
@@ -48,7 +42,6 @@ public class SubscriptionsPage implements Command {
 
         List<Subscription> subscriptions = paginationResult.getSubscriptionsList();
 
-
         int nuOfRows = paginationResult.getNuOfRows();
         int nuOfPages = (int) Math.ceil(nuOfRows * 1.0 / ROWS_PER_PAGE);
 
@@ -58,15 +51,7 @@ public class SubscriptionsPage implements Command {
         request.getSession().setAttribute("search_input", searchInput);
         request.getSession().setAttribute("page", "subscriptions");
 
-
-
-
-//        return previous_page.get(request.getServletContext().getContextPath());
-//
-////                "/WEB-INF/view/support.jsp";
-////                "/WEB-INF/view/catalog.jsp";
-////                "/WEB-INF/view/home_page.jsp";
-        return  "/WEB-INF/view/subscriptions_page.jsp";
+        return "/WEB-INF/view/subscriptions_page.jsp";
     }
 }
 

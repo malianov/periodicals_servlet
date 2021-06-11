@@ -2,6 +2,7 @@ package hire.me.model.dao.impl;
 
 import hire.me.connection.ConnectionPool;
 import hire.me.model.dao.daoFactory.UserDao;
+import hire.me.model.dao.impl.queries.UserSQL;
 import hire.me.model.dao.mapper.UserMapper;
 import hire.me.model.entity.account.User;
 import hire.me.model.entity.account.UserRole;
@@ -46,9 +47,7 @@ public class JdbcUserDaoImpl implements UserDao {
 
     @Override
     public void create(User user) {
-        try (PreparedStatement ps = connection.prepareStatement("INSERT INTO users " +
-                "(login, first_name, surname, email, password, account_status, user_role, balance) " +
-                "VALUES ((?),(?),(?),(?),(?),(?),(?),(?))")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.CREATE.getQUERY())) {
 
             ps.setString(1, user.getLogin());
             ps.setString(2, user.getPerson().getName());
@@ -61,6 +60,7 @@ public class JdbcUserDaoImpl implements UserDao {
             ps.execute();
 
         } catch (SQLException e) {
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
     }
@@ -84,8 +84,7 @@ public class JdbcUserDaoImpl implements UserDao {
 
     @Override
     public boolean isUserExist(String login, String password) {
-        logger.trace("login => {}, password => {}", login, password);
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users where login=(?) and password=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.CHECK_EXISTENCE.getQUERY())) {
             ps.setString(1, login);
             ps.setString(2, password);
 
@@ -95,6 +94,7 @@ public class JdbcUserDaoImpl implements UserDao {
                 return true;
             }
         } catch (SQLException e) {
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
         return false;
@@ -102,8 +102,7 @@ public class JdbcUserDaoImpl implements UserDao {
 
     @Override
     public boolean emailIsAlreadyUsed(String email) {
-        logger.trace("email => {}", email);
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users where email=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.CHECK_EMAIL_USING.getQUERY())) {
             ps.setString(1, email);
             final ResultSet rs = ps.executeQuery();
 
@@ -111,7 +110,7 @@ public class JdbcUserDaoImpl implements UserDao {
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println("Caught SQLException exception" + e);
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
         return false;
@@ -119,7 +118,7 @@ public class JdbcUserDaoImpl implements UserDao {
 
     @Override
     public boolean loginIsAlreadyUsed(String login) {
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users where login=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.CHECK_LOGIN_USED.getQUERY())) {
             ps.setString(1, login);
             final ResultSet rs = ps.executeQuery();
 
@@ -127,7 +126,7 @@ public class JdbcUserDaoImpl implements UserDao {
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println("Caught SQLException exception" + e);
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
         return false;
@@ -135,25 +134,23 @@ public class JdbcUserDaoImpl implements UserDao {
 
     @Override
     public boolean isLoginExist(String login) {
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users where login=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.CHECK_LOGIN_EXISTENCE.getQUERY())) {
             ps.setString(1, login);
             final ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                logger.trace("login {} is exists", login);
                 return true;
             }
         } catch (SQLException e) {
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
-        logger.trace("login {} does not exists", login);
         return false;
     }
 
     @Override
     public boolean isPasswordCorrectForLogin(String login, String passwordFromWeb) {
-        logger.trace("login => {}, passwordFromWeb => {}", login, passwordFromWeb);
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users where login=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.READ_PASSWORD_FOR_LOGIN.getQUERY())) {
             ps.setString(1, login);
 
             ResultSet rs = ps.executeQuery();
@@ -163,6 +160,7 @@ public class JdbcUserDaoImpl implements UserDao {
                 return Password.validatePassword(passwordFromWeb, passwordFromDB);
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
         return false;
@@ -172,19 +170,17 @@ public class JdbcUserDaoImpl implements UserDao {
     public UserRole getRoleByLogin(String login) {
         UserRole role = UserRole.GUEST;
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT user_role FROM users WHERE login=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.READ_ROLE_FOR_LOGIN.getQUERY())) {
             ps.setString(1, login);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                logger.trace("insideeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 role = UserRole.valueOf(rs.getString("user_role").toUpperCase());
-                logger.trace("Inside getRoleByLogin, role exists and equal to {}", role);
                 return role;
             }
         } catch (SQLException e) {
-            logger.trace("Inside getRoleByLogin: Exception {}", e);
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
         return role;
@@ -192,37 +188,32 @@ public class JdbcUserDaoImpl implements UserDao {
 
     @Override
     public Long getIdByLogin(String login) {
-        logger.trace("login => {}", login);
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT id FROM users where login=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.READ_ID_BY_LOGIN.getQUERY())) {
             ps.setString(1, login);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 long id = rs.getLong("id");
-                logger.trace("Inside getIdByLogin, role exists and equal to {}", id);
                 return id;
             }
         } catch (SQLException e) {
-            logger.trace("Inside getIdByLogin: Exception {}", e);
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
         return null;
     }
 
     public UserService.PaginationResult searchSubscribersWithPagination(int lowerBound, int upperBound, String searchKey) {
-        logger.info("Search users by pagination with lowerBound = {}, upperBound = {} and searchKey = {}", lowerBound, upperBound, searchKey);
 
         UserService.PaginationResult paginationResult = new UserService.PaginationResult();
         UserMapper userMapper = new UserMapper();
         List<User> subscribers = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement subscribersPS = connection.prepareStatement("SELECT users.id, users.login, users.first_name, users.surname, users.email," +
-                     "users.account_status, users.balance FROM users WHERE users.user_role='SUBSCRIBER' AND (users.login LIKE ? OR users.first_name LIKE ? OR users.surname LIKE ? OR users.email LIKE ?) LIMIT ?, ?;");
-             PreparedStatement countRowsPS = connection.prepareStatement("SELECT COUNT(*) " +
-                     "FROM users WHERE users.user_role='SUBSCRIBER' AND (users.login LIKE ? OR users.first_name LIKE ? OR users.surname LIKE ? OR users.email LIKE ?);");) {
+             PreparedStatement subscribersPS = connection.prepareStatement(UserSQL.FILTER_SUBSCRIBERS.getQUERY());
+             PreparedStatement countRowsPS = connection.prepareStatement(UserSQL.COUNT_FILTERED_SUBSCRIBERS.getQUERY());) {
 
             subscribersPS.setString(1, "%" + searchKey + "%");
             subscribersPS.setString(2, "%" + searchKey + "%");
@@ -233,7 +224,6 @@ public class JdbcUserDaoImpl implements UserDao {
 
             ResultSet rs = subscribersPS.executeQuery();
             while (rs.next()) {
-                logger.info("We have smth inside rs_1");
                 User subscriber = userMapper.extractFromResultSet(rs);
                 subscribers.add(subscriber);
             }
@@ -251,7 +241,7 @@ public class JdbcUserDaoImpl implements UserDao {
             rs.close();
 
         } catch (SQLException e) {
-            logger.trace("Catched SQLException {}", e);
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
 
@@ -261,16 +251,14 @@ public class JdbcUserDaoImpl implements UserDao {
 
     @Override
     public void changeUserStatus(String login, String status) {
-        try (PreparedStatement ps = connection.prepareStatement("UPDATE users SET account_status = (?) WHERE `login` = (?);")) {
-            logger.trace("inside changeUserStatus, login = {}, status = {}", login, status);
-
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.UPDATE_USER_STATUS.getQUERY())) {
             ps.setString(2, login);
             ps.setString(1, status.equals("ACTIVE") ? "ACTIVE" : "BLOCKED");
 
             ps.execute();
 
         } catch (SQLException e) {
-            logger.trace("Caught SQLException exception", e);
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
     }
@@ -279,7 +267,7 @@ public class JdbcUserDaoImpl implements UserDao {
     public BigDecimal getSubscriberBalanceByLogin(String login) {
         BigDecimal subscriberBalance = new BigDecimal(0.0);
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT users.balance FROM users where login=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.GET_SUBSCRIBER_BALANCE_BY_ID.getQUERY())) {
             ps.setString(1, login);
 
             ResultSet rs = ps.executeQuery();
@@ -289,7 +277,7 @@ public class JdbcUserDaoImpl implements UserDao {
                 return subscriberBalance;
             }
         } catch (SQLException e) {
-            logger.trace("Inside getSubscriberBalanceByLogin: Exception {}", e);
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
         return subscriberBalance;
@@ -300,19 +288,17 @@ public class JdbcUserDaoImpl implements UserDao {
 
         UserStatus userStatus = UserStatus.UNKNOWN;
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT account_status FROM users WHERE login=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.READ_ACCOUNT_STATUS_BY_LOGIN.getQUERY())) {
             ps.setString(1, login);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                logger.trace("insideeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 userStatus = UserStatus.valueOf(rs.getString("account_status").toUpperCase());
-                logger.trace("userStatus to {}", userStatus);
                 return userStatus;
             }
         } catch (SQLException e) {
-            logger.trace("Inside getRoleByLogin: Exception {}", e);
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
         return userStatus;
@@ -324,7 +310,7 @@ public class JdbcUserDaoImpl implements UserDao {
         UserMapper userMapper = new UserMapper();
         User user;
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users where id=(?);")) {
+        try (PreparedStatement ps = connection.prepareStatement(UserSQL.READ_USER_BY_ID.getQUERY())) {
             ps.setLong(1, id);
             final ResultSet rs = ps.executeQuery();
 
@@ -335,8 +321,9 @@ public class JdbcUserDaoImpl implements UserDao {
             rs.close();
 
         } catch (SQLException e) {
+            logger.error("Error with DAO: {}", e);
             e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 }

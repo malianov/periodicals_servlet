@@ -10,19 +10,28 @@ import org.apache.logging.log4j.Logger;
 import java.math.BigDecimal;
 
 public interface UserDao extends AbstractDao<User> {
-    static final Logger logger = LogManager.getLogger(UserDao.class);
+    Logger logger = LogManager.getLogger(UserDao.class);
 
     boolean isUserExist(final String email, final String password);
+
     boolean emailIsAlreadyUsed(final String email);
+
     boolean loginIsAlreadyUsed(final String login);
+
     boolean isLoginExist(String login);
+
     boolean isPasswordCorrectForLogin(String login, String password);
 
     Long getIdByLogin(String login);
+
     UserRole getRoleByLogin(String login);
+
     UserService.PaginationResult searchSubscribersWithPagination(int lowerBound, int upperBound, String searchKey);
+
     void changeUserStatus(String login, String status);
+
     BigDecimal getSubscriberBalanceByLogin(String login);
+
     UserStatus checkSubscriberStatusByLogin(String login);
 }
 
