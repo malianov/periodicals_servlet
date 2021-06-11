@@ -18,7 +18,4 @@ The reader has a personal account that he can replenish. Funds are withdrawn fro
 The system administrator has the rights to:
 - adding, deleting and editing publications;
 - blocking, unlocking the user.
-
-#### Comments:
-The functionality of the program is not fully implemented.
                                                              
